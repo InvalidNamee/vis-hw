@@ -1,0 +1,63 @@
+---
+export interface TocEntry { depth: number; text: string; id: string; }
+interface Props { entries: TocEntry[]; }
+const { entries } = Astro.props;
+---
+{entries.length >= 2 && <chapter-toc>
+  <details open>
+    <summary>本章目录</summary>
+    <nav aria-label="本章目录">
+      <ol>{entries.map(entry => <li class:list={{ nested: entry.depth === 3 }}><a href={`#${entry.id}`}>{entry.text}</a></li>)}</ol>
+    </nav>
+  </details>
+</chapter-toc>}
+<script>
+  class ChapterToc extends HTMLElement {
+    cleanup?: () => void;
+    connectedCallback() {
+      const details = this.querySelector('details')!;
+      const media = matchMedia('(min-width: 1024px)');
+      const sync = () => { details.open = media.matches; };
+      sync(); media.addEventListener('change', sync);
+      const links = [...this.querySelectorAll<HTMLAnchorElement>('a')];
+      const headings = links.map(link => document.getElementById(decodeURIComponent(link.hash.slice(1))));
+      let scheduled = false;
+      const update = () => {
+        scheduled = false;
+        let active = 0;
+        headings.forEach((heading, i) => { if (heading && heading.getBoundingClientRect().top <= 120) active = i; });
+        links.forEach((link, i) => {
+          if (i === active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        });
+      };
+      const schedule = () => { if (!scheduled) { scheduled = true; requestAnimationFrame(update); } };
+      const observer = new IntersectionObserver(schedule, { rootMargin: '-80px 0px -60% 0px' });
+      headings.forEach(heading => { if (heading) observer.observe(heading); });
+      const onClick = () => { if (!media.matches) details.open = false; };
+      links.forEach(link => link.addEventListener('click', onClick));
+      // Scroll fallback handles short headings crossed between observer samples.
+      window.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule);
+      update();
+      this.cleanup = () => {
+        observer.disconnect(); media.removeEventListener('change', sync);
+        window.removeEventListener('scroll', schedule); window.removeEventListener('resize', schedule);
+        links.forEach(link => link.removeEventListener('click', onClick));
+      };
+    }
+    disconnectedCallback() { this.cleanup?.(); }
+  }
+  if (!customElements.get('chapter-toc')) customElements.define('chapter-toc', ChapterToc);
+</script>
+<style>
+  chapter-toc { display: block; font-size: 14px; }
+  summary { font-weight: 650; color: #0f172a; margin-bottom: 14px; }
+  ol { list-style: none; padding: 0; margin: 0; border-left: 1px solid #e2e8f0; }
+  a { display: block; padding: 7px 0 7px 16px; color: #64748b; line-height: 1.6; border-left: 2px solid transparent; margin-left: -1px; overflow-wrap: anywhere; }
+  a:hover, a[aria-current="location"] { color: #2563eb; }
+  a[aria-current="location"] { border-left-color: #2563eb; }
+  .nested a { padding-left: 28px; }
+  @media (min-width: 1024px) { summary { list-style: none; pointer-events: none; }summary::-webkit-details-marker { display: none; } }
+  @media (max-width: 1023px) { details { padding: 14px 0; border-block: 1px solid #e2e8f0; }summary { margin-bottom: 0; }details[open] summary { margin-bottom: 12px; } }
+</style>

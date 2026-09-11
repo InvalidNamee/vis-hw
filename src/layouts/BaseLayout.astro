@@ -1,0 +1,32 @@
+---
+import '../styles/global.css';
+import { homework, href } from '../config/homework';
+interface Props { title: string; description?: string; current?: string; }
+const { title, description = '《可视化导论》课程作业：从网页基础到数据可视化。', current } = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title} · 可视化导论</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="brand" href={href()} aria-current={!current ? 'page' : undefined}>可视化导论<span>课程作业</span></a>
+        <nav class="desktop-nav" aria-label="作业导航">
+          {homework.map(hw => <a href={href(`${hw.id}/`)} aria-current={current === hw.id ? 'page' : undefined}>{hw.id.toUpperCase()}</a>)}
+        </nav>
+        <details class="mobile-nav">
+          <summary>{current ? current.toUpperCase() : '首页'} · 切换作业</summary>
+          <nav aria-label="移动端作业导航">{homework.map(hw => <a href={href(`${hw.id}/`)} aria-current={current === hw.id ? 'page' : undefined}>{hw.id.toUpperCase()} · {hw.title}</a>)}</nav>
+        </details>
+      </div>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer"><span>可视化导论</span><span>观察 · 理解 · 表达</span></footer>
+  </body>
+</html>

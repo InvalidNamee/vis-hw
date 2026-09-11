@@ -1,0 +1,90 @@
+<layout-demo>
+  <section class="layout-lab" aria-label="网页布局实验">
+    <div class="lab-toolbar">
+      <div><h2>布局实验台</h2><p>调整参数，观察内容如何分配空间。</p></div>
+      <button type="button" data-reset>重置参数</button>
+    </div>
+    <div class="lab-controls">
+      <label>预览宽度<select data-width><option value="wide">宽屏</option><option value="narrow">窄屏（360px）</option></select></label>
+      <label>侧栏宽度 <output data-sidebar-output>160px</output><input data-sidebar type="range" min="100" max="220" step="10" value="160" /></label>
+      <label>区域间距 <output data-gap-output>16px</output><input data-gap type="range" min="0" max="32" step="4" value="16" /></label>
+    </div>
+    <div class="preview-stage">
+      <div class="preview-viewport" data-viewport>
+        <div class="example-page" data-example>
+          <div class="example-header"><strong>HEADER</strong><span>站点标题与导航</span></div>
+          <div class="example-body">
+            <div class="example-sidebar"><strong>ASIDE</strong><span>筛选条件</span><span>图例说明</span></div>
+            <div class="example-main"><strong>MAIN</strong><p>主要内容区域</p><div class="example-cards"><div>内容 A</div><div>内容 B</div><div>内容 C</div></div></div>
+          </div>
+          <div class="example-footer">FOOTER <span>补充信息</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="lab-status" data-status aria-live="polite">宽屏：侧栏固定宽度，主内容占据剩余空间。</p>
+    <div class="lab-note"><strong>观察重点</strong><p>窄屏下侧栏与正文改为上下排列，卡片也变为单列。拖动“区域间距”，区分元素之间的 gap 与元素内部的 padding。</p></div>
+  </section>
+</layout-demo>
+
+<script>
+  class LayoutDemo extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.initialized) return;
+      this.dataset.initialized = 'true';
+      const width = this.querySelector<HTMLSelectElement>('[data-width]')!;
+      const sidebar = this.querySelector<HTMLInputElement>('[data-sidebar]')!;
+      const gap = this.querySelector<HTMLInputElement>('[data-gap]')!;
+      const viewport = this.querySelector<HTMLElement>('[data-viewport]')!;
+      const example = this.querySelector<HTMLElement>('[data-example]')!;
+      const update = () => {
+        viewport.style.maxWidth = width.value === 'narrow' ? '360px' : '100%';
+        example.style.setProperty('--sidebar-width', `${sidebar.value}px`);
+        example.style.setProperty('--gap', `${gap.value}px`);
+        this.querySelector('output[data-sidebar-output]')!.textContent = `${sidebar.value}px`;
+        this.querySelector('output[data-gap-output]')!.textContent = `${gap.value}px`;
+      };
+      width.addEventListener('change', update);
+      sidebar.addEventListener('input', update);
+      gap.addEventListener('input', update);
+      this.querySelector('[data-reset]')!.addEventListener('click', () => {
+        width.value = 'wide'; sidebar.value = '160'; gap.value = '16'; update();
+      });
+      const observer = new ResizeObserver(([entry]) => {
+        if (!entry.contentRect.width) return;
+        const narrow = entry.contentRect.width <= 560;
+        this.querySelector('[data-status]')!.textContent = narrow
+          ? '窄屏：侧栏与正文上下排列，内容卡片变为单列。侧栏宽度参数暂不生效。'
+          : '宽屏：侧栏固定宽度，主内容占据剩余空间。';
+      });
+      observer.observe(viewport);
+      this.observer = observer;
+      update();
+    }
+    observer?: ResizeObserver;
+    disconnectedCallback() { this.observer?.disconnect(); }
+  }
+  if (!customElements.get('layout-demo')) customElements.define('layout-demo', LayoutDemo);
+</script>
+
+<style>
+  layout-demo { display: block; margin: 12px 0 32px; }
+  .layout-lab { border: 1px solid #e2e8f0; background: #fff; border-radius: 8px; overflow: hidden; }
+  .lab-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px; }
+  .lab-toolbar h2 { margin: 0; font-size: 20px; font-weight: 650; }.lab-toolbar p { margin: 4px 0 0; font-size: 14px; color: #475569; }
+  button { white-space: nowrap; border: 1px solid #cbd5e1; padding: 7px 12px; border-radius: 6px; font-size: 14px; background: white; }button:hover { background: #f1f5f9; }
+  .lab-controls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; padding: 20px 24px; border-block: 1px solid #e2e8f0; background: #f8fafc; }
+  label { display: block; font-size: 14px; font-weight: 500; }output { float: right; color: #2563eb; font-variant-numeric: tabular-nums; }
+  input { display: block; width: 100%; margin-top: 16px; accent-color: #2563eb; }select { display: block; width: 100%; margin-top: 8px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 5px; background: white; }
+  .preview-stage { padding: 28px; background: #edf2f7; }.preview-viewport { margin: auto; width: 100%; container-type: inline-size; }
+  .example-page { --sidebar-width: 160px; --gap: 16px; display: grid; gap: var(--gap); background: white; padding: 16px; border: 1px solid #cbd5e1; border-radius: 6px; }
+  .example-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 16px; background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; border-radius: 4px; }
+  .example-header span, .example-footer span { font-size: 13px; }.example-header strong, .example-main strong, .example-sidebar strong { font-size: 13px; letter-spacing: .06em; }
+  .example-body { display: grid; grid-template-columns: var(--sidebar-width) minmax(0, 1fr); gap: var(--gap); }
+  .example-sidebar { display: flex; flex-direction: column; gap: 14px; padding: 16px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; }.example-sidebar span { font-size: 14px; color: #475569; }
+  .example-main { min-width: 0; padding: 20px; border: 1px solid #93c5fd; background: #eff6ff; border-radius: 4px; color: #1e40af; }.example-main p { font-size: 16px; margin: 10px 0 20px; }
+  .example-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }.example-cards div { display: grid; place-items: center; min-height: 90px; border: 1px solid #bfdbfe; background: white; border-radius: 4px; font-size: 14px; }
+  .example-footer { display: flex; flex-wrap: wrap; gap: 16px; padding: 12px 16px; font-size: 13px; color: #475569; background: #f1f5f9; border-radius: 4px; }
+  .lab-status { margin: 0; padding: 15px 24px; font-size: 14px; color: #475569; border-bottom: 1px solid #e2e8f0; }.lab-note { padding: 20px 24px; font-size: 14px; }.lab-note p { margin: 5px 0 0; color: #475569; }
+  @container (max-width: 560px) { .example-body, .example-cards { grid-template-columns: 1fr; }.example-sidebar { flex-direction: row; flex-wrap: wrap; }.example-cards div { min-height: 56px; } }
+  @media (max-width: 600px) { .lab-controls { grid-template-columns: 1fr; gap: 20px; }.lab-toolbar { align-items: start; padding: 20px; }.preview-stage { padding: 12px; }.example-page { padding: 10px; } }
+</style>

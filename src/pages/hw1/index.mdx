@@ -1,0 +1,159 @@
+---
+layout: ../../layouts/DocumentLayout.astro
+title: 网页空间布局
+description: 用盒模型理解空间，用 Grid 划分区域，用 Flex 组织内容。
+homework: hw1
+---
+
+import HomeworkTabs from '../../components/HomeworkTabs.astro';
+import { TabsContent } from '../../components/starwind/tabs';
+import LayoutDemo from '../../components/LayoutDemo.astro';
+
+<HomeworkTabs>
+<TabsContent keepMounted value="explanation">
+<div className="prose">
+
+## 先划分区域，再排列内容
+
+网页布局决定信息放在哪里、占据多少空间，以及屏幕变小时如何重新排列。开始写 CSS 前，先把页面拆成几个有意义的区域：**页头、侧栏、主内容和页脚**。
+
+本节以一个带侧栏的内容页为例：大屏左右分栏，小屏上下排列。切换到“展示”，可以直接调整这个页面的空间分配。
+
+### 01 / 用盒模型理解尺寸
+
+每个元素都可以看作一个盒子：内容区外依次是 `padding`（内边距）、`border`（边框）和 `margin`（外边距）。
+
+- **padding**：为内容与边界之间留出呼吸空间。
+- **margin**：调整这个盒子与外部元素的距离。
+- **gap**：统一设置 Grid 或 Flex 容器中子项之间的间距。
+
+设置 `box-sizing: border-box` 后，声明的宽度会包含内边距和边框，但不包含外边距，尺寸更容易控制。
+
+### 02 / 用 Grid 划分页面区域
+
+Grid 适合需要同时控制行与列的布局。示例中，外层 Grid 纵向安排页头、主体与页脚；主体内部再分成侧栏和正文两列。
+
+`grid-template-columns: 160px minmax(0, 1fr)` 表示侧栏宽 160px，正文分配剩余宽度。`minmax(0, 1fr)` 允许正文列收缩，避免长内容把整个页面撑宽；代码块等内容仍需单独处理溢出。
+
+### 03 / 用 Flex 排列一组元素
+
+Flex 适合主要沿一个方向排列的内容，例如导航、工具栏和按钮组。用 `align-items` 控制交叉轴对齐，用 `justify-content` 分配主轴空间；允许换行时加上 `flex-wrap: wrap`。
+
+> Grid 与 Flex 可以组合使用：先用 Grid 分配页面空间，再用 Flex 对齐区域内部的内容。
+
+### 04 / 让布局适应可用宽度
+
+示例以 **560px 的容器宽度**为分界。小于或等于这个宽度时，侧栏与正文从左右排列改为上下排列，三张内容卡片也改为单列。
+
+这里使用容器查询 `@container`，因此实验台内切换预览宽度就能触发布局变化。整页布局也可以根据实际需要使用 `@media` 响应浏览器视口。
+
+### 动手观察
+
+1. 把间距从 16px 调到 32px，观察正文和卡片可用空间的变化。
+2. 增加侧栏宽度，观察主内容如何自动收缩。
+3. 切换到窄屏，确认内容保持完整，页面没有横向溢出。
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="code">
+<div className="prose">
+
+## 关键代码
+
+下面保留展示区的核心结构与布局规则，省略颜色、边框和控制面板。实验台通过修改 `--sidebar-width` 与 `--gap` 两个 CSS 变量更新布局。
+
+### 1. 建立区域结构
+
+```html title="layout.html"
+<div class="preview-viewport">
+  <div class="example-page">
+    <header class="example-header">页头与导航</header>
+    <div class="example-body">
+      <aside class="example-sidebar">侧栏</aside>
+      <main class="example-main">
+        <div class="example-cards">
+          <article>内容 A</article>
+          <article>内容 B</article>
+          <article>内容 C</article>
+        </div>
+      </main>
+    </div>
+    <footer>补充信息</footer>
+  </div>
+</div>
+```
+
+### 2. 分配宽度与间距
+
+```css title="layout.css"
+* { box-sizing: border-box; }
+
+.preview-viewport { container-type: inline-size; }
+
+.example-page {
+  --sidebar-width: 160px;
+  --gap: 16px;
+  display: grid;
+  gap: var(--gap);
+  padding: 16px;
+}
+
+.example-body {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  gap: var(--gap);
+}
+
+.example-main { min-width: 0; padding: 20px; }
+
+.example-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.example-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+}
+```
+
+### 3. 为窄容器改成单列
+
+```css title="layout.css"
+@container (max-width: 560px) {
+  .example-body,
+  .example-cards {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+### 4. 从控件更新 CSS 变量
+
+```js title="controls.js"
+gapInput.addEventListener('input', () => {
+  example.style.setProperty('--gap', `${gapInput.value}px`);
+});
+```
+
+变量只作用于当前示例容器，因此不会改变导航或其他作业的布局。
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="demo">
+<div className="prose">
+
+## 展示
+
+从一个真实的布局开始。调整侧栏和间距，再切换到窄屏观察重排；“重置参数”会恢复初始设置。
+
+</div>
+<LayoutDemo />
+</TabsContent>
+</HomeworkTabs>

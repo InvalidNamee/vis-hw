@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { homework, href } from '../config/homework';
+---
+<BaseLayout title="首页">
+  <div class="page-shell">
+    <section class="home-intro">
+      <p class="eyebrow">VISUALIZATION / COURSEWORK</p>
+      <h1>可视化导论<span class="title-period">.</span></h1>
+      <p class="lead">从网页中的空间组织，到数据背后的规律表达。<br class="desktop-break" />这里记录每一次练习、实验与探索。</p>
+      <div class="intro-meta"><span>10 份作业</span><span>{homework.filter(hw => hw.ready).length} 份已更新</span><span>讲解 / 关键代码 / 展示</span></div>
+    </section>
+    <section aria-labelledby="assignments-title">
+      <div class="section-heading"><h2 id="assignments-title">作业目录</h2><span>01 — 10</span></div>
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+        {homework.map(hw => <a class:list={['assignment', { 'assignment-ready': hw.ready }]} href={href(`${hw.id}/`)}>
+          <div class="assignment-top"><span class="assignment-number">{String(hw.number).padStart(2, '0')}</span><span class:list={['badge', { 'badge-ready': hw.ready }]}>{hw.ready ? '已更新' : '待更新'}</span></div>
+          <h3>{hw.title}</h3><p>{hw.description}</p>
+          <div class="assignment-bottom"><span>{hw.id.toUpperCase()}</span><span>{hw.ready ? '查看作业' : '查看章节'}</span></div>
+        </a>)}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

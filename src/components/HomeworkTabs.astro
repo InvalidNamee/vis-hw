@@ -1,0 +1,19 @@
+---
+import { Tabs, TabsList, TabsTrigger } from './starwind/tabs';
+---
+<div class="homework-tabs">
+  <Tabs defaultValue="explanation">
+    <TabsList aria-label="作业内容">
+      <TabsTrigger value="explanation">讲解</TabsTrigger>
+      <TabsTrigger value="code">关键代码</TabsTrigger>
+      <TabsTrigger value="demo">展示</TabsTrigger>
+    </TabsList>
+    <slot />
+  </Tabs>
+</div>
+<style is:global>
+  .homework-tabs [role="tablist"] { display: flex; justify-content: flex-start; gap: 28px; width: 100%; height: auto; padding: 0; background: transparent; border: 0; border-bottom: 1px solid #e2e8f0; border-radius: 0; }
+  .homework-tabs [role="tab"] { flex: none; position: relative; height: auto; min-height: 48px; padding: 12px 6px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; font-size: 15px; font-weight: 500; color: #475569; background: transparent; box-shadow: none; }
+  .homework-tabs [role="tab"][aria-selected="true"] { color: #2563eb; border-bottom-color: #2563eb; background: transparent; box-shadow: none; }
+  .homework-tabs [role="tabpanel"] { margin-top: 0; }
+</style>
