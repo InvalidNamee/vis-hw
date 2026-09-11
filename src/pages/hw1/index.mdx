@@ -1,57 +1,44 @@
 ---
 layout: ../../layouts/DocumentLayout.astro
 title: 网页空间布局
-description: 用盒模型理解空间，用 Grid 划分区域，用 Flex 组织内容。
+description: 从盒模型出发，用 Grid 和 Flex 组织页面，再用容器查询完成自适应重排。
 homework: hw1
+category: Layout
 ---
 
 import HomeworkTabs from '../../components/HomeworkTabs.astro';
 import { TabsContent } from '../../components/starwind/tabs';
+import BoxModelDemo from '../../components/BoxModelDemo.astro';
+import FlowDemo from '../../components/FlowDemo.astro';
+import GridDemo from '../../components/GridDemo.astro';
+import FlexDemo from '../../components/FlexDemo.astro';
 import LayoutDemo from '../../components/LayoutDemo.astro';
+
+网页空间布局要回答三个问题：一个元素占多大空间？多个元素如何排列？容器变窄时，内容如何重新分配空间？本章按“算尺寸 → 看流动 → 划区域 → 排内容 → 做响应式 → 验证”的顺序，把这些问题拆成可以观察和修改的 CSS 规则。
+
+每个布局概念都有一组独立的“讲解 / 关键代码 / 展示”标签。先看讲解，再对照代码，最后在展示中改变参数或观察结构；章末的验证流程按连续正文展开，方便从头到尾执行。
+
+## 从盒模型开始：先算清空间
+
+布局的最小单位是盒子。只有先分清内容、内边距、边框和外边距分别占据哪一层，后续的宽度计算才不会靠猜。
 
 <HomeworkTabs>
 <TabsContent keepMounted value="explanation">
 <div className="prose">
 
-## 先划分区域，再排列内容
+### 内部空间和外部空间
 
-网页布局决定信息放在哪里、占据多少空间，以及屏幕变小时如何重新排列。开始写 CSS 前，先把页面拆成几个有意义的区域：**页头、侧栏、主内容和页脚**。
+一个块级元素从内向外可以看成四层：`content` 是文字或子元素所在的内容区，`padding` 是内容与边框之间的内部留白，`border` 是可见边界，`margin` 则是这个盒子与其他盒子的外部距离。
 
-本节以一个带侧栏的内容页为例：大屏左右分栏，小屏上下排列。切换到“展示”，可以直接调整这个页面的空间分配。
+最容易出现误判的是 `width`。默认的 `content-box` 会把 `padding` 和 `border` 额外加到声明宽度上；`border-box` 则把它们包含在声明的宽度里。实际项目通常会在全局设置 `box-sizing: border-box`，让“写下的宽度”更接近“页面上看到的宽度”。
 
-### 01 / 用盒模型理解尺寸
+`padding` 和 `margin` 都是留白，但职责不同：前者扩大内容与边界之间的呼吸空间，后者拉开不同盒子之间的距离。Grid 或 Flex 子项之间的统一间距优先使用 `gap`，不要给每个子项分别加 margin。
 
-每个元素都可以看作一个盒子：内容区外依次是 `padding`（内边距）、`border`（边框）和 `margin`（外边距）。
+### 一个可复用的判断顺序
 
-- **padding**：为内容与边界之间留出呼吸空间。
-- **margin**：调整这个盒子与外部元素的距离。
-- **gap**：统一设置 Grid 或 Flex 容器中子项之间的间距。
-
-设置 `box-sizing: border-box` 后，声明的宽度会包含内边距和边框，但不包含外边距，尺寸更容易控制。
-
-### 02 / 用 Grid 划分页面区域
-
-Grid 适合需要同时控制行与列的布局。示例中，外层 Grid 纵向安排页头、主体与页脚；主体内部再分成侧栏和正文两列。
-
-`grid-template-columns: 160px minmax(0, 1fr)` 表示侧栏宽 160px，正文分配剩余宽度。`minmax(0, 1fr)` 允许正文列收缩，避免长内容把整个页面撑宽；代码块等内容仍需单独处理溢出。
-
-### 03 / 用 Flex 排列一组元素
-
-Flex 适合主要沿一个方向排列的内容，例如导航、工具栏和按钮组。用 `align-items` 控制交叉轴对齐，用 `justify-content` 分配主轴空间；允许换行时加上 `flex-wrap: wrap`。
-
-> Grid 与 Flex 可以组合使用：先用 Grid 分配页面空间，再用 Flex 对齐区域内部的内容。
-
-### 04 / 让布局适应可用宽度
-
-示例以 **560px 的容器宽度**为分界。小于或等于这个宽度时，侧栏与正文从左右排列改为上下排列，三张内容卡片也改为单列。
-
-这里使用容器查询 `@container`，因此实验台内切换预览宽度就能触发布局变化。整页布局也可以根据实际需要使用 `@media` 响应浏览器视口。
-
-### 动手观察
-
-1. 把间距从 16px 调到 32px，观察正文和卡片可用空间的变化。
-2. 增加侧栏宽度，观察主内容如何自动收缩。
-3. 切换到窄屏，确认内容保持完整，页面没有横向溢出。
+1. 先问元素的**可见盒子**应该多宽，再决定使用 `border-box` 还是额外计算内容宽度。
+2. 再区分留白是在盒子里面（`padding`）还是盒子外面（`margin` / `gap`）。
+3. 如果内容可能很长，在 Grid 子项上配合 `min-width: 0`，避免最小内容尺寸把父级撑出横向滚动。
 
 </div>
 </TabsContent>
@@ -59,89 +46,29 @@ Flex 适合主要沿一个方向排列的内容，例如导航、工具栏和按
 <TabsContent keepMounted value="code">
 <div className="prose">
 
-## 关键代码
+### 建立一个可计算的盒子
 
-下面保留展示区的核心结构与布局规则，省略颜色、边框和控制面板。实验台通过修改 `--sidebar-width` 与 `--gap` 两个 CSS 变量更新布局。
-
-### 1. 建立区域结构
-
-```html title="layout.html"
-<div class="preview-viewport">
-  <div class="example-page">
-    <header class="example-header">页头与导航</header>
-    <div class="example-body">
-      <aside class="example-sidebar">侧栏</aside>
-      <main class="example-main">
-        <div class="example-cards">
-          <article>内容 A</article>
-          <article>内容 B</article>
-          <article>内容 C</article>
-        </div>
-      </main>
-    </div>
-    <footer>补充信息</footer>
-  </div>
-</div>
+```html title="box-model.html"
+<article class="card">
+  <h2>可计算的卡片</h2>
+  <p>内容区、内边距和边框共同组成可见盒子。</p>
+</article>
 ```
 
-### 2. 分配宽度与间距
-
-```css title="layout.css"
-* { box-sizing: border-box; }
-
-.preview-viewport { container-type: inline-size; }
-
-.example-page {
-  --sidebar-width: 160px;
-  --gap: 16px;
-  display: grid;
-  gap: var(--gap);
-  padding: 16px;
+```css title="box-model.css"
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-.example-body {
-  display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-  gap: var(--gap);
-}
-
-.example-main { min-width: 0; padding: 20px; }
-
-.example-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.example-cards {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gap);
+.card {
+  width: 320px;
+  padding: 20px;
+  border: 2px solid #93c5fd;
+  margin: 24px;
 }
 ```
 
-### 3. 为窄容器改成单列
-
-```css title="layout.css"
-@container (max-width: 560px) {
-  .example-body,
-  .example-cards {
-    grid-template-columns: 1fr;
-  }
-}
-```
-
-### 4. 从控件更新 CSS 变量
-
-```js title="controls.js"
-gapInput.addEventListener('input', () => {
-  example.style.setProperty('--gap', `${gapInput.value}px`);
-});
-```
-
-变量只作用于当前示例容器，因此不会改变导航或其他作业的布局。
+在这段代码中，卡片的可见宽度是 `320px`，内容区会自动减去左右 `padding` 和 `border`；`margin` 不属于可见盒子，它只在外部占据空间。若移除 `box-sizing: border-box`，默认的 `content-box` 会让实际可见宽度变成 `364px`（`320 + 40 + 4`）。
 
 </div>
 </TabsContent>
@@ -149,11 +76,355 @@ gapInput.addEventListener('input', () => {
 <TabsContent keepMounted value="demo">
 <div className="prose">
 
-## 展示
+### 观察四层空间
 
-从一个真实的布局开始。调整侧栏和间距，再切换到窄屏观察重排；“重置参数”会恢复初始设置。
+下面的示意把一张卡片拆成 `margin → border → padding → content` 四层。重点观察：改变内部留白不会改变 `border-box` 的总宽度，外部的 margin 仍然留在盒子之外。
+
+</div>
+<BoxModelDemo />
+</TabsContent>
+</HomeworkTabs>
+
+## 先理解正常流，再选择定位
+
+浏览器在没有 Grid、Flex 或定位规则时，仍会按照正常文档流排列内容。先利用默认流完成可读结构，再选择新的布局模式，通常比一开始就用坐标固定元素更稳定。
+
+<HomeworkTabs>
+<TabsContent keepMounted value="explanation">
+<div className="prose">
+
+### 默认布局已经有秩序
+
+正常流中，块级盒子沿块轴依次排列，通常占满容器的可用内联宽度；行内盒子则跟随文字排在同一行，空间不足时自然换行。`display: grid` 和 `display: flex` 会为容器建立新的布局模式，但容器本身仍然处在外部文档流中。
+
+`position: relative` 会保留元素原来的占位，也常用来为绝对定位的子元素建立包含块；`position: absolute` 和 `fixed` 会让元素脱离正常流，周围内容不再为它预留空间。因此，绝对定位适合角标、浮层和局部叠加，不适合承担正文、侧栏等页面骨架。
+
+`position: sticky` 适合目录或工具栏：元素在达到指定阈值前仍随文档流移动，达到阈值后保持在容器范围内。无论使用哪种定位，都要检查覆盖关系、滚动容器和键盘焦点是否仍然可见。
+
+### 让内容决定高度
+
+正文区域尽量避免固定高度。文字变长时，盒子默认会增长；如果确实需要滚动区域，使用明确的尺寸约束和 `overflow: auto`。不要用 `overflow: hidden` 掩盖布局错误，否则文字和可聚焦控件可能一起被裁掉。
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="code">
+<div className="prose">
+
+### 只把角标移出正常流
+
+```html title="positioned-card.html"
+<article class="card">
+  <span class="card-badge">NEW</span>
+  <h2>课程公告</h2>
+  <p>正文继续参与正常流，并决定卡片高度。</p>
+</article>
+```
+
+```css title="positioned-card.css"
+.card {
+  position: relative;
+  padding: 24px;
+}
+
+.card-badge {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-end: 12px;
+}
+
+.scroll-region {
+  max-width: 100%;
+  overflow-x: auto;
+}
+```
+
+父元素的 `position: relative` 建立定位上下文，但它仍占据正常流中的位置。只有角标脱离正常流；标题和正文仍会自然撑开卡片。
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="demo">
+<div className="prose">
+
+### 对比流内排列与局部叠加
+
+左侧的标题、正文和操作区按正常流依次占位；右侧只有角标绝对定位在卡片右上角，正文仍按原顺序排列。
+
+</div>
+<FlowDemo />
+</TabsContent>
+</HomeworkTabs>
+
+## 用 Grid 建立页面骨架
+
+当问题同时涉及行和列时，CSS Grid 能把页面区域放到同一张二维网格上。先分配页面骨架，再在主内容内部嵌套更小的 Grid，层级会比不断堆叠 margin 更清晰。
+
+<HomeworkTabs>
+<TabsContent keepMounted value="explanation">
+<div className="prose">
+
+### 把空间写成轨道
+
+Grid 容器由行、列和它们之间的 gutter（间距）组成。`grid-template-columns: 160px minmax(0, 1fr)` 表示侧栏固定为 `160px`，主内容占据剩余空间；`minmax(0, 1fr)` 的 `0` 明确允许主内容列收缩，是处理长标题、代码块和表格时很有用的防溢出习惯。
+
+如果页面区域有明确语义，可以使用 `grid-template-areas`：`header`、`sidebar`、`main`、`footer` 直接表达布局意图；如果只是重复卡片，则使用 `repeat()` 和 `minmax()` 描述可重复的列更合适。
+
+Grid 主要负责“区域之间如何占空间”，不是用来替代 HTML 语义。页面仍应使用 `header`、`aside`、`main`、`footer` 等结构元素，再用 CSS Grid 改变它们的视觉位置。
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="code">
+<div className="prose">
+
+### 用命名区域搭出骨架
+
+```html title="page.html"
+<div class="page">
+  <header class="page-header">站点标题与导航</header>
+  <aside class="page-sidebar">筛选与说明</aside>
+  <main class="page-main">
+    <div class="cards">
+      <article>内容 A</article>
+      <article>内容 B</article>
+      <article>内容 C</article>
+    </div>
+  </main>
+  <footer class="page-footer">补充信息</footer>
+</div>
+```
+
+```css title="page.css"
+.page {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  gap: 16px;
+}
+
+.page-header { grid-area: header; }
+.page-sidebar { grid-area: sidebar; }
+.page-main { grid-area: main; min-width: 0; }
+.page-footer { grid-area: footer; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+```
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="demo">
+<div className="prose">
+
+### 观察行、列与区域
+
+这个示例用命名区域搭出一个真实页面：页头和页脚跨越整行，侧栏占固定轨道，主内容与三张卡片占据剩余空间。
+
+</div>
+<GridDemo />
+</TabsContent>
+</HomeworkTabs>
+
+## 用 Flex 处理一维对齐
+
+当元素主要沿一条轴线排列时，用 Flex 解决对齐和剩余空间分配更直接。导航、工具栏、按钮组和卡片内部的标题区，通常都是 Flex 的使用场景。
+
+<HomeworkTabs>
+<TabsContent keepMounted value="explanation">
+<div className="prose">
+
+### 先确定主轴，再处理交叉轴
+
+`display: flex` 默认沿水平方向排列子项。`flex-direction` 决定主轴方向，`justify-content` 管主轴上的分配，`align-items` 管交叉轴上的对齐；这两个属性的含义会随着主轴方向改变。
+
+工具栏内容长度不一时，常见组合是：容器使用 `align-items: center`，项目之间用 `gap`，需要两端分布时使用 `justify-content: space-between`，按钮较多时补上 `flex-wrap: wrap`。需要“标题占据剩余空间、按钮保持自身宽度”时，让标题 `flex: 1`，并在可能被长文字撑开的项目上设置 `min-width: 0`。
+
+Grid 和 Flex 可以嵌套：Grid 负责页面的大区域，Flex 负责区域内部的一排控件。选择布局方法时，看的是空间关系，而不是组件名称。
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="code">
+<div className="prose">
+
+### 让标题和按钮共享一行
+
+```html title="toolbar.html"
+<div class="toolbar">
+  <div class="toolbar-title">
+    <strong>布局实验</strong>
+    <span>当前视图：宽屏</span>
+  </div>
+  <div class="toolbar-actions">
+    <button type="button">重置</button>
+    <button type="button">保存</button>
+  </div>
+</div>
+```
+
+```css title="toolbar.css"
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.toolbar-title {
+  display: flex;
+  align-items: baseline;
+  flex: 1 1 220px;
+  min-width: 0;
+  gap: 12px;
+}
+
+.toolbar-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+```
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="demo">
+<div className="prose">
+
+### 观察主轴上的剩余空间
+
+示例把标题区和操作区放在同一条 Flex 轴上。点击“窄屏”缩小展示区后，`flex-wrap` 允许操作区换到下一行，内容不会因为强行保持一行而溢出；点击“宽屏”可以恢复初始布局。
+
+</div>
+<FlexDemo />
+</TabsContent>
+</HomeworkTabs>
+
+## 用容器查询做自适应重排
+
+响应式布局不是简单地“缩小所有东西”，而是根据可用空间改变区域关系：侧栏可以移到正文上方，三列卡片可以变成单列，工具栏也可以换行。这里用容器查询关注组件自身的宽度，而不是只能关注整个浏览器视口。
+
+<HomeworkTabs>
+<TabsContent keepMounted value="explanation">
+<div className="prose">
+
+### 让组件根据自己的容器适应
+
+先在希望被观察的父元素上声明 `container-type: inline-size`，再用 `@container` 查询它的内联尺寸。这样，同一张卡片放在宽主内容区或窄侧栏中，都能根据自己的实际宽度改变布局。
+
+容器查询适合可复用组件；`@media` 仍然适合控制整个页面的视口级变化，例如导航是否显示、页面边距如何变化。两者可以同时存在，但断点要对应具体的空间问题，不要为了设备名称硬套一组数字。
+
+响应式规则最好先写“窄空间下的安全状态”，再在更宽的容器中增加列数。每个断点都应该回答一个可观察的问题：卡片是否已经无法舒适地并排？侧栏是否已经挤压了正文？
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="code">
+<div className="prose">
+
+### 声明容器并在断点重排
+
+```css title="responsive-layout.css"
+.content-region {
+  container-type: inline-size;
+}
+
+.content-layout,
+.card-list {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.card-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@container (max-width: 560px) {
+  .content-layout,
+  .card-list {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+`@container` 查询的是 `.content-region` 的宽度。展示区里把预览宽度切换为 `360px`，就能在不改变浏览器窗口的情况下触发这条规则。
+
+</div>
+</TabsContent>
+
+<TabsContent keepMounted value="demo">
+<div className="prose">
+
+### 拖动参数，观察重排
+
+先在宽屏下调大侧栏和区域间距，再切换到 `360px` 窄屏。注意观察：窄屏下侧栏宽度不再参与左右分栏，页面改为上下流动；同时三张卡片变成单列。
 
 </div>
 <LayoutDemo />
 </TabsContent>
 </HomeworkTabs>
+
+## 把布局问题变成验证流程
+
+布局完成不等于布局可靠。把“看起来差不多”改成几个可以在浏览器中逐项检查的条件，才能发现溢出、对齐和响应式重排的问题。
+
+<div className="prose">
+
+### 四步检查法
+
+1. **看结构**：用开发者工具检查 Grid 的行、列、区域和 Flex 的主轴，确认视觉层级没有脱离 HTML 语义。
+2. **看尺寸**：从外向内检查 margin、border、padding、content，确认宽度计算符合 `box-sizing` 的选择。
+3. **看极端内容**：输入长标题、长单词、按钮组和空状态，检查是否出现横向滚动、重叠或不可点击的控件。
+4. **看空间变化**：拖动容器宽度，验证每个 `@container` 断点是否解决了一个具体问题；再用键盘操作 Tab，确认布局变化没有隐藏焦点。
+
+### 把可调参数集中起来
+
+```css title="layout-tokens.css"
+.layout-sandbox {
+  --content-max: 72rem;
+  --space: 16px;
+  --sidebar: 160px;
+  width: min(100%, var(--content-max));
+  margin-inline: auto;
+  padding-inline: var(--space);
+}
+
+.layout-sandbox__body {
+  display: grid;
+  grid-template-columns: var(--sidebar) minmax(0, 1fr);
+  gap: var(--space);
+}
+
+@container (max-width: 560px) {
+  .layout-sandbox__body {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+把宽度和间距抽成自定义属性后，可以从实验台或调试面板统一修改；当页面出现问题时，也更容易定位是轨道、间距还是盒模型导致的。
+
+### 最终验收清单
+
+在完成一个页面后，至少确认以下结果：
+
+- 宽屏下主要区域边界清楚，主内容可以收缩。
+- Grid 负责二维区域，Flex 负责一维对齐，`gap` 表达兄弟元素间距。
+- 长内容不会撑破容器，也没有不必要的横向滚动。
+- 窄容器下布局按预期重排，所有内容仍然可见、可读、可操作。
+
+### 教程参考
+
+本章内容参考 MDN 的官方学习材料：[`CSS layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout)、[`The box model`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model)、[`Block and inline layout in normal flow`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Block_and_inline_layout)、[`Positioning`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning)、[`CSS grid layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Grids)、[`Flexbox`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Flexbox)、[`CSS container queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries) 和 [`Overflowing content`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Overflow)。可以按本章顺序继续阅读，并用浏览器开发者工具复现其中的例子。
+
+</div>

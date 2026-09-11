@@ -1,12 +1,44 @@
 # HW1 交接：网页空间布局
 
-- 路由：/hw1/；入口：src/pages/hw1/index.mdx。
-- 内容：盒模型、Grid、Flex、容器查询；教师要求“讲解 / 关键代码 / 展示”。
-- 演示：src/components/LayoutDemo.astro，使用手写示例布局，没有外部数据。可调宽窄屏、侧栏宽度、间距并重置。
-- 技术：MDX、Starwind Tabs、Expressive Code。Lucide 已安装，当前作业未使用图标。
-- 当前结构：整章一个 HomeworkTabs。用户要求这次先不改 Tab 的结构和对齐，未来可在单独任务中拆成每小节一组。
-- 文档页已改为白底，桌面预留右侧 TOC。因为所有标题位于 Tabs 内，目录为空并自动隐藏，这是预期行为。
-- 改成小节级 Tabs 时，将 Markdown h2/h3 放到 Tabs 外；各小节保持相互独立，目录自动生成。
-- 初版与 Expressive Code 接入已通过类型检查、静态构建与产物检查；未进行浏览器交互测试。
-- 下一会话先阅读 docs/HOMEWORK-HANDOFF.md。不要直接复制当前整章 Tab 结构作为后续作业模板。
-- 本轮 TOC 验证：2 项插件测试通过；临时 MDX 页面验证了真实编译、目录链接和锚点，以及 Tab 内标题排除。测试页面已删除。现有 4 个 Expressive Code 代码块保持正常。未进行浏览器交互测试。
+- 路由：`/hw1/`；入口：`src/pages/hw1/index.mdx`。
+- 主题：盒模型、正常文档流与定位、CSS Grid、Flexbox、容器查询，以及把布局问题转化为可验证的检查流程。
+- 教师要求：正文使用 MDX，按小节拆分；布局概念小节独立提供“讲解 / 关键代码 / 展示”三个 Tab，章末验证流程使用连续正文。
+- 教程参考：MDN 的 [CSS layout](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout)、[The box model](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model)、[Normal flow](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Block_and_inline_layout)、[Positioning](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning)、[CSS grid layout](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Grids)、[Flexbox](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Flexbox)、[CSS container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries) 与 [Overflowing content](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Overflow)。
+
+## 本章文件与演示
+
+- `src/pages/hw1/index.mdx`：6 个 Markdown `h2` 小节；前 5 个概念小节使用独立的 `HomeworkTabs`，最后的验证流程完全展开。
+- `src/components/BoxModelDemo.astro`：盒模型四层空间示意。
+- `src/components/FlowDemo.astro`：正常文档流与局部绝对定位对比。
+- `src/components/GridDemo.astro`：命名区域、固定侧栏与卡片 Grid 示意。
+- `src/components/FlexDemo.astro`：工具栏主轴、交叉轴和换行示意。
+- `src/components/LayoutDemo.astro`：可切换宽屏 / 360px 窄屏、可调侧栏宽度和区域间距的交互实验台。
+
+## TOC 与公共文件
+
+- 复用已配置的 `src/plugins/remark-section-toc.mjs`，不手写 `frontmatter.toc`。
+- 6 个二级标题与验证流程下的三级标题位于 `HomeworkTabs` 外，由 `TableOfContents.astro` 自动展示；不手写固定锚点编号。
+- Tab 内的讲解标题被插件递归排除，不会污染本章目录；每个 `HomeworkTabs` 没有设置共享 `syncKey`，可独立切换。
+- 更新了 `src/pages/hw1/index.mdx` 的 frontmatter 描述并新增 4 个 HW1 专属演示组件；没有修改其他作业或公共 Tab 对齐样式。
+
+## 验证
+
+- `npm run check`：通过，0 errors / 0 warnings / 0 hints。
+- `npm run build`：通过，成功生成 `/hw1/index.html` 及其余 10 个静态作业路由。
+- `node --test tests/remark-section-toc.test.mjs`：通过，2/2；产物中确认生成 10 个 TOC 条目（6 个二级标题、4 个展开的三级标题）和 5 个独立 Tab 根节点。
+- Playwright 浏览器测试：Flex 展示可从 720px 宽屏切换到 320px 窄屏并触发换行，再恢复为宽屏；按钮 `aria-pressed` 与状态文字同步更新。其余多组 Tab 的键盘方向键、TOC 滚动高亮、窄屏目录展开和隐藏演示区重新显示后的尺寸表现仍需手动确认。
+
+## 已知限制与下一步
+
+- 演示数据均为静态教学示例，不代表真实业务页面或测量结果。
+- 目前只实现本章的空间布局概念和示例，尚未连接真实数据源。
+- 如需下一步，可用浏览器检查不同宽度下的 Tab 切换、TOC 锚点与隐藏演示区再次显示时的尺寸表现。
+
+## 公共 Tab 视觉修复
+
+- 恢复了本地预览服务：排查时 4321 端口无服务，浏览器返回 ERR_CONNECTION_REFUSED；重启后 HW1 正常返回 200，未复现编译报错。
+- HomeworkTabs 内 prose 不再限宽居中；与外层左对齐，padding 调为 16px 0 4px，移除首个标题叠加的顶部 margin。
+- Tab 按钮 padding 调为 8px 0；Expressive Code 内容内边距为横向 16px、纵向 12px。
+- 浏览器检查了桌面正文、关键代码及独立 Tab 状态；桌面外层、正文和代码框左边界均为 40px，没有横向溢出。
+- 类型检查及 11 页静态构建通过。浏览器仅见 favicon.ico 缺失的 404，不影响正文；未新增站点图标。
+- 后续补验：390px 手机视口下外层正文、Tab 正文与代码框左边界均为 20px，页面 scrollWidth = 390px，没有整页横向溢出。当前 /hw1/ HTTP 响应为 200。手机截图捕获超时，不能据此声称完成手机截图视觉验收；桌面截图已查看。
