@@ -1,0 +1,12 @@
+---
+import { ExternalLink } from '@lucide/astro';
+interface Props { href: string; class?: string; }
+const { href, class: className } = Astro.props;
+---
+<a href={href} class:list={['external-link', className]} target="_blank" rel="noopener noreferrer">
+  <slot /><ExternalLink size={14} aria-hidden="true" /><span class="sr-only">（在新标签页打开）</span>
+</a>
+<style>
+  .external-link { display: inline-flex; align-items: baseline; gap: 4px; }
+  .external-link :global(svg) { flex-shrink: 0; align-self: center; }
+</style>

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { homework, href } from '../config/homework';
+import ExternalLink from '../components/ExternalLink.astro';
 interface Props { title: string; description?: string; current?: string; }
 const { title, description = '《可视化导论》课程作业：从网页基础到数据可视化。', current } = Astro.props;
 ---
@@ -10,6 +11,7 @@ const { title, description = '《可视化导论》课程作业：从网页基�
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={href('favicon.svg')} />
     <title>{title} · 可视化导论</title>
   </head>
   <body>
@@ -24,6 +26,11 @@ const { title, description = '《可视化导论》课程作业：从网页基�
           <summary>{current ? current.toUpperCase() : '首页'} · 切换作业</summary>
           <nav aria-label="移动端作业导航">{homework.map(hw => <a href={href(`${hw.id}/`)} aria-current={current === hw.id ? 'page' : undefined}>{hw.id.toUpperCase()} · {hw.title}</a>)}</nav>
         </details>
+        <nav class="site-links" aria-label="站点链接">
+          <ExternalLink href="https://starlab.top/">博客</ExternalLink>
+          <ExternalLink href="https://docs.starlab.top/">档案库</ExternalLink>
+          <a href={href('about/')} aria-current={current === 'about' ? 'page' : undefined}>About</a>
+        </nav>
       </div>
     </header>
     <main id="main"><slot /></main>

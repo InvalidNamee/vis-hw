@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { ExternalLink as ExternalLinkIcon, FolderGit2 } from '@lucide/astro';
+---
+<BaseLayout title="关于项目" current="about" description="可视化导论作业站的技术实现与内容组织。">
+  <div class="page-shell about-page">
+    <header>
+      <p class="eyebrow">ABOUT THE PROJECT</p>
+      <h1>关于这个项目</h1>
+      <p class="lead">用一个轻量的静态网站，记录《可视化导论》的学习与实践。</p>
+    </header>
+    <article class="prose">
+      <h2>一个入口，多种实验</h2>
+      <p>作业从网页布局延伸到数据可视化。每章拥有独立页面，共享导航与基础样式，正文和交互区域则根据内容自由组织。</p>
+      <h2>构建与内容</h2>
+      <p>网站使用 Astro 构建，输出可直接托管的 HTML、CSS 和 JavaScript，不依赖运行中的后端服务。作业通过 <code>/hw01/</code> 至 <code>/hw10/</code> 访问。</p>
+      <p>教程使用 MDX 编写，将文字、代码和交互组件放在同一份内容中。概念小节通过“讲解 / 关键代码 / 展示”三个标签连接原理与实践，各小节独立切换。</p>
+      <h2>界面与阅读体验</h2>
+      <p>Tailwind CSS 负责样式工具，Starwind UI 提供按需使用的交互组件。代码块由 Expressive Code 处理，支持语法高亮、文件名与复制；界面图标按需使用 Lucide。</p>
+      <p>文档目录由自定义 remark 插件在构建时提取，只收集标签页外的小节标题。目录组件负责锚点导航和阅读位置高亮，在手机上折叠显示。</p>
+      <h2>项目仓库</h2>
+      <a class="repo-card" href="https://github.com/InvalidNamee/vis-hw" target="_blank" rel="noopener noreferrer">
+        <FolderGit2 size={24} aria-hidden="true" />
+        <span class="repo-copy"><strong>InvalidNamee / vis-hw</strong><span>查看项目源码、作业内容与实现细节</span><span class="repo-host">github.com</span></span>
+        <ExternalLinkIcon size={18} aria-hidden="true" />
+        <span class="sr-only">（在新标签页打开）</span>
+      </a>
+      <h2>更多记录</h2>
+      <p>课程之外的文章与资料，可以在 <ExternalLink href="https://starlab.top/">我的博客</ExternalLink> 和 <ExternalLink href="https://docs.starlab.top/">档案库</ExternalLink> 找到。</p>
+    </article>
+  </div>
+</BaseLayout>
+<style>
+  :global(body:has(.about-page)) { background: #fff; }
+  .about-page { padding-top: 56px; }
+  .about-page .prose { max-width: 800px; margin: 0; padding-top: 32px; }
+  .prose .repo-card { display: flex; align-items: flex-start; gap: 16px; padding: 20px; margin: 16px 0 28px; border: 1px solid #e2e8f0; border-radius: 8px; text-decoration: none; color: #2563eb; background: #f8fafc; }
+  .repo-card:hover { border-color: #93b4fa; background: #eff6ff; }
+  .repo-card :global(svg) { flex-shrink: 0; margin-top: 4px; }
+  .repo-copy { display: grid; gap: 4px; flex: 1; min-width: 0; font-size: 14px; color: #475569; }
+  .repo-copy strong { font-size: 17px; overflow-wrap: anywhere; }
+  .repo-host { color: #64748b; font-size: 13px; }
+  @media (max-width: 760px) { .about-page { padding-top: 36px; } }
+</style>

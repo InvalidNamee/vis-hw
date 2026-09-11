@@ -1,24 +1,68 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { ArrowRight } from '@lucide/astro';
 import { homework, href } from '../config/homework';
+const available = homework.filter(hw => hw.ready);
 ---
 <BaseLayout title="首页">
-  <div class="page-shell">
+  <div class="page-shell home-page">
     <section class="home-intro">
-      <p class="eyebrow">VISUALIZATION / COURSEWORK</p>
-      <h1>可视化导论<span class="title-period">.</span></h1>
-      <p class="lead">从网页中的空间组织，到数据背后的规律表达。<br class="desktop-break" />这里记录每一次练习、实验与探索。</p>
-      <div class="intro-meta"><span>10 份作业</span><span>{homework.filter(hw => hw.ready).length} 份已更新</span><span>讲解 / 关键代码 / 展示</span></div>
+      <div>
+        <p class="eyebrow">课程作业与实验</p>
+        <h1>可视化导论<span class="title-period">.</span></h1>
+        <p class="lead">从网页布局到数据表达，记录每一章的原理、代码与可视化实践。</p>
+        <div class="home-actions">
+          {available[0] && <a class="start-link" href={href(`${available[0].id}/`)}>开始阅读 <ArrowRight size={16} aria-hidden="true" /></a>}
+          <a class="about-link" href={href('about/')}>关于项目</a>
+        </div>
+      </div>
+      <aside class="resource-links" aria-label="更多入口">
+        <span class="resource-label">更多记录</span>
+        <ExternalLink href="https://starlab.top/">我的博客</ExternalLink>
+        <ExternalLink href="https://docs.starlab.top/">资料档案库</ExternalLink>
+        <ExternalLink href="https://github.com/InvalidNamee/vis-hw">GitHub 仓库</ExternalLink>
+      </aside>
     </section>
     <section aria-labelledby="assignments-title">
-      <div class="section-heading"><h2 id="assignments-title">作业目录</h2><span>01 — 10</span></div>
-      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <div class="section-heading"><h2 id="assignments-title">作业目录</h2><span>{available.length} / {homework.length} 已更新</span></div>
+      <div class="assignment-grid grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {homework.map(hw => <a class:list={['assignment', { 'assignment-ready': hw.ready }]} href={href(`${hw.id}/`)}>
-          <div class="assignment-top"><span class="assignment-number">{String(hw.number).padStart(2, '0')}</span><span class:list={['badge', { 'badge-ready': hw.ready }]}>{hw.ready ? '已更新' : '待更新'}</span></div>
-          <h3>{hw.title}</h3><p>{hw.description}</p>
-          <div class="assignment-bottom"><span>{hw.id.toUpperCase()}</span><span>{hw.ready ? '查看作业' : '查看章节'}</span></div>
+          {hw.cover && <img class="assignment-cover" src={href(hw.cover)} alt={hw.coverAlt ?? ''} width="640" height="360" loading="lazy" decoding="async" />}
+          <div class="assignment-body">
+            <div class="assignment-top"><span class="assignment-id">{hw.id.toUpperCase()}</span><span class:list={['badge', { 'badge-ready': hw.ready }]}>{hw.ready ? '已更新' : '待更新'}</span></div>
+            <h3>{hw.title}</h3><p>{hw.description}</p>
+            <div class="assignment-bottom"><span>{hw.ready ? '阅读与实验' : '内容准备中'}</span><ArrowRight size={16} aria-hidden="true" /></div>
+          </div>
         </a>)}
       </div>
     </section>
   </div>
 </BaseLayout>
+<style>
+  .home-intro { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 48px; padding: 44px 0 36px; align-items: center; }
+  .home-intro h1 { font-size: clamp(32px, 4vw, 44px); margin-bottom: 16px; }
+  .home-intro .lead { font-size: 16px; max-width: 620px; }
+  .home-actions { display: flex; align-items: center; gap: 24px; margin-top: 24px; font-size: 14px; }
+  .start-link { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; background: #2563eb; color: white; border-radius: 6px; }
+  .start-link:hover { background: #1d4ed8; }
+  .about-link:hover { color: #2563eb; }
+  .resource-links { display: grid; justify-items: start; gap: 10px; border-left: 1px solid #e2e8f0; padding-left: 24px; font-size: 14px; color: #475569; }
+  .resource-links :global(a:hover) { color: #2563eb; }
+  .resource-label { font-size: 12px; color: #64748b; margin-bottom: 3px; }
+  .assignment { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .assignment-ready { border-top-width: 1px; border-color: #b6cdfb; }
+  .assignment-cover { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-bottom: 1px solid #e2e8f0; }
+  .assignment-body { display: flex; flex-direction: column; padding: 20px; flex: 1; }
+  .assignment-id { font-size: 13px; letter-spacing: .06em; color: #64748b; font-weight: 600; }
+  .assignment-ready .assignment-id { color: #2563eb; }
+  .assignment h3 { font-size: 19px; margin: 16px 0 8px; }
+  .assignment p { margin: 0 0 20px; flex: 1; font-size: 14px; }
+  .assignment-bottom { padding-top: 12px; }
+  .assignment-ready .assignment-bottom { color: #2563eb; }
+  @media (max-width: 760px) {
+    .home-intro { grid-template-columns: 1fr; gap: 24px; padding: 32px 0 24px; }
+    .resource-links { display: flex; flex-wrap: wrap; gap: 12px 20px; border-left: 0; padding-left: 0; }
+    .resource-label { width: 100%; margin: 0; }
+  }
+</style>

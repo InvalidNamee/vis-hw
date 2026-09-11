@@ -1,13 +1,11 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import { href } from '../config/homework';
 import TableOfContents, { type TocEntry } from '../components/TableOfContents.astro';
 interface Props { frontmatter: { title: string; description: string; homework: string; category?: string; toc?: TocEntry[]; }; }
 const { frontmatter } = Astro.props;
 ---
 <BaseLayout title={frontmatter.title} description={frontmatter.description} current={frontmatter.homework}>
   <div class="page-shell lesson-shell">
-    <a class="back-link" href={href()}>全部作业 / {frontmatter.homework.toUpperCase()}</a>
     <header class="lesson-heading">
       <p class="eyebrow">{frontmatter.homework.toUpperCase()} {frontmatter.category && <span>{frontmatter.category}</span>}</p>
       <h1>{frontmatter.title}</h1>
@@ -20,9 +18,14 @@ const { frontmatter } = Astro.props;
   </div>
 </BaseLayout>
 <style is:global>
+  .lesson-shell { padding-top: 32px; }
   body:has(.lesson-shell) { background: #fff; }
   .document-grid { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 48px; align-items: start; }
   .document-content { min-width: 0; }
+  .document-content .prose { max-width: none; margin: 0; padding: 16px 0 4px; text-align: left; }
+  .document-content .prose > :first-child { margin-top: 0; }
+  .document-content .prose > :last-child { margin-bottom: 0; }
+  .document-content .prose .expressive-code { margin: 14px 0; }
   .document-toc { position: sticky; top: 32px; max-height: calc(100vh - 64px); overflow-y: auto; }
   .document-content [id^="chapter-section-"] { scroll-margin-top: 32px; }
   .document-content > h2 { font-size: 26px; font-weight: 650; margin: 32px 0 16px; }
