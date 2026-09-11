@@ -3,3 +3,5 @@ dist/
 .astro/
 .sites-runtime/
 .DS_Store
+.playwright-cli/
+output/playwright/

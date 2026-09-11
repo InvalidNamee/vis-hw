@@ -13,7 +13,10 @@ export default defineConfig({
     expressiveCode({
       themes: ['github-light'],
       defaultLocale: 'zh-CN',
-      styleOverrides: { borderRadius: '0.5rem', codeFontSize: '0.875rem' },
+      styleOverrides: {
+        borderRadius: '0.5rem', codeFontSize: '0.875rem',
+        codePaddingInline: '1rem', codePaddingBlock: '0.75rem',
+      },
     }),
     mdx(),
   ],
