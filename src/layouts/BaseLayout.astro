@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import { homework, href } from '../config/homework';
 import ExternalLink from '../components/ExternalLink.astro';
-import { Moon } from '@lucide/astro';
+import ThemeSwitch from '../components/ThemeSwitch.astro';
 import { siGithub } from 'simple-icons';
 interface Props { title: string; description?: string; current?: string; }
 const { title, description = '《可视化导论》课程作业：从网页基础到数据可视化。', current } = Astro.props;
@@ -11,6 +11,15 @@ const { title, description = '《可视化导论》课程作业：从网页基�
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
+    <script is:inline>
+      (() => {
+        let saved = null;
+        try { saved = localStorage.getItem('vis-hw-theme'); } catch {}
+        const dark = saved === 'dark' || (saved !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={href('favicon.svg')} />
@@ -33,8 +42,7 @@ const { title, description = '《可视化导论》课程作业：从网页基�
           <ExternalLink href="https://starlab.top/">博客</ExternalLink>
           <ExternalLink href="https://docs.starlab.top/">档案库</ExternalLink>
           <span class="nav-divider" aria-hidden="true"></span>
-          {/* 深色模式开关：位置和样式先占位，切换逻辑尚未实现。 */}
-          <button type="button" class="theme-toggle" aria-label="切换深色模式（尚未启用）" disabled><Moon size={20} aria-hidden="true" /></button>
+          <ThemeSwitch />
           <span class="nav-divider" aria-hidden="true"></span>
           <ExternalLink href="https://github.com/InvalidNamee/vis-hw" variant="icon" label="GitHub 项目仓库">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d={siGithub.path} /></svg>

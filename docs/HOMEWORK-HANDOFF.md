@@ -20,7 +20,7 @@
 ## 新增作业
 
 1. 在 src/pages/hwNN/index.mdx 创建入口，使用下方 frontmatter。
-2. 将本章演示放到 src/components/hwNN/，数据放 public/data/hwNN/。不要覆盖其他作业的数据或组件。
+2. 将本章演示放到 src/homework/hwNN/components/，数据放 public/data/hwNN/。不要覆盖其他作业的数据或组件。
 3. 创建 src/homework/hwNN/meta.ts，统一维护 title、description、ready、cover 等元信息，并在 src/config/homework.ts 的 metadata 中注册。ready 为 true 时占位路由自动排除该章，必须同时提供真实入口。
 4. 链接与数据 URL 兼容部署 base；导航使用 src/config/homework.ts 的 href。
 5. 文档只陈述已实现的效果；数据示例注明来源，不能把示例当真实结果。
@@ -122,3 +122,12 @@ ArticleLayout 中的 `.document-content .prose` 统一控制正文：取消限�
 ### 仓库入口与品牌图标
 
 用户已确认 GitHub 品牌标志使用 Simple Icons（Lucide 当前版本不包含该标志）。公共导航最右侧通过 ExternalLink 的 icon 变体显示仓库入口；必须提供 label，统一保留新标签页辅助提示。普通界面图标继续用 Lucide。首页不再重复仓库文字入口，About 保留卡片，并通过 ArticleLayout 的 eyebrow="ABOUT" 显示蓝色标签。
+
+## 深色模式
+
+- 页头 `ThemeSwitch` 保持在档案库和 GitHub 入口之间，首次访问跟随系统，手动切换后通过 `vis-hw-theme` 保存偏好。
+- `BaseLayout` 在页面绘制前设置根元素的 `.dark` 与 `data-theme`；Expressive Code 根据相同状态切换 GitHub 明暗主题。
+- 新作业的正文和演示组件使用 `src/styles/theme.css` 中的语义颜色变量，例如 `--surface`、`--text-primary`、`--border-soft`，避免写死白色背景和深色文字。实心按钮使用 `--action` 与 `--on-action`。
+- 新增内容需检查明暗主题下的文字、交互控件与图表可读性。
+
+深色主题采用与 Expressive Code `github-dark` 协调的中性灰：正文和卡片 `#24292e`、页面底色 `#1b1f23`、抬高表面 `#2f363d`，蓝色用于链接和选中态。浅色主题保持冷灰蓝。

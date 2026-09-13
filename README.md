@@ -26,7 +26,7 @@ npm run preview
 - `src/layouts/ArticleLayout.astro`：About 与教程共用的文章排版；`DocumentLayout.astro` 从作业 ID 获取元信息。
 - `src/pages/hw01/index.mdx`：HW1 的讲解、关键代码、展示三个标签内容。
 - `src/components/HomeworkTabs.astro`：固定三标签页，可在后续 MDX 中复用。
-- `src/components/LayoutDemo.astro`：HW1 的布局实验，样式与脚本独立。
+- `src/homework/hw01/components/LayoutDemo.astro`：HW1 的布局实验，样式与脚本独立。
 - `src/pages/[homework].astro`：仅为尚未完成的作业生成占位页。
 
 新增作业时，创建并注册独立的 `meta.ts`，设置 `ready`、标题和简介，再创建对应 `src/pages/hwNN/index.mdx` 或 `index.astro`。占位路由会自动排除已完成作业，避免重复路径。大型可视化页面可直接使用 BaseLayout，不必使用文档布局。

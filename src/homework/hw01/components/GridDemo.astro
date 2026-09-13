@@ -1,0 +1,19 @@
+<grid-demo>
+  <div class="grid-demo-frame" aria-label="Grid 页面骨架演示">
+    <div class="grid-demo-header"><strong>HEADER</strong><span>跨越整行</span></div>
+    <div class="grid-demo-sidebar"><strong>ASIDE</strong><span>侧栏区域</span><span>筛选条件</span></div>
+    <div class="grid-demo-main"><strong>MAIN</strong><span>主内容区域</span><div class="grid-demo-cards"><i>内容 A</i><i>内容 B</i><i>内容 C</i></div></div>
+    <div class="grid-demo-footer"><strong>FOOTER</strong><span>跨越整行</span></div>
+  </div>
+  <p class="grid-demo-note"><code>grid-template-areas</code> 把视觉区域映射到页面结构，内层卡片 Grid 独立排列卡片，视口窄于 560px 时改为单列。</p>
+</grid-demo>
+
+<style>
+  grid-demo { display: block; margin: 12px 0 32px; padding: 24px; border: 1px solid var(--border-soft); border-radius: 8px; background: var(--surface-muted); }
+  .grid-demo-frame { display: grid; grid-template-columns: 140px minmax(0, 1fr); grid-template-areas: "header header" "sidebar main" "footer footer"; gap: 12px; max-width: 720px; margin: 0 auto; }
+  .grid-demo-frame > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; min-height: 54px; padding: 14px; border: 1px solid var(--diagram-border); border-radius: 6px; color: var(--diagram-text); font-size: 13px; }
+  .grid-demo-header { grid-area: header; background: var(--diagram-fill); }.grid-demo-sidebar { grid-area: sidebar; align-content: start; background: var(--surface-raised); }.grid-demo-main { display: block !important; grid-area: main; background: var(--accent-soft); }.grid-demo-main > span { display: block; margin-top: 3px; color: var(--text-secondary); }.grid-demo-footer { grid-area: footer; background: var(--surface-raised); }
+  .grid-demo-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }.grid-demo-cards i { display: grid; min-height: 64px; place-items: center; border: 1px solid var(--diagram-border); border-radius: 4px; background: var(--surface); color: var(--accent); font-style: normal; font-size: 12px; }
+  .grid-demo-note { max-width: 720px; margin: 14px auto 0; color: var(--text-subtle); font-size: 13px; line-height: 1.6; }.grid-demo-note code { padding: 2px 5px; border-radius: 4px; background: var(--indigo-fill); color: var(--indigo-text); }
+  @media (max-width: 560px) { grid-demo { padding: 14px; }.grid-demo-frame { grid-template-columns: 1fr; grid-template-areas: "header" "sidebar" "main" "footer"; }.grid-demo-cards { grid-template-columns: 1fr; } }
+</style>

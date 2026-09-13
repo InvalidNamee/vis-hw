@@ -1,0 +1,50 @@
+---
+import { Sun, Moon } from '@lucide/astro';
+---
+<label class="theme-switch" title="深色模式">
+  <input type="checkbox" role="switch" aria-label="深色模式" data-theme-switch />
+  <span class="switch-track" aria-hidden="true">
+    <span class="switch-thumb">
+      <Sun class="sun-icon" size={12} stroke-width={2} />
+      <Moon class="moon-icon" size={12} stroke-width={2} />
+    </span>
+  </span>
+</label>
+<script>
+  const input = document.querySelector<HTMLInputElement>('[data-theme-switch]')!;
+  const media = matchMedia('(prefers-color-scheme: dark)');
+  const key = 'vis-hw-theme';
+  let explicit: string | null = null;
+  try { explicit = localStorage.getItem(key); } catch {}
+  const apply = (dark: boolean) => {
+    document.documentElement.classList.toggle('dark', dark);
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    input.checked = dark;
+  };
+  apply(document.documentElement.classList.contains('dark'));
+  input.addEventListener('change', () => {
+    explicit = input.checked ? 'dark' : 'light';
+    apply(input.checked);
+    try { localStorage.setItem(key, explicit); } catch {}
+  });
+  media.addEventListener('change', () => {
+    if (explicit !== 'dark' && explicit !== 'light') apply(media.matches);
+  });
+  window.addEventListener('storage', event => {
+    if (event.key !== key && event.key !== null) return;
+    explicit = event.newValue;
+    apply(explicit === 'dark' || (explicit !== 'light' && media.matches));
+  });
+</script>
+<style>
+  .theme-switch { display: inline-flex; position: relative; align-items: center; width: 44px; height: 36px; cursor: pointer; flex-shrink: 0; }
+  input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .switch-track { width: 44px; height: 24px; padding: 3px; border-radius: 99px; background: var(--switch-off); pointer-events: none; transition: background .15s; }
+  .switch-thumb { display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; background: #fff; color: #475569; border-radius: 50%; transition: transform .15s; }
+  .switch-thumb :global(.moon-icon) { display: none; }
+  input:checked + .switch-track :global(.sun-icon) { display: none; }
+  input:checked + .switch-track :global(.moon-icon) { display: block; color: var(--action); }
+  input:checked + .switch-track { background: var(--action); }
+  input:checked + .switch-track .switch-thumb { transform: translateX(20px); }
+  input:focus-visible + .switch-track { outline: 3px solid var(--blue); outline-offset: 4px; }
+</style>

@@ -11,7 +11,9 @@ export default defineConfig({
   markdown: { processor: unified({ remarkPlugins: [remarkSectionToc] }) },
   integrations: [
     expressiveCode({
-      themes: ['github-light'],
+      themes: ['github-light', 'github-dark'],
+      useDarkModeMediaQuery: false,
+      themeCssSelector: theme => `[data-theme="${theme.type}"]`,
       defaultLocale: 'zh-CN',
       styleOverrides: {
         borderRadius: '0.5rem', codeFontSize: '0.875rem',

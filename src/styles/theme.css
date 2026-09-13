@@ -1,0 +1,63 @@
+:root {
+  --surface: #fff;
+  --surface-muted: #f8fafc;
+  --surface-raised: #f1f5f9;
+  --border-soft: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-emphasis: #94a3b8;
+  --text-primary: #0f172a;
+  --text-body: #334155;
+  --text-secondary: #475569;
+  --text-subtle: #64748b;
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --diagram-text: #1e40af;
+  --diagram-heading: #1e3a8a;
+  --accent-soft: #eff6ff;
+  --diagram-fill: #dbeafe;
+  --diagram-border: #bfdbfe;
+  --diagram-border-strong: #93c5fd;
+  --border-hover: #93b4fa;
+  --border-active: #b6cdfb;
+  --inline-code: #eaf0f7;
+  --demo-stage: #edf2f7;
+  --teal-fill: #ccfbf1;
+  --teal-text: #0f766e;
+  --indigo-fill: #e0e7ff;
+  --indigo-text: #3730a3;
+  --action: #2563eb; --action-hover: #1d4ed8; --on-action: #fff; --switch-off: #94a3b8;
+  color-scheme: light;
+}
+:root.dark {
+  /* Neutral grays coordinated with Expressive Code's github-dark theme. */
+  --surface: #24292e;
+  --surface-muted: #1b1f23;
+  --surface-raised: #2f363d;
+  --border-soft: #3a424a;
+  --border-strong: #586069;
+  --border-emphasis: #6a737d;
+  --text-primary: #f6f8fa;
+  --text-body: #e1e4e8;
+  --text-secondary: #c1c8cf;
+  --text-subtle: #959da5;
+  --accent: #79b8ff;
+  --accent-strong: #c8e1ff;
+  --diagram-text: #c8e1ff;
+  --diagram-heading: #dbedff;
+  --accent-soft: #253649;
+  --diagram-fill: #28415c;
+  --diagram-border: #41658a;
+  --diagram-border-strong: #6093c7;
+  --border-hover: #79b8ff;
+  --border-active: #41658a;
+  --inline-code: #2f363d;
+  --demo-stage: #1b1f23;
+  --teal-fill: #243e3b;
+  --teal-text: #85e89d;
+  --indigo-fill: #353047;
+  --indigo-text: #d1bcf9;
+  --action: #0366d6;
+  --action-hover: #0256b9;
+  --switch-off: #586069;
+  color-scheme: dark;
+}

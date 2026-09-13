@@ -40,15 +40,15 @@
 </script>
 
 <style>
-  flex-demo { display: block; margin: 12px 0 32px; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; }
-  .flex-demo-stage { min-height: 118px; padding: 12px; border-radius: 6px; background: #e2e8f0; }
+  flex-demo { display: block; margin: 12px 0 32px; padding: 24px; border: 1px solid var(--border-soft); border-radius: 8px; background: var(--surface-muted); }
+  .flex-demo-stage { min-height: 118px; padding: 12px; border-radius: 6px; background: var(--border-soft); }
   .flex-demo-viewport { width: 100%; max-width: 720px; margin: 0 auto; transition: max-width 180ms ease; }
   .flex-demo-viewport[data-size="narrow"] { max-width: 320px; }
-  .flex-demo-frame { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; padding: 18px; border: 1px solid #bfdbfe; border-radius: 6px; background: #eff6ff; }
-  .flex-demo-title { display: flex; align-items: baseline; flex: 1 1 220px; min-width: 0; gap: 12px; color: #1e40af; }.flex-demo-title strong { flex: 0 0 auto; }.flex-demo-title span { min-width: 0; overflow: hidden; color: #475569; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
-  .flex-demo-actions { display: flex; flex: 0 0 auto; gap: 8px; }.flex-demo-actions button { padding: 6px 12px; border: 1px solid #93c5fd; border-radius: 5px; background: #fff; color: #1d4ed8; font-size: 13px; }.flex-demo-actions button[aria-pressed="true"] { border-color: #2563eb; background: #2563eb; color: #fff; }
-  .flex-demo-status { max-width: 720px; margin: 12px auto 0; color: #475569; font-size: 13px; line-height: 1.6; }
-  .flex-demo-axis { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; max-width: 720px; margin: 8px auto 0; color: #64748b; font-size: 12px; }
+  .flex-demo-frame { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; padding: 18px; border: 1px solid var(--diagram-border); border-radius: 6px; background: var(--accent-soft); }
+  .flex-demo-title { display: flex; align-items: baseline; flex: 1 1 220px; min-width: 0; gap: 12px; color: var(--diagram-text); }.flex-demo-title strong { flex: 0 0 auto; }.flex-demo-title span { min-width: 0; overflow: hidden; color: var(--text-secondary); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+  .flex-demo-actions { display: flex; flex: 0 0 auto; gap: 8px; }.flex-demo-actions button { padding: 6px 12px; border: 1px solid var(--diagram-border-strong); border-radius: 5px; background: var(--surface); color: var(--accent-strong); font-size: 13px; }.flex-demo-actions button[aria-pressed="true"] { border-color: var(--accent); background: var(--action); color: var(--on-action); }
+  .flex-demo-status { max-width: 720px; margin: 12px auto 0; color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
+  .flex-demo-axis { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; max-width: 720px; margin: 8px auto 0; color: var(--text-subtle); font-size: 12px; }
   @media (max-width: 480px) { flex-demo { padding: 14px; }.flex-demo-stage { padding: 8px; }.flex-demo-title { flex-basis: 160px; } }
   @media (prefers-reduced-motion: reduce) { .flex-demo-viewport { transition: none; } }
 </style>

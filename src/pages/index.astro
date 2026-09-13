@@ -40,19 +40,19 @@ const available = homework.filter(hw => hw.ready);
   .home-intro h1 { font-size: clamp(32px, 4vw, 44px); margin-bottom: 16px; }
   .home-intro .lead { font-size: 16px; max-width: 620px; }
   .home-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; margin-top: 24px; font-size: 14px; }
-  .start-link { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; background: #2563eb; color: white; border-radius: 6px; }
-  .start-link:hover { background: #1d4ed8; }
-  .about-link:hover { color: #2563eb; }
+  .start-link { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; background: var(--action); color: var(--on-action); border-radius: 6px; }
+  .start-link:hover { background: var(--action-hover); }
+  .about-link:hover { color: var(--accent); }
   .assignment { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
-  .assignment-ready { border-top-width: 1px; border-color: #b6cdfb; }
-  .assignment-cover { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-bottom: 1px solid #e2e8f0; }
+  .assignment-ready { border-top-width: 1px; border-color: var(--border-active); }
+  .assignment-cover { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-bottom: 1px solid var(--border-soft); }
   .assignment-body { display: flex; flex-direction: column; padding: 20px; flex: 1; }
-  .assignment-id { font-size: 13px; letter-spacing: .06em; color: #64748b; font-weight: 600; }
-  .assignment-ready .assignment-id { color: #2563eb; }
+  .assignment-id { font-size: 13px; letter-spacing: .06em; color: var(--text-subtle); font-weight: 600; }
+  .assignment-ready .assignment-id { color: var(--accent); }
   .assignment h3 { font-size: 19px; margin: 16px 0 8px; }
   .assignment p { margin: 0 0 20px; flex: 1; font-size: 14px; }
   .assignment-bottom { padding-top: 12px; }
-  .assignment-ready .assignment-bottom { color: #2563eb; }
+  .assignment-ready .assignment-bottom { color: var(--accent); }
   @media (max-width: 760px) {
     .home-intro { grid-template-columns: 1fr; gap: 24px; padding: 32px 0 24px; }
   }

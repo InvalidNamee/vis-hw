@@ -19,7 +19,7 @@ const { title, description, current, eyebrow, toc = [] } = Astro.props;
 </BaseLayout>
 <style is:global>
   .lesson-shell { padding-top: 32px; }
-  body:has(.lesson-shell) { background: #fff; }
+  body:has(.lesson-shell) { background: var(--surface); }
   .document-grid { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 48px; align-items: start; }
   .document-content { min-width: 0; }
   .document-content .prose { max-width: none; margin: 0; padding: 16px 0 4px; text-align: left; }
@@ -30,7 +30,7 @@ const { title, description, current, eyebrow, toc = [] } = Astro.props;
   .document-content [id^="chapter-section-"] { scroll-margin-top: 32px; }
   .document-content > h2 { font-size: 26px; font-weight: 650; margin: 32px 0 16px; }
   .document-content > h3 { font-size: 20px; font-weight: 650; margin: 24px 0 12px; }
-  .document-content > p { line-height: 1.9; color: #334155; margin: 12px 0 20px; }
+  .document-content > p { line-height: 1.9; color: var(--text-body); margin: 12px 0 20px; }
   @media (max-width: 1023px) {
     .document-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
     .document-toc { grid-row: 1; position: static; max-height: none; }
