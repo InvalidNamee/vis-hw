@@ -75,7 +75,7 @@ import LayoutDemo from '../../components/LayoutDemo.astro';
 
 ### 观察四层空间
 
-下面的示意把一张卡片拆成 `margin → border → padding → content` 四层。这是层级示意，不按实际尺寸绘制。对照“关键代码”：当声明宽度固定为 `320px` 且使用 `border-box` 时，内边距增大会减少内容区宽度，外边距不计入声明宽度。
+下面的示意把一张卡片拆成 `margin → border → padding → content` 四层。由外向内观察：margin 位于边框之外，padding 留在边框与内容之间，content 是内容所在区域。各层仅表示包含关系，不按实际尺寸绘制。
 
 </div>
 <BoxModelDemo />
