@@ -9,7 +9,7 @@ export interface Homework {
   coverAlt?: string;
 }
 
-export const homework: Homework[] = Array.from({ length: 10 }, (_, i) => ({
+export const homework: Homework[] = Array.from({ length: 9 }, (_, i) => ({
   id: `hw${String(i + 1).padStart(2, '0')}`,
   number: i + 1,
   title: i === 0 ? '网页空间布局' : `作业 ${String(i + 1).padStart(2, '0')}`,

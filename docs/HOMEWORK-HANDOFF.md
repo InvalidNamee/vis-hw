@@ -8,7 +8,7 @@
 
 ## 已确定的约定
 
-- Astro 静态多页，路由 `/hw01/` 至 `/hw10/`；没有后端。
+- Astro 静态多页，路由 `/hw01/` 至 `/hw09/`；没有后端。
 - Tailwind CSS + Starwind 按需组件；冷灰蓝主题。首页为两列作业卡片，文档页为无外框白底。
 - 公共导航与元信息由 BaseLayout 提供。文档页可使用 DocumentLayout，大型可视化可只使用 BaseLayout。
 - 固定 Tab 名称与 value：讲解 `explanation`、关键代码 `code`、展示 `demo`。
