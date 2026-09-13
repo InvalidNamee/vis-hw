@@ -2,10 +2,10 @@
   <section class="layout-lab" aria-label="网页布局实验">
     <div class="lab-toolbar">
       <div><h2>布局实验台</h2><p>调整参数，观察内容如何分配空间。</p></div>
-      <button type="button" data-reset>重置参数</button>
+      <button type="button" data-reset>恢复默认</button>
     </div>
     <div class="lab-controls">
-      <label>预览宽度<select data-width><option value="wide">宽屏</option><option value="narrow">窄屏（360px）</option></select></label>
+      <label>预览宽度<select data-width><option value="wide">自适应宽度</option><option value="narrow">窄容器</option></select></label>
       <label>侧栏宽度 <output data-sidebar-output>160px</output><input data-sidebar type="range" min="100" max="220" step="10" value="160" /></label>
       <label>区域间距 <output data-gap-output>16px</output><input data-gap type="range" min="0" max="32" step="4" value="16" /></label>
     </div>
@@ -15,14 +15,14 @@
           <div class="example-header"><strong>HEADER</strong><span>站点标题与导航</span></div>
           <div class="example-body">
             <div class="example-sidebar"><strong>ASIDE</strong><span>筛选条件</span><span>图例说明</span></div>
-            <div class="example-main"><strong>MAIN</strong><p>主要内容区域</p><div class="example-cards"><div>内容 A</div><div>内容 B</div><div>内容 C</div></div></div>
+            <div class="example-main"><strong>MAIN</strong><p>主内容区域</p><div class="example-cards"><div>内容 A</div><div>内容 B</div><div>内容 C</div></div></div>
           </div>
           <div class="example-footer">FOOTER <span>补充信息</span></div>
         </div>
       </div>
     </div>
-    <p class="lab-status" data-status aria-live="polite">宽屏：侧栏固定宽度，主内容占据剩余空间。</p>
-    <div class="lab-note"><strong>观察重点</strong><p>窄屏下侧栏与正文改为上下排列，卡片也变为单列。拖动“区域间距”，区分元素之间的 gap 与元素内部的 padding。</p></div>
+    <p class="lab-status" data-status aria-live="polite">两列布局：侧栏固定宽度，主内容占据剩余空间。</p>
+    <div class="lab-note"><strong>观察重点</strong><p>预览宽度设为“窄容器”时，侧栏与正文改为上下排列，卡片也变为单列。拖动“区域间距”，区分元素之间的 gap 与元素内部的 padding。</p></div>
   </section>
 </layout-demo>
 
@@ -53,8 +53,8 @@
         if (!entry.contentRect.width) return;
         const narrow = entry.contentRect.width <= 560;
         this.querySelector('[data-status]')!.textContent = narrow
-          ? '窄屏：侧栏与正文上下排列，内容卡片变为单列。侧栏宽度参数暂不生效。'
-          : '宽屏：侧栏固定宽度，主内容占据剩余空间。';
+          ? '单列布局：侧栏与正文上下排列，内容卡片变为单列。侧栏宽度设置在此布局下不生效。'
+          : '两列布局：侧栏固定宽度，主内容占据剩余空间。';
       });
       observer.observe(viewport);
       this.observer = observer;

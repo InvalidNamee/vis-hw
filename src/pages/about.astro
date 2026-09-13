@@ -3,22 +3,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ExternalLink from '../components/ExternalLink.astro';
 import { ExternalLink as ExternalLinkIcon, FolderGit2 } from '@lucide/astro';
 ---
-<BaseLayout title="关于项目" current="about" description="可视化导论作业站的技术实现与内容组织。">
+<BaseLayout title="关于项目" current="about" description="可视化导论课程作业的内容组织与技术实现。">
   <div class="page-shell about-page">
     <header>
-      <p class="eyebrow">ABOUT THE PROJECT</p>
-      <h1>关于这个项目</h1>
+      <p class="eyebrow">项目说明</p>
+      <h1>关于项目</h1>
       <p class="lead">用一个轻量的静态网站，记录《可视化导论》的学习与实践。</p>
     </header>
     <article class="prose">
-      <h2>一个入口，多种实验</h2>
-      <p>作业从网页布局延伸到数据可视化。每章拥有独立页面，共享导航与基础样式，正文和交互区域则根据内容自由组织。</p>
-      <h2>构建与内容</h2>
-      <p>网站使用 Astro 构建，输出可直接托管的 HTML、CSS 和 JavaScript，不依赖运行中的后端服务。作业通过 <code>/hw01/</code> 至 <code>/hw09/</code> 访问。</p>
-      <p>教程使用 MDX 编写，将文字、代码和交互组件放在同一份内容中。概念小节通过“讲解 / 关键代码 / 展示”三个标签连接原理与实践，各小节独立切换。</p>
-      <h2>界面与阅读体验</h2>
-      <p>Tailwind CSS 负责样式工具，Starwind UI 提供按需使用的交互组件。代码块由 Expressive Code 处理，支持语法高亮、文件名与复制；界面图标按需使用 Lucide。</p>
-      <p>文档目录由自定义 remark 插件在构建时提取，只收集标签页外的小节标题。目录组件负责锚点导航和阅读位置高亮，在手机上折叠显示。</p>
+      <h2>网站内容</h2>
+      <p>作业从网页布局延伸到数据可视化。每份作业占一个独立页面，共享同一套导航和基础样式，正文与交互演示按各自的主题组织；作业通过 <code>/hw01/</code> 至 <code>/hw09/</code> 访问。</p>
+      <p>每份作业由若干小节组成。每个小节用“讲解 / 关键代码 / 展示”三个标签，把原理、代码和可以动手操作的演示放在一起，各小节独立切换；页面目录列出本章小节，并跟随阅读位置高亮。</p>
+      <h2>技术实现</h2>
+      <p>网站使用 Astro 构建，输出可直接托管的 HTML、CSS 和 JavaScript，不依赖运行中的后端服务。作业正文用 MDX 编写，文字、代码和交互组件放在同一份内容里。</p>
+      <p>样式由 Tailwind CSS 提供，交互组件按需取自 Starwind UI。代码块由 Expressive Code 渲染，支持语法高亮、文件名与复制；界面图标按需使用 Lucide。</p>
+      <p>文档目录由自定义 remark 插件在构建时提取，只收集标签页外的小节标题。目录在视口窄于 1024px 时折叠显示。</p>
       <h2>项目仓库</h2>
       <a class="repo-card" href="https://github.com/InvalidNamee/vis-hw" target="_blank" rel="noopener noreferrer">
         <FolderGit2 size={24} aria-hidden="true" />
@@ -26,8 +25,8 @@ import { ExternalLink as ExternalLinkIcon, FolderGit2 } from '@lucide/astro';
         <ExternalLinkIcon size={18} aria-hidden="true" />
         <span class="sr-only">（在新标签页打开）</span>
       </a>
-      <h2>更多记录</h2>
-      <p>课程之外的文章与资料，可以在 <ExternalLink href="https://starlab.top/">我的博客</ExternalLink> 和 <ExternalLink href="https://docs.starlab.top/">档案库</ExternalLink> 找到。</p>
+      <h2>相关链接</h2>
+      <p>本课程之外的文章与资料，可以在 <ExternalLink href="https://starlab.top/">博客</ExternalLink> 和 <ExternalLink href="https://docs.starlab.top/">档案库</ExternalLink> 找到。</p>
     </article>
   </div>
 </BaseLayout>

@@ -3,14 +3,14 @@
     <div class="flex-demo-viewport" id="flex-demo-viewport" data-size="wide">
       <div class="flex-demo-frame" aria-label="Flex 工具栏对齐演示">
         <div class="flex-demo-title"><strong>布局实验台</strong><span>标题占据剩余空间</span></div>
-        <div class="flex-demo-actions" aria-label="演示宽度">
-          <button type="button" data-size="wide" aria-controls="flex-demo-viewport" aria-pressed="true">宽屏</button>
-          <button type="button" data-size="narrow" aria-controls="flex-demo-viewport" aria-pressed="false">窄屏</button>
+        <div class="flex-demo-actions" aria-label="预览宽度">
+          <button type="button" data-size="wide" aria-controls="flex-demo-viewport" aria-pressed="true">自适应宽度</button>
+          <button type="button" data-size="narrow" aria-controls="flex-demo-viewport" aria-pressed="false">窄容器</button>
         </div>
       </div>
     </div>
   </div>
-  <p class="flex-demo-status" data-status aria-live="polite">宽屏：标题区占据剩余空间，操作按钮保持在同一行。</p>
+  <p class="flex-demo-status" data-status aria-live="polite">自适应宽度：空间充足时标题与按钮同行，空间不足时自动换行。</p>
   <div class="flex-demo-axis"><span>主轴：justify-content</span><span>交叉轴：align-items</span></div>
 </flex-demo>
 
@@ -28,8 +28,8 @@
         viewport.dataset.size = size;
         buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.size === size)));
         status.textContent = narrow
-          ? '窄屏：标题区和操作区分成两行，按钮保持自身宽度。'
-          : '宽屏：标题区占据剩余空间，操作按钮保持在同一行。';
+          ? '窄容器：预览宽度限制为最大 320px，标题与按钮根据可用空间换行。'
+          : '自适应宽度：空间充足时标题与按钮同行，空间不足时自动换行。';
       };
 
       buttons.forEach(button => button.addEventListener('click', () => setSize(button.dataset.size ?? 'wide')));

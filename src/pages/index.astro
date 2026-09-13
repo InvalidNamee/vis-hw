@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ExternalLink from '../components/ExternalLink.astro';
 import { ArrowRight } from '@lucide/astro';
-import { homework, href } from '../config/homework';
+import { homework, href, displayName } from '../config/homework';
 const available = homework.filter(hw => hw.ready);
 ---
 <BaseLayout title="首页">
@@ -13,28 +13,31 @@ const available = homework.filter(hw => hw.ready);
         <h1>可视化导论<span class="title-period">.</span></h1>
         <p class="lead">从网页布局到数据表达，记录每一章的原理、代码与可视化实践。</p>
         <div class="home-actions">
-          {available[0] && <a class="start-link" href={href(`${available[0].id}/`)}>开始阅读 <ArrowRight size={16} aria-hidden="true" /></a>}
+          {available[0] && <a class="start-link" href={href(`${available[0].id}/`)}>查看 {available[0].id.toUpperCase()} · {displayName(available[0])} <ArrowRight size={16} aria-hidden="true" /></a>}
           <a class="about-link" href={href('about/')}>关于项目</a>
         </div>
       </div>
-      <aside class="resource-links" aria-label="更多入口">
-        <span class="resource-label">更多记录</span>
-        <ExternalLink href="https://starlab.top/">我的博客</ExternalLink>
-        <ExternalLink href="https://docs.starlab.top/">资料档案库</ExternalLink>
-        <ExternalLink href="https://github.com/InvalidNamee/vis-hw">GitHub 仓库</ExternalLink>
+      <aside class="resource-links" aria-label="相关链接">
+        <span class="resource-label">相关链接</span>
+        <ExternalLink href="https://starlab.top/">博客</ExternalLink>
+        <ExternalLink href="https://docs.starlab.top/">档案库</ExternalLink>
+        <ExternalLink href="https://github.com/InvalidNamee/vis-hw">项目仓库</ExternalLink>
       </aside>
     </section>
     <section aria-labelledby="assignments-title">
-      <div class="section-heading"><h2 id="assignments-title">作业目录</h2><span>{available.length} / {homework.length} 已更新</span></div>
+      <div class="section-heading"><h2 id="assignments-title">作业目录</h2><span>已添加 {available.length} 份，共 {homework.length} 份</span></div>
       <div class="assignment-grid grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {homework.map(hw => <a class:list={['assignment', { 'assignment-ready': hw.ready }]} href={href(`${hw.id}/`)}>
-          {hw.cover && <img class="assignment-cover" src={href(hw.cover)} alt={hw.coverAlt ?? ''} width="640" height="360" loading="lazy" decoding="async" />}
-          <div class="assignment-body">
-            <div class="assignment-top"><span class="assignment-id">{hw.id.toUpperCase()}</span><span class:list={['badge', { 'badge-ready': hw.ready }]}>{hw.ready ? '已更新' : '待更新'}</span></div>
-            <h3>{hw.title}</h3><p>{hw.description}</p>
-            <div class="assignment-bottom"><span>{hw.ready ? '阅读与实验' : '内容准备中'}</span><ArrowRight size={16} aria-hidden="true" /></div>
-          </div>
-        </a>)}
+        {homework.map(hw => {
+          const Card = hw.ready ? 'a' : 'div';
+          return <Card class:list={['assignment', { 'assignment-ready': hw.ready }]} {...(hw.ready ? { href: href(`${hw.id}/`) } : {})}>
+            {hw.cover && <img class="assignment-cover" src={href(hw.cover)} alt={hw.coverAlt ?? ''} width="640" height="360" loading="lazy" decoding="async" />}
+            <div class="assignment-body">
+              <div class="assignment-top"><span class="assignment-id">{hw.id.toUpperCase()}</span><span class:list={['badge', { 'badge-ready': hw.ready }]}>{hw.ready ? '可查看' : '未添加'}</span></div>
+              <h3>{displayName(hw)}</h3><p>{hw.description}</p>
+              {hw.ready && <div class="assignment-bottom"><span>查看作业</span><ArrowRight size={16} aria-hidden="true" /></div>}
+            </div>
+          </Card>;
+        })}
       </div>
     </section>
   </div>
@@ -43,7 +46,7 @@ const available = homework.filter(hw => hw.ready);
   .home-intro { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 48px; padding: 44px 0 36px; align-items: center; }
   .home-intro h1 { font-size: clamp(32px, 4vw, 44px); margin-bottom: 16px; }
   .home-intro .lead { font-size: 16px; max-width: 620px; }
-  .home-actions { display: flex; align-items: center; gap: 24px; margin-top: 24px; font-size: 14px; }
+  .home-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; margin-top: 24px; font-size: 14px; }
   .start-link { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; background: #2563eb; color: white; border-radius: 6px; }
   .start-link:hover { background: #1d4ed8; }
   .about-link:hover { color: #2563eb; }

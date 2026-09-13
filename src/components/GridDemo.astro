@@ -1,11 +1,11 @@
 <grid-demo>
   <div class="grid-demo-frame" aria-label="Grid 页面骨架演示">
-    <div class="grid-demo-header"><strong>HEADER</strong><span>跨越两列</span></div>
-    <div class="grid-demo-sidebar"><strong>ASIDE</strong><span>固定轨道</span><span>筛选条件</span></div>
-    <div class="grid-demo-main"><strong>MAIN</strong><span>剩余空间</span><div class="grid-demo-cards"><i>内容 A</i><i>内容 B</i><i>内容 C</i></div></div>
-    <div class="grid-demo-footer"><strong>FOOTER</strong><span>跨越两列</span></div>
+    <div class="grid-demo-header"><strong>HEADER</strong><span>跨越整行</span></div>
+    <div class="grid-demo-sidebar"><strong>ASIDE</strong><span>侧栏区域</span><span>筛选条件</span></div>
+    <div class="grid-demo-main"><strong>MAIN</strong><span>主内容区域</span><div class="grid-demo-cards"><i>内容 A</i><i>内容 B</i><i>内容 C</i></div></div>
+    <div class="grid-demo-footer"><strong>FOOTER</strong><span>跨越整行</span></div>
   </div>
-  <p class="grid-demo-note"><code>grid-template-areas</code> 把视觉区域映射到页面结构，内层卡片 Grid 再独立管理三列。</p>
+  <p class="grid-demo-note"><code>grid-template-areas</code> 把视觉区域映射到页面结构，内层卡片 Grid 独立排列卡片，视口窄于 560px 时改为单列。</p>
 </grid-demo>
 
 <style>

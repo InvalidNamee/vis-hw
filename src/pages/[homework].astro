@@ -1,16 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { homework, href } from '../config/homework';
+import { homework, href, displayName } from '../config/homework';
 export function getStaticPaths() {
   return homework.filter(hw => !hw.ready).map(hw => ({ params: { homework: hw.id }, props: { hw } }));
 }
 const { hw } = Astro.props;
 ---
-<BaseLayout title={hw.title} current={hw.id}>
+<BaseLayout title={displayName(hw)} current={hw.id}>
   <div class="page-shell placeholder-page">
-    <p class="eyebrow">{hw.id.toUpperCase()}</p>
-    <h1>{hw.title}</h1>
-    <p class="lead">本章作业尚未更新。</p>
+    <h1>{displayName(hw)}</h1>
+    <p class="lead">本次作业内容尚未添加。</p>
     <a class="text-button" href={href()}>返回作业目录</a>
   </div>
 </BaseLayout>

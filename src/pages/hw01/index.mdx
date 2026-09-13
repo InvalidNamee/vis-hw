@@ -3,7 +3,7 @@ layout: ../../layouts/DocumentLayout.astro
 title: 网页空间布局
 description: 从盒模型出发，用 Grid 和 Flex 组织页面，再用容器查询完成自适应重排。
 homework: hw01
-category: Layout
+category: 网页布局
 ---
 
 import HomeworkTabs from '../../components/HomeworkTabs.astro';
@@ -78,7 +78,7 @@ import LayoutDemo from '../../components/LayoutDemo.astro';
 
 ### 观察四层空间
 
-下面的示意把一张卡片拆成 `margin → border → padding → content` 四层。重点观察：改变内部留白不会改变 `border-box` 的总宽度，外部的 margin 仍然留在盒子之外。
+下面的示意把一张卡片拆成 `margin → border → padding → content` 四层。这是层级示意，不按实际尺寸绘制。对照“关键代码”：当声明宽度固定为 `320px` 且使用 `border-box` 时，内边距增大会减少内容区宽度，外边距不计入声明宽度。
 
 </div>
 <BoxModelDemo />
@@ -149,7 +149,7 @@ import LayoutDemo from '../../components/LayoutDemo.astro';
 
 ### 对比流内排列与局部叠加
 
-左侧的标题、正文和操作区按正常流依次占位；右侧只有角标绝对定位在卡片右上角，正文仍按原顺序排列。
+“正常流”示例中的标题、正文和操作区依次占位；“局部定位”示例只有角标绝对定位在卡片右上角，正文仍按原顺序排列。
 
 </div>
 <FlowDemo />
@@ -226,7 +226,7 @@ Grid 主要负责“区域之间如何占空间”，不是用来替代 HTML 语
 
 ### 观察行、列与区域
 
-这个示例用命名区域搭出一个真实页面：页头和页脚跨越整行，侧栏占固定轨道，主内容与三张卡片占据剩余空间。
+这个页面结构示例使用两列：页头和页脚跨越整行，侧栏占固定轨道，主内容中排列三张卡片。视口窄于 560px 时改为单列。
 
 </div>
 <GridDemo />
@@ -260,12 +260,12 @@ Grid 和 Flex 可以嵌套：Grid 负责页面的大区域，Flex 负责区域�
 ```html title="toolbar.html"
 <div class="toolbar">
   <div class="toolbar-title">
-    <strong>布局实验</strong>
-    <span>当前视图：宽屏</span>
+    <strong>布局实验台</strong>
+    <span>标题占据剩余空间</span>
   </div>
   <div class="toolbar-actions">
-    <button type="button">重置</button>
-    <button type="button">保存</button>
+    <button type="button">自适应宽度</button>
+    <button type="button">窄容器</button>
   </div>
 </div>
 ```
@@ -302,7 +302,7 @@ Grid 和 Flex 可以嵌套：Grid 负责页面的大区域，Flex 负责区域�
 
 ### 观察主轴上的剩余空间
 
-示例把标题区和操作区放在同一条 Flex 轴上。点击“窄屏”缩小展示区后，`flex-wrap` 允许操作区换到下一行，内容不会因为强行保持一行而溢出；点击“宽屏”可以恢复初始布局。
+示例把标题区和操作区放在同一条 Flex 轴上。点击“窄容器”缩小展示区后，`flex-wrap` 允许操作区换到下一行，内容不会因为强行保持一行而溢出；点击“自适应宽度”可以恢复展示区的可用宽度；空间充足时，标题与按钮回到同一行。
 
 </div>
 <FlexDemo />
@@ -357,7 +357,7 @@ Grid 和 Flex 可以嵌套：Grid 负责页面的大区域，Flex 负责区域�
 }
 ```
 
-`@container` 查询的是 `.content-region` 的宽度。展示区里把预览宽度切换为 `360px`，就能在不改变浏览器窗口的情况下触发这条规则。
+`@container` 查询的是 `.content-region` 的宽度。展示区里把预览宽度设为“窄容器”，容器宽度变为 `360px`，小于 `560px` 的断点，就能在不改变浏览器窗口的情况下触发这条规则。
 
 </div>
 </TabsContent>
@@ -367,7 +367,7 @@ Grid 和 Flex 可以嵌套：Grid 负责页面的大区域，Flex 负责区域�
 
 ### 拖动参数，观察重排
 
-先在宽屏下调大侧栏和区域间距，再切换到 `360px` 窄屏。注意观察：窄屏下侧栏宽度不再参与左右分栏，页面改为上下流动；同时三张卡片变成单列。
+先把侧栏和区域间距调大，再把预览宽度设为“窄容器”。注意观察：预览宽度收窄后，侧栏宽度不再参与左右分栏，页面改为上下流动，三张卡片也变为单列。
 
 </div>
 <LayoutDemo />
@@ -418,7 +418,7 @@ Grid 和 Flex 可以嵌套：Grid 负责页面的大区域，Flex 负责区域�
 
 在完成一个页面后，至少确认以下结果：
 
-- 宽屏下主要区域边界清楚，主内容可以收缩。
+- 视口较宽时主要区域边界清楚，主内容可以收缩。
 - Grid 负责二维区域，Flex 负责一维对齐，`gap` 表达兄弟元素间距。
 - 长内容不会撑破容器，也没有不必要的横向滚动。
 - 窄容器下布局按预期重排，所有内容仍然可见、可读、可操作。
