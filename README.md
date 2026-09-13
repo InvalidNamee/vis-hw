@@ -21,15 +21,15 @@ npm run preview
 
 ## 内容组织
 
-- `src/config/homework.ts`：首页及导航共用的作业信息。
+- `src/homework/hwNN/meta.ts`：每章唯一的标题、简介、状态和封面配置；`src/config/homework.ts` 汇总并提供 getHomework。
 - `src/layouts/BaseLayout.astro`：导航、页面元信息与公共外壳。
-- `src/layouts/DocumentLayout.astro`：可选的文档标题与内容容器。
+- `src/layouts/ArticleLayout.astro`：About 与教程共用的文章排版；`DocumentLayout.astro` 从作业 ID 获取元信息。
 - `src/pages/hw01/index.mdx`：HW1 的讲解、关键代码、展示三个标签内容。
 - `src/components/HomeworkTabs.astro`：固定三标签页，可在后续 MDX 中复用。
 - `src/components/LayoutDemo.astro`：HW1 的布局实验，样式与脚本独立。
 - `src/pages/[homework].astro`：仅为尚未完成的作业生成占位页。
 
-新增作业时，先将其 `ready` 设为 `true`、更新标题和简介，再创建对应 `src/pages/hwNN/index.mdx` 或 `index.astro`。占位路由会自动排除已完成作业，避免重复路径。大型可视化页面可直接使用 BaseLayout，不必使用文档布局。
+新增作业时，创建并注册独立的 `meta.ts`，设置 `ready`、标题和简介，再创建对应 `src/pages/hwNN/index.mdx` 或 `index.astro`。占位路由会自动排除已完成作业，避免重复路径。大型可视化页面可直接使用 BaseLayout，不必使用文档布局。
 
 三标签中的内容写在 MDX 的 `TabsContent` 内；交互演示作为独立 Astro 组件导入。全站为冷灰蓝浅色主题，不使用 emoji。后续图标统一使用已安装的 `@lucide/astro`，按需导入，不全量加载。
 

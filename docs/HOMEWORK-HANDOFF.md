@@ -21,7 +21,7 @@
 
 1. 在 src/pages/hwNN/index.mdx 创建入口，使用下方 frontmatter。
 2. 将本章演示放到 src/components/hwNN/，数据放 public/data/hwNN/。不要覆盖其他作业的数据或组件。
-3. 更新 src/config/homework.ts 中本章 title、description 和 ready。ready 为 true 时占位路由自动排除该章，必须同时提供真实入口。
+3. 创建 src/homework/hwNN/meta.ts，统一维护 title、description、ready、cover 等元信息，并在 src/config/homework.ts 的 metadata 中注册。ready 为 true 时占位路由自动排除该章，必须同时提供真实入口。
 4. 链接与数据 URL 兼容部署 base；导航使用 src/config/homework.ts 的 href。
 5. 文档只陈述已实现的效果；数据示例注明来源，不能把示例当真实结果。
 
@@ -32,10 +32,7 @@
 ````mdx
 ---
 layout: ../../layouts/DocumentLayout.astro
-title: 本章标题
-description: 本章简介
 homework: hw02
-category: 可选分类
 ---
 
 import HomeworkTabs from '../../components/HomeworkTabs.astro';
@@ -105,10 +102,23 @@ import { TabsContent } from '../../components/starwind/tabs';
 
 ## 文档正文统一排版
 
-DocumentLayout 中的 `.document-content .prose` 统一控制正文：取消限宽居中，使用左对齐和 `16px 0 4px` 内边距，移除首尾多余 margin，并统一代码块间距。此规则同时覆盖普通 MDX 正文和 Tab 内正文；HomeworkTabs 只负责标签栏及面板，不单独定义 prose 排版。所有使用 DocumentLayout 的作业自动继承。
+ArticleLayout 中的 `.document-content .prose` 统一控制正文：取消限宽居中，使用左对齐和 `16px 0 4px` 内边距，移除首尾多余 margin，并统一代码块间距。此规则同时覆盖普通 MDX 正文和 Tab 内正文；HomeworkTabs 只负责标签栏及面板，不单独定义 prose 排版。所有使用 DocumentLayout 的作业自动继承。
 
 ## 首页入口与章节封面
 
-首页桌面三列、平板两列、手机单列。作业配置可选 `cover`（相对 public/ 的图片路径，例如 covers/hw01.webp）和 `coverAlt`；添加实际图片文件后即可显示 16:9 封面，没有封面时不显示图片占位。入口统一来自 homework.ts；首页提供开始阅读、About、博客、档案库与仓库链接。
+首页桌面三列、平板两列、手机单列。作业配置可选 `cover`（相对 public/ 的图片路径，例如 covers/hw01.webp）和 `coverAlt`；添加实际图片文件后即可显示 16:9 封面，没有封面时不显示图片占位。入口统一来自 homework.ts；首页简介下提供作业主入口、关于与仓库链接；博客和档案库仅保留在公共导航。
 
 文档页已删除“全部作业 / HWxx”面包屑，保留编号、标题和简介；返回首页使用公共导航的课程名称。
+
+## 单一元信息源与公共文章布局
+
+- 每份作业的 src/homework/hwNN/meta.ts 与内容框架无关；不要再次在 MDX frontmatter 写 title、description、category。
+- MDX frontmatter 只需 layout 和 homework；DocumentLayout 使用 getHomework(id) 读取元信息，缺少有效配置时构建报错。TOC 仍由插件生成。
+- 非 MDX 的 Astro 页面也从 src/config/homework.ts 导入 getHomework，使用同一标题和简介传给 BaseLayout；其内部可自由使用其他交互框架。
+- ArticleLayout 提供统一白底、标题、简介、正文和右侧目录布局；DocumentLayout 是作业元信息适配层，About 直接使用 ArticleLayout。
+- 文档 eyebrow 仅保留作业编号，不显示与标题重复的分类。
+- 仓库卡片使用 ExternalLink 的 variant="card"；所有新标签页属性、Lucide 外链图标和辅助提示由该组件维护，调用方只写内容。
+
+### 仓库入口与品牌图标
+
+用户已确认 GitHub 品牌标志使用 Simple Icons（Lucide 当前版本不包含该标志）。公共导航最右侧通过 ExternalLink 的 icon 变体显示仓库入口；必须提供 label，统一保留新标签页辅助提示。普通界面图标继续用 Lucide。首页不再重复仓库文字入口，About 保留卡片，并通过 ArticleLayout 的 eyebrow="ABOUT" 显示蓝色标签。

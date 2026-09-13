@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import { homework, href } from '../config/homework';
 import ExternalLink from '../components/ExternalLink.astro';
+import { Moon } from '@lucide/astro';
+import { siGithub } from 'simple-icons';
 interface Props { title: string; description?: string; current?: string; }
 const { title, description = '《可视化导论》课程作业：从网页基础到数据可视化。', current } = Astro.props;
 ---
@@ -27,9 +29,16 @@ const { title, description = '《可视化导论》课程作业：从网页基�
           <nav aria-label="移动端作业导航">{homework.map(hw => <a href={href(`${hw.id}/`)} aria-current={current === hw.id ? 'page' : undefined}>{hw.title ? `${hw.id.toUpperCase()} · ${hw.title}` : hw.id.toUpperCase()}</a>)}</nav>
         </details>
         <nav class="site-links" aria-label="站点链接">
+          <a href={href('about/')} aria-current={current === 'about' ? 'page' : undefined}>关于</a>
           <ExternalLink href="https://starlab.top/">博客</ExternalLink>
           <ExternalLink href="https://docs.starlab.top/">档案库</ExternalLink>
-          <a href={href('about/')} aria-current={current === 'about' ? 'page' : undefined}>关于项目</a>
+          <span class="nav-divider" aria-hidden="true"></span>
+          {/* 深色模式开关：位置和样式先占位，切换逻辑尚未实现。 */}
+          <button type="button" class="theme-toggle" aria-label="切换深色模式（尚未启用）" disabled><Moon size={20} aria-hidden="true" /></button>
+          <span class="nav-divider" aria-hidden="true"></span>
+          <ExternalLink href="https://github.com/InvalidNamee/vis-hw" variant="icon" label="GitHub 项目仓库">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d={siGithub.path} /></svg>
+          </ExternalLink>
         </nav>
       </div>
     </header>

@@ -1,39 +1,11 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import TableOfContents, { type TocEntry } from '../components/TableOfContents.astro';
-interface Props { frontmatter: { title: string; description: string; homework: string; category?: string; toc?: TocEntry[]; }; }
+import ArticleLayout from './ArticleLayout.astro';
+import { getHomework } from '../config/homework';
+import type { TocEntry } from '../components/TableOfContents.astro';
+interface Props { frontmatter: { homework: string; toc?: TocEntry[]; }; }
 const { frontmatter } = Astro.props;
+const hw = getHomework(frontmatter.homework);
 ---
-<BaseLayout title={frontmatter.title} description={frontmatter.description} current={frontmatter.homework}>
-  <div class="page-shell lesson-shell">
-    <header class="lesson-heading">
-      <p class="eyebrow">{frontmatter.homework.toUpperCase()} {frontmatter.category && <span>{frontmatter.category}</span>}</p>
-      <h1>{frontmatter.title}</h1>
-      <p class="lead">{frontmatter.description}</p>
-    </header>
-    <div class="document-grid">
-      <div class="document-content"><slot /></div>
-      <aside class="document-toc"><TableOfContents entries={frontmatter.toc ?? []} /></aside>
-    </div>
-  </div>
-</BaseLayout>
-<style is:global>
-  .lesson-shell { padding-top: 32px; }
-  body:has(.lesson-shell) { background: #fff; }
-  .document-grid { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 48px; align-items: start; }
-  .document-content { min-width: 0; }
-  .document-content .prose { max-width: none; margin: 0; padding: 16px 0 4px; text-align: left; }
-  .document-content .prose > :first-child { margin-top: 0; }
-  .document-content .prose > :last-child { margin-bottom: 0; }
-  .document-content .prose .expressive-code { margin: 14px 0; }
-  .document-toc { position: sticky; top: 32px; max-height: calc(100vh - 64px); overflow-y: auto; }
-  .document-content [id^="chapter-section-"] { scroll-margin-top: 32px; }
-  .document-content > h2 { font-size: 26px; font-weight: 650; margin: 32px 0 16px; }
-  .document-content > h3 { font-size: 20px; font-weight: 650; margin: 24px 0 12px; }
-  .document-content > p { line-height: 1.9; color: #334155; margin: 12px 0 20px; }
-  @media (max-width: 1023px) {
-    .document-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-    .document-toc { grid-row: 1; position: static; max-height: none; }
-    .document-toc:not(:has(chapter-toc)) { display: none; }
-  }
-</style>
+<ArticleLayout title={hw.title} description={hw.description} current={hw.id} eyebrow={hw.id.toUpperCase()} toc={frontmatter.toc}>
+  <slot />
+</ArticleLayout>

@@ -1,12 +1,17 @@
 ---
 import { ExternalLink } from '@lucide/astro';
-interface Props { href: string; class?: string; }
-const { href, class: className } = Astro.props;
+interface Props { href: string; class?: string; variant?: 'inline' | 'card' | 'icon'; label?: string; }
+const { href, class: className, variant = 'inline', label } = Astro.props;
 ---
-<a href={href} class:list={['external-link', className]} target="_blank" rel="noopener noreferrer">
-  <slot /><ExternalLink size={14} aria-hidden="true" /><span class="sr-only">（在新标签页打开）</span>
+<a href={href} title={label} class:list={['external-link', { 'external-card': variant === 'card', 'external-icon': variant === 'icon' }, className]} target="_blank" rel="noopener noreferrer">
+  <slot />{variant !== 'icon' && <ExternalLink size={variant === 'card' ? 18 : 14} aria-hidden="true" />}<span class="sr-only">{variant === 'icon' && label}（在新标签页打开）</span>
 </a>
 <style>
   .external-link { display: inline-flex; align-items: baseline; gap: 4px; }
   .external-link :global(svg) { flex-shrink: 0; align-self: center; }
+  .external-link.external-icon { display: inline-flex; justify-content: center; align-items: center; width: 36px; height: 36px; border-radius: 6px; }
+  .external-icon:hover { background: #eff6ff; color: #2563eb; }
+  .external-link.external-card { display: grid; grid-template-columns: 24px minmax(0, 1fr) 18px; align-items: start; width: 100%; gap: 16px; padding: 20px; margin: 16px 0 28px; border: 1px solid #e2e8f0; border-radius: 8px; text-decoration: none; color: #2563eb; background: #f8fafc; }
+  .external-card:hover { border-color: #93b4fa; background: #eff6ff; }
+  .external-card :global(svg) { align-self: flex-start; margin-top: 4px; }
 </style>
