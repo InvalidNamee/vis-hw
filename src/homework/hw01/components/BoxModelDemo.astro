@@ -1,20 +1,24 @@
+---
+import { translator } from '../../../i18n';
+const t = translator(Astro.url);
+---
 <box-model-demo>
   <figure class="box-model-figure" aria-labelledby="box-model-caption">
     <div class="margin-layer">
-      <span class="layer-label margin-label">margin · 外边距</span>
+      <span class="layer-label margin-label">{t("margin · 外边距")}</span>
       <div class="border-layer">
-        <span class="layer-label border-label">border · 边框</span>
+        <span class="layer-label border-label">{t("border · 边框")}</span>
         <div class="padding-layer">
-          <span class="layer-label padding-label">padding · 内边距</span>
-          <div class="content-layer">content<br /><small>内容区</small></div>
+          <span class="layer-label padding-label">{t("padding · 内边距")}</span>
+          <div class="content-layer">content<br /><small>{t("内容区")}</small></div>
         </div>
       </div>
     </div>
-    <figcaption id="box-model-caption">盒模型层级示意（非等比例）：margin → border → padding → content</figcaption>
+    <figcaption id="box-model-caption">{t("盒模型层级示意（非等比例）：margin → border → padding → content")}</figcaption>
   </figure>
-  <div class="box-model-notes" aria-label="盒模型尺寸说明">
-    <div><strong>可见盒子</strong><span>border-box = content + padding + border</span></div>
-    <div><strong>盒外距离</strong><span>margin 位于边框外，不计入声明宽度</span></div>
+  <div class="box-model-notes" aria-label={t("盒模型尺寸说明")}>
+    <div><strong>{t("可见盒子")}</strong><span>border-box = content + padding + border</span></div>
+    <div><strong>{t("盒外距离")}</strong><span>{t("margin 位于边框外，不计入声明宽度")}</span></div>
   </div>
 </box-model-demo>
 

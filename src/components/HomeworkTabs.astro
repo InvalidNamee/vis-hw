@@ -1,12 +1,14 @@
 ---
+import { translator } from '../i18n';
+const t = translator(Astro.url);
 import { Tabs, TabsList, TabsTrigger } from './starwind/tabs';
 ---
 <div class="homework-tabs">
   <Tabs defaultValue="explanation">
-    <TabsList aria-label="作业内容">
-      <TabsTrigger value="explanation">讲解</TabsTrigger>
-      <TabsTrigger value="code">关键代码</TabsTrigger>
-      <TabsTrigger value="demo">展示</TabsTrigger>
+    <TabsList aria-label={t("作业内容")}>
+      <TabsTrigger value="explanation">{t("讲解")}</TabsTrigger>
+      <TabsTrigger value="code">{t("关键代码")}</TabsTrigger>
+      <TabsTrigger value="demo">{t("展示")}</TabsTrigger>
     </TabsList>
     <slot />
   </Tabs>

@@ -1,10 +1,12 @@
 ---
+import { translator } from '../i18n';
+const t = translator(Astro.url);
 import { ExternalLink } from '@lucide/astro';
 interface Props { href: string; class?: string; variant?: 'inline' | 'card' | 'icon'; label?: string; }
 const { href, class: className, variant = 'inline', label } = Astro.props;
 ---
 <a href={href} title={label} class:list={['external-link', { 'external-card': variant === 'card', 'external-icon': variant === 'icon' }, className]} target="_blank" rel="noopener noreferrer">
-  <slot />{variant !== 'icon' && <ExternalLink size={variant === 'card' ? 18 : 14} aria-hidden="true" />}<span class="sr-only">{variant === 'icon' && label}（在新标签页打开）</span>
+  <slot />{variant !== 'icon' && <ExternalLink size={variant === 'card' ? 18 : 14} aria-hidden="true" />}<span class="sr-only">{variant === 'icon' && label}{t("（在新标签页打开）")}</span>
 </a>
 <style>
   .external-link { display: inline-flex; align-items: baseline; gap: 4px; }

@@ -1,24 +1,28 @@
+---
+import { translator } from '../../../i18n';
+const t = translator(Astro.url);
+---
 <flow-demo>
-  <div class="flow-demo-grid" aria-label="正常文档流与绝对定位对比">
+  <div class="flow-demo-grid" aria-label={t("正常文档流与绝对定位对比")}>
     <figure>
-      <figcaption><strong>正常流</strong><span>每个盒子依次占位</span></figcaption>
+      <figcaption><strong>{t("正常流")}</strong><span>{t("每个盒子依次占位")}</span></figcaption>
       <div class="flow-card normal-flow-card">
-        <div>标题</div>
-        <div>正文自然撑开高度</div>
-        <div>操作区</div>
+        <div>{t("标题")}</div>
+        <div>{t("正文自然撑开高度")}</div>
+        <div>{t("操作区")}</div>
       </div>
     </figure>
     <figure>
-      <figcaption><strong>局部定位</strong><span>只有角标脱离正常流</span></figcaption>
+      <figcaption><strong>{t("局部定位")}</strong><span>{t("只有角标脱离正常流")}</span></figcaption>
       <div class="flow-card positioned-card">
         <b>NEW</b>
-        <div>标题</div>
-        <div>正文仍然依次占位</div>
-        <div>操作区</div>
+        <div>{t("标题")}</div>
+        <div>{t("正文仍然依次占位")}</div>
+        <div>{t("操作区")}</div>
       </div>
     </figure>
   </div>
-  <p>定位改变的是局部叠加关系，不应替代正文的自然流动。</p>
+  <p>{t("定位改变的是局部叠加关系，不应替代正文的自然流动。")}</p>
 </flow-demo>
 
 <style>

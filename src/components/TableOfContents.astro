@@ -1,12 +1,14 @@
 ---
+import { translator } from '../i18n';
+const t = translator(Astro.url);
 export interface TocEntry { depth: number; text: string; id: string; }
 interface Props { entries: TocEntry[]; }
 const { entries } = Astro.props;
 ---
 {entries.length >= 2 && <chapter-toc>
   <details open>
-    <summary>本章目录</summary>
-    <nav aria-label="本章目录">
+    <summary>{t("本章目录")}</summary>
+    <nav aria-label={t("本章目录")}>
       <ol>{entries.map(entry => <li class:list={{ nested: entry.depth === 3 }}><a href={`#${entry.id}`}>{entry.text}</a></li>)}</ol>
     </nav>
   </details>

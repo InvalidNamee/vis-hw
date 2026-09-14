@@ -1,4 +1,6 @@
 ---
+import { translator } from '../i18n';
+const t = translator(Astro.url);
 import ArticleLayout from './ArticleLayout.astro';
 import { getHomework } from '../config/homework';
 import type { TocEntry } from '../components/TableOfContents.astro';
@@ -6,6 +8,6 @@ interface Props { frontmatter: { homework: string; toc?: TocEntry[]; }; }
 const { frontmatter } = Astro.props;
 const hw = getHomework(frontmatter.homework);
 ---
-<ArticleLayout title={hw.title} description={hw.description} current={hw.id} eyebrow={hw.id.toUpperCase()} toc={frontmatter.toc}>
+<ArticleLayout title={t(hw.title)} description={t(hw.description)} current={hw.id} eyebrow={hw.id.toUpperCase()} toc={frontmatter.toc}>
   <slot />
 </ArticleLayout>

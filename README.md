@@ -44,3 +44,11 @@ Lucide 已安装供后续界面使用，例如在 Astro 的 frontmatter 中 `imp
 每份作业的新会话先读 [作业开发与交接指南](docs/HOMEWORK-HANDOFF.md)，其中包含可直接复制的提示词、小节级三标签 MDX 模板与验证要求。当前作业状态见 [HW1 交接](docs/hw01.md)。
 
 文档页使用白底并预留右侧目录。自定义 remark 插件在构建时采集 Tab 外的 Markdown h2/h3，TableOfContents 组件负责展示、锚点与阅读位置高亮。目录少于两项时隐藏；当前 HW1 保留原有整章 Tab 结构，因此暂不显示目录。
+
+## 中英文内容
+
+- 中文沿用 `/`、`/about/`、`/hw01/` 等地址；英文使用 `/en/` 前缀。
+- 导航的「中文 / EN」切换到同一页面，并保留查询参数与章节锚点；站内导航沿用当前语言。
+- 通用界面文案位于 `src/i18n/index.ts`，首页、关于和占位页共用 `src/views/` 中的页面组件。
+- HW01 英文全文位于 `src/pages/en/hw01/index.mdx`，与中文共用交互组件。修改章节结构时需同步两份 MDX，保证目录锚点对应。
+- 验证：`npm run check && npm run build && node --test tests/*.test.mjs`。构建测试检查双语路由、内部链接、英文文案和章节对应关系。

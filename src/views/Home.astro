@@ -1,0 +1,62 @@
+---
+import { translator, localeFromUrl, localizedHref, homeworkName } from '../i18n';
+const t = translator(Astro.url);
+const locale = localeFromUrl(Astro.url);
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ArrowRight } from '@lucide/astro';
+import { homework, href } from '../config/homework';
+const available = homework.filter(hw => hw.ready);
+---
+<BaseLayout title={t("首页")}>
+  <div class="page-shell home-page">
+    <section class="home-intro">
+      <div>
+        <p class="eyebrow">{t("课程作业与实验")}</p>
+        <h1>{t("可视化导论")}<span class="title-period">.</span></h1>
+        <p class="lead">{t("从网页布局到数据表达，记录每一章的原理、代码与可视化实践。")}</p>
+        <div class="home-actions">
+          {available[0] && <a class="start-link" href={localizedHref(`${available[0].id}/`, locale)}>{locale === "en" ? "View" : "查看"} {available[0].id.toUpperCase()} · {homeworkName(available[0], locale)} <ArrowRight size={16} aria-hidden="true" /></a>}
+          <a class="about-link" href={localizedHref('about/', locale)}>{t("关于")}</a>
+        </div>
+      </div>
+    </section>
+    <section aria-labelledby="assignments-title">
+      <div class="section-heading"><h2 id="assignments-title">{t("作业目录")}</h2><span>{locale === "en" ? `${available.length} of ${homework.length} added` : `已添加 ${available.length} 份，共 ${homework.length} 份`}</span></div>
+      <div class="assignment-grid grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {homework.map(hw => {
+          const Card = hw.ready ? 'a' : 'div';
+          return <Card class:list={['assignment', { 'assignment-ready': hw.ready }]} {...(hw.ready ? { href: localizedHref(`${hw.id}/`, locale) } : {})}>
+            {hw.cover && <img class="assignment-cover" src={href(hw.cover)} alt={hw.coverAlt ?? ''} width="640" height="360" loading="lazy" decoding="async" />}
+            <div class="assignment-body">
+              <div class="assignment-top"><span class="assignment-id">{hw.id.toUpperCase()}</span><span class:list={['badge', { 'badge-ready': hw.ready }]}>{hw.ready ? t("可查看") : t("未添加")}</span></div>
+              <h3>{homeworkName(hw, locale)}</h3><p>{t(hw.description)}</p>
+              {hw.ready && <div class="assignment-bottom"><span>{t("查看作业")}</span><ArrowRight size={16} aria-hidden="true" /></div>}
+            </div>
+          </Card>;
+        })}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+<style>
+  .home-intro { padding: 44px 0 36px; }
+  .home-intro h1 { font-size: clamp(32px, 4vw, 44px); margin-bottom: 16px; }
+  .home-intro .lead { font-size: 16px; max-width: 620px; }
+  .home-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; margin-top: 24px; font-size: 14px; }
+  .start-link { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; background: var(--action); color: var(--on-action); border-radius: 6px; }
+  .start-link:hover { background: var(--action-hover); }
+  .about-link:hover { color: var(--accent); }
+  .assignment { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .assignment-ready { border-top-width: 1px; border-color: var(--border-active); }
+  .assignment-cover { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-bottom: 1px solid var(--border-soft); }
+  .assignment-body { display: flex; flex-direction: column; padding: 20px; flex: 1; }
+  .assignment-id { font-size: 13px; letter-spacing: .06em; color: var(--text-subtle); font-weight: 600; }
+  .assignment-ready .assignment-id { color: var(--accent); }
+  .assignment h3 { font-size: 19px; margin: 16px 0 8px; }
+  .assignment p { margin: 0 0 20px; flex: 1; font-size: 14px; }
+  .assignment-bottom { padding-top: 12px; }
+  .assignment-ready .assignment-bottom { color: var(--accent); }
+  @media (max-width: 760px) {
+    .home-intro { grid-template-columns: 1fr; gap: 24px; padding: 32px 0 24px; }
+  }
+</style>

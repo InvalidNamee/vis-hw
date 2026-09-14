@@ -1,6 +1,6 @@
 ---
-import Page from '../views/Placeholder.astro';
-import { homework } from '../config/homework';
+import Page from '../../views/Placeholder.astro';
+import { homework } from '../../config/homework';
 export function getStaticPaths() {
   return homework.filter(hw => !hw.ready).map(hw => ({ params: { homework: hw.id }, props: { hw } }));
 }

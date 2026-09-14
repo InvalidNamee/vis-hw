@@ -1,8 +1,10 @@
 ---
+import { translator } from '../i18n';
+const t = translator(Astro.url);
 import { Sun, Moon } from '@lucide/astro';
 ---
-<label class="theme-switch" title="深色模式">
-  <input type="checkbox" role="switch" aria-label="深色模式" data-theme-switch />
+<label class="theme-switch" title={t("深色模式")}>
+  <input type="checkbox" role="switch" aria-label={t("深色模式")} data-theme-switch />
   <span class="switch-track" aria-hidden="true">
     <span class="switch-thumb">
       <Sun class="sun-icon" size={12} stroke-width={2} />

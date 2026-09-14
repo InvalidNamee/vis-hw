@@ -1,0 +1,15 @@
+---
+import { translator, localeFromUrl, localizedHref, homeworkName } from '../i18n';
+const t = translator(Astro.url);
+const locale = localeFromUrl(Astro.url);
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { hw } = Astro.props;
+---
+<BaseLayout title={homeworkName(hw, locale)} current={hw.id}>
+  <div class="page-shell placeholder-page">
+    <h1>{homeworkName(hw, locale)}</h1>
+    <p class="lead">{t("本次作业内容尚未添加。")}</p>
+    <a class="text-button" href={localizedHref("", locale)}>{t("返回作业目录")}</a>
+  </div>
+</BaseLayout>
