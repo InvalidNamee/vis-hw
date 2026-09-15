@@ -8,17 +8,13 @@ const page = Astro.url.pathname.slice(base.length).replace(/^\/(?:en(?:\/|$))?/,
   <a href={localizedHref(page, 'zh-CN')} lang="zh-CN" hreflang="zh-CN" aria-current={locale === 'zh-CN' ? 'true' : undefined}>中文</a>
   <a href={localizedHref(page, 'en')} lang="en" hreflang="en" aria-current={locale === 'en' ? 'true' : undefined}>EN</a>
 </div>
+<span class="language-status" role="status" data-language-status></span>
 <script>
-  const syncLinks = () => document.querySelectorAll<HTMLAnchorElement>('.language-switch a').forEach(link => {
-    const target = new URL(link.href);
-    target.search = location.search;
-    target.hash = location.hash;
-    link.href = target.href;
-  });
-  syncLinks();
-  window.addEventListener('hashchange', syncLinks);
+  import '../i18n/switch-language';
 </script>
 <style>
+  .language-status:empty { display: none; }
+  .language-status { position: absolute; right: 20px; top: 100%; z-index: 60; max-width: calc(100vw - 40px); padding: 10px 14px; border: 1px solid var(--border-soft); border-radius: 6px; background: var(--surface); color: var(--text-primary); white-space: normal; }
   .language-switch { display: inline-flex; flex-shrink: 0; border: 1px solid var(--border-soft); border-radius: 6px; padding: 2px; gap: 2px; }
   a { padding: 4px 7px; border-radius: 4px; font-size: 12px; line-height: 1.5; }
   a[aria-current] { background: var(--accent-soft); color: var(--accent-strong); font-weight: 650; }

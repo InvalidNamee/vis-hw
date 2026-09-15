@@ -33,12 +33,12 @@ const { title, description = t("《可视化导论》课程作业：从网页基
     <a class="skip-link" href="#main">{t("跳到正文")}</a>
     <header class="site-header">
       <div class="nav-shell">
-        <a class="brand" href={localizedHref("", locale)} aria-current={!current ? 'page' : undefined}>{t("可视化导论")}</a>
+        <a class="brand" href={localizedHref("", locale)} aria-current={!current ? 'page' : undefined}>{locale === "en" ? "Visualization" : t("可视化导论")}</a>
         <nav class="desktop-nav" aria-label={t("作业导航")}>
           {homework.map(hw => <a href={localizedHref(`${hw.id}/`, locale)} aria-current={current === hw.id ? 'page' : undefined}>{hw.id.toUpperCase()}</a>)}
         </nav>
         <details class="mobile-nav">
-          <summary>{current?.startsWith("hw") ? `${current.toUpperCase()} · ${t("切换作业")}` : t("选择作业")}</summary>
+          <summary>{current?.startsWith("hw") ? `${current.toUpperCase()} · ${t("作业目录")}` : t("作业目录")}</summary>
           <nav aria-label={t("移动端作业导航")}>{homework.map(hw => <a href={localizedHref(`${hw.id}/`, locale)} aria-current={current === hw.id ? 'page' : undefined}>{hw.title ? `${hw.id.toUpperCase()} · ${t(hw.title)}` : hw.id.toUpperCase()}</a>)}</nav>
         </details>
         <nav class="site-links" aria-label={t("站点链接")}>
@@ -55,6 +55,14 @@ const { title, description = t("《可视化导论》课程作业：从网页基
         </nav>
       </div>
     </header>
+    <script is:inline>
+      (() => {
+        const header = document.querySelector('.site-header');
+        const syncHeight = () => document.documentElement.style.setProperty('--site-header-height', `${header.getBoundingClientRect().height}px`);
+        syncHeight();
+        new ResizeObserver(syncHeight).observe(header);
+      })();
+    </script>
     <main id="main"><slot /></main>
     <footer class="site-footer"><span>{t("可视化导论")}</span><span>{t("观察 · 理解 · 表达")}</span></footer>
   </body>

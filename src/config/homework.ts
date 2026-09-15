@@ -8,7 +8,7 @@ export interface Homework extends Omit<HomeworkMeta, 'title'> {
 }
 
 const metadata: Partial<Record<string, HomeworkMeta>> = { hw01 };
-export const homework: Homework[] = Array.from({ length: 9 }, (_, i) => {
+export const homework: Homework[] = Array.from({ length: 6 }, (_, i) => {
   const id = `hw${String(i + 1).padStart(2, '0')}`;
   return {
     id,
