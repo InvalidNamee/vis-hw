@@ -3,26 +3,26 @@ import { translator } from '../../../i18n';
 const t = translator(Astro.url);
 ---
 <flow-demo>
-  <div class="flow-demo-grid" aria-label={t("正常文档流与绝对定位对比")}>
+  <div class="flow-demo-grid" aria-label={t("作品卡片的正常流与局部定位对比")}>
     <figure>
-      <figcaption><strong>{t("正常流")}</strong><span>{t("每个盒子依次占位")}</span></figcaption>
+      <figcaption><strong>{t("卡片内容保持正常流")}</strong><span>{t("标题、摘要与入口依次占位")}</span></figcaption>
       <div class="flow-card normal-flow-card">
-        <div>{t("标题")}</div>
-        <div>{t("正文自然撑开高度")}</div>
-        <div>{t("操作区")}</div>
+        <div>{t("城市热岛地图")}</div>
+        <div>{t("比较温度与绿地覆盖率")}</div>
+        <div>{t("查看作品")}</div>
       </div>
     </figure>
     <figure>
-      <figcaption><strong>{t("局部定位")}</strong><span>{t("只有角标脱离正常流")}</span></figcaption>
+      <figcaption><strong>{t("只定位作品角标")}</strong><span>{t("角标脱离正常流，卡片内容保持占位")}</span></figcaption>
       <div class="flow-card positioned-card">
         <b>NEW</b>
-        <div>{t("标题")}</div>
-        <div>{t("正文仍然依次占位")}</div>
-        <div>{t("操作区")}</div>
+        <div>{t("城市热岛地图")}</div>
+        <div>{t("比较温度与绿地覆盖率")}</div>
+        <div>{t("查看作品")}</div>
       </div>
     </figure>
   </div>
-  <p>{t("定位改变的是局部叠加关系，不应替代正文的自然流动。")}</p>
+  <p>{t("作品角标可以局部叠加，标题、摘要和入口仍应自然撑开卡片。")}</p>
 </flow-demo>
 
 <style>

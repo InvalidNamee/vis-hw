@@ -3,9 +3,9 @@ import { translator } from '../../../i18n';
 const t = translator(Astro.url);
 ---
 <layout-demo>
-  <section class="layout-lab" aria-label={t("网页布局实验")}>
+  <section class="layout-lab" aria-label={t("课程作品浏览页布局实验")}>
     <div class="lab-toolbar">
-      <div><h2>{t("布局实验台")}</h2><p>{t("调整参数，观察内容如何分配空间。")}</p></div>
+      <div><h2>{t("作品浏览页布局实验")}</h2><p>{t("调整筛选侧栏、区域间距和内边距，完成案例的响应式布局。")}</p></div>
       <button type="button" data-reset>{t("恢复默认")}</button>
     </div>
     <div class="lab-controls">
@@ -17,17 +17,17 @@ const t = translator(Astro.url);
     <div class="preview-stage">
       <div class="preview-viewport" data-viewport>
         <div class="example-page" data-example>
-          <div class="example-header"><strong>HEADER</strong><span>{t("站点标题与导航")}</span></div>
+          <div class="example-header"><strong>HEADER</strong><span>{t("可视化课程作品库 · 课程导航")}</span></div>
           <div class="example-body">
-            <div class="example-sidebar"><strong>ASIDE</strong><span>{t("筛选条件")}</span><span>{t("图例说明")}</span></div>
-            <div class="example-main"><strong>MAIN</strong><p>{t("主内容区域")}</p><div class="example-cards"><div>{t("内容 A")}</div><div>{t("内容 B")}</div><div>{t("内容 C")}</div></div></div>
+            <div class="example-sidebar"><strong>ASIDE</strong><span>{t("筛选作品")}</span><span>{t("主题 · 年份")}</span></div>
+            <div class="example-main"><strong>MAIN</strong><p>{t("课程作品")}</p><div class="example-cards"><div>{t("城市热岛")}</div><div>{t("通勤流向")}</div><div>{t("空气质量")}</div></div></div>
           </div>
-          <div class="example-footer">FOOTER <span>{t("补充信息")}</span></div>
+          <div class="example-footer">FOOTER <span>{t("课程说明与数据来源")}</span></div>
         </div>
       </div>
     </div>
-    <p class="lab-status" data-status aria-live="polite">{t("两列布局：侧栏固定宽度，主内容占据剩余空间。")}</p>
-    <div class="lab-note"><strong>{t("观察重点")}</strong><p>{t("预览宽度设为“窄容器”时，侧栏与正文改为上下排列，卡片也变为单列。分别拖动“区域间距”和“区域内边距”：前者改变区域之间的空隙，后者改变内容与区域边界之间的留白。")}</p></div>
+    <p class="lab-status" data-status aria-live="polite">{t("作品页两列布局：筛选侧栏固定宽度，作品区占据剩余空间。")}</p>
+    <div class="lab-note"><strong>{t("案例目标")}</strong><p>{t("先调整筛选侧栏、区域间距和区域内边距，再选择“窄容器”。确认筛选项移到作品列表上方，三张作品卡片改为单列，并且内容没有被裁切。")}</p></div>
   </section>
 </layout-demo>
 
@@ -64,8 +64,8 @@ const t = translator(Astro.url);
         if (!entry.contentRect.width) return;
         const narrow = entry.contentRect.width <= 560;
         this.querySelector('[data-status]')!.textContent = narrow
-          ? t("单列布局：侧栏与正文上下排列，内容卡片变为单列。侧栏宽度设置在此布局下不生效。")
-          : t("两列布局：侧栏固定宽度，主内容占据剩余空间。");
+          ? t("作品页单列布局：筛选项位于作品列表上方，作品卡片逐张排列；侧栏宽度设置暂不生效。")
+          : t("作品页两列布局：筛选侧栏固定宽度，作品区占据剩余空间。");
       });
       observer.observe(viewport);
       this.observer = observer;

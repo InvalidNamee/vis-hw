@@ -3,13 +3,13 @@ import { translator } from '../../../i18n';
 const t = translator(Astro.url);
 ---
 <grid-demo>
-  <div class="grid-demo-frame" aria-label={t("Grid 页面骨架演示")}>
-    <div class="grid-demo-header"><strong>HEADER</strong><span>{t("跨越整行")}</span></div>
-    <div class="grid-demo-sidebar"><strong>ASIDE</strong><span>{t("侧栏区域")}</span><span>{t("筛选条件")}</span></div>
-    <div class="grid-demo-main"><strong>MAIN</strong><span>{t("主内容区域")}</span><div class="grid-demo-cards"><i>{t("内容 A")}</i><i>{t("内容 B")}</i><i>{t("内容 C")}</i></div></div>
-    <div class="grid-demo-footer"><strong>FOOTER</strong><span>{t("跨越整行")}</span></div>
+  <div class="grid-demo-frame" aria-label={t("课程作品浏览页 Grid 骨架演示")}>
+    <div class="grid-demo-header"><strong>HEADER</strong><span>{t("可视化课程作品库 · 课程导航")}</span></div>
+    <div class="grid-demo-sidebar"><strong>ASIDE</strong><span>{t("筛选作品")}</span><span>{t("主题 · 年份")}</span></div>
+    <div class="grid-demo-main"><strong>MAIN</strong><span>{t("课程作品")}</span><div class="grid-demo-cards"><i>{t("城市热岛")}</i><i>{t("通勤流向")}</i><i>{t("空气质量")}</i></div></div>
+    <div class="grid-demo-footer"><strong>FOOTER</strong><span>{t("课程说明与数据来源")}</span></div>
   </div>
-  <p class="grid-demo-note"><code>grid-template-areas</code> {t("把视觉区域映射到页面结构，内层卡片 Grid 独立排列卡片，视口窄于 560px 时改为单列。")}</p>
+  <p class="grid-demo-note"><code>grid-template-areas</code> {t("把案例的页头、筛选侧栏、作品区与页脚映射到页面结构，内层 Grid 再排列作品卡片。")}</p>
 </grid-demo>
 
 <style>

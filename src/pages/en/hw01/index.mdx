@@ -11,31 +11,39 @@ import GridDemo from '../../../homework/hw01/components/GridDemo.astro';
 import FlexDemo from '../../../homework/hw01/components/FlexDemo.astro';
 import LayoutDemo from '../../../homework/hw01/components/LayoutDemo.astro';
 
-Web layout answers three questions: How much space does an element occupy? How are multiple elements arranged? How is space redistributed when a container becomes narrower? This chapter follows the sequence “calculate sizes → understand flow → define regions → align content → adapt the layout → verify” to turn these questions into CSS rules you can inspect and change.
+Web layout answers three questions: How much space does an element occupy? How are multiple elements arranged? How is space redistributed when a container becomes narrower? Instead of using unrelated examples, the following six steps build one visualization course project gallery.
 
-Each layout concept has its own “Explanation / Key code / Demo” tabs. Read the explanation, compare it with the code, then adjust parameters or inspect the structure in the demo. The final verification section is presented as continuous text so you can work through it from start to finish.
+<div className="prose">
 
-## Start with the box model: calculate the space
+> **Case brief: a gallery for visualization course projects**
+>
+> We are creating a gallery for a visualization course. Students move between sections in the header, filter by topic and year in the sidebar, browse projects such as Urban Heat, Commuting Flows, and Air Quality in the main region, and find course notes and data sources in the footer. The page can stand alone or be embedded in a narrow course platform, so it must rearrange itself as its container changes.
 
-The box is the smallest unit of layout. Distinguishing content, padding, border, and margin makes width calculations predictable instead of a matter of guesswork.
+</div>
+
+The six steps develop the same page in sequence: create a predictably sized project card, preserve its content flow while positioning a badge, build the page with Grid, arrange the project toolbar with Flexbox, add container queries, and verify the result. The first five steps use independent “Explanation / Key code / Demo” tabs; the sixth connects all the results.
+
+## Step 1: define the project card box model
+
+Begin with the case’s smallest repeated unit: a project card. Separating content, padding, border, and card spacing prevents the later three-column layout from overflowing because of incorrect size calculations.
 
 <HomeworkTabs>
 <TabsContent keepMounted value="explanation">
 <div className="prose">
 
-### Inner and outer space
+### Allocate space to the first project card
 
-A block-level element has four layers, from inside out: `content` holds text or child elements, `padding` is the inner space between content and border, `border` is the visible boundary, and `margin` is the outer distance between this box and other boxes.
+A project card has four layers from inside out: `content` holds the title and summary, `padding` creates breathing room inside the boundary, `border` marks the visible edge, and `margin` separates the card from external elements.
 
-The most common source of confusion is `width`. With the default `content-box`, padding and borders are added to the declared width. With `border-box`, they are included in it. Projects commonly set `box-sizing: border-box` globally so the declared width matches the visible width more closely.
+The default `content-box` adds padding and borders outside the declared width. With `border-box`, they are included. This case applies `box-sizing: border-box` so the card width in CSS matches the visible width.
 
-Both `padding` and `margin` create space, but they serve different purposes: padding separates content from its boundary, while margin separates boxes. For consistent spacing between Grid or Flex items, prefer `gap` over individual margins.
+Use `padding` inside each card and let the Grid’s `gap` control consistent space between cards. Project titles may be long, so Grid items must also be allowed to shrink instead of forcing the page wider.
 
-### A reusable decision process
+### Decision order for this step
 
-1. Decide how wide the element’s **visible box** should be, then choose `border-box` or calculate the content width separately.
-2. Determine whether the space belongs inside the box (`padding`) or outside it (`margin` / `gap`).
-3. If content may be long, use `min-width: 0` on Grid items so their minimum content size does not force the parent to overflow horizontally.
+1. Set the project card’s visible width and use `border-box`.
+2. Use `padding` inside cards and `gap` between cards.
+3. Use `min-width: 0` where long titles must be able to shrink.
 
 </div>
 </TabsContent>
@@ -43,29 +51,28 @@ Both `padding` and `margin` create space, but they serve different purposes: pad
 <TabsContent keepMounted value="code">
 <div className="prose">
 
-### Build a box with predictable dimensions
+### Write a predictably sized project card
 
-```html locale="en-US" title="box-model.html"
-<article class="card">
-  <h2>A predictable card</h2>
-  <p>Content, padding, and borders make up the visible box.</p>
+```html locale="en-US" title="project-card.html"
+<article class="project-card">
+  <h2>Urban Heat Island Map</h2>
+  <p>Compare temperature and green-space coverage.</p>
 </article>
 ```
 
-```css locale="en-US" title="box-model.css"
+```css locale="en-US" title="project-card.css"
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-.card {
+.project-card {
   width: 320px;
   padding: 20px;
   border: 2px solid #93c5fd;
-  margin: 24px;
 }
 ```
 
-In this example, the card’s visible width is `320px`. The content area automatically subtracts the left and right padding and borders. Margin sits outside the visible box and only occupies external space. Removing `box-sizing: border-box` restores `content-box`, making the visible width `364px` (`320 + 40 + 4`).
+The card’s visible width is `320px`; the content area automatically subtracts horizontal padding and borders. With the default `content-box`, the visible width becomes `364px` (`320 + 40 + 4`), making the future three-column layout more likely to exceed its intended width.
 
 </div>
 </TabsContent>
@@ -73,34 +80,34 @@ In this example, the card’s visible width is `320px`. The content area automat
 <TabsContent keepMounted value="demo">
 <div className="prose">
 
-### Inspect the four layers
+### Inspect the project card’s four layers
 
-The diagram separates a card into `margin → border → padding → content`. Moving inward, margin is outside the border, padding sits between the border and content, and content is the innermost area. The layers show containment and are not drawn to scale.
+The diagram separates the card into `margin → border → padding → content`. It shows containment rather than actual scale. Confirm which layers the declared width includes and that spacing between cards sits outside the border. This step produces a predictably sized base card.
 
 </div>
 <BoxModelDemo />
 </TabsContent>
 </HomeworkTabs>
 
-## Understand normal flow before choosing positioning
+## Step 2: keep card content in normal flow
 
-Even without Grid, Flexbox, or positioning rules, the browser arranges content in normal document flow. Building a readable structure with that default flow before choosing another layout mode is usually more robust than fixing elements to coordinates from the start.
+With predictable dimensions in place, add the project title, summary, and link. They should take space in sequence and determine the card’s height; only the “NEW” badge needs to overlay the top-right corner.
 
 <HomeworkTabs>
 <TabsContent keepMounted value="explanation">
 <div className="prose">
 
-### The default layout already has an order
+### Let the main content flow naturally
 
-In normal flow, block boxes follow one another along the block axis and usually fill the container’s available inline width. Inline boxes flow with text on the same line and wrap when space runs out. `display: grid` and `display: flex` establish new layout modes inside a container, while the container itself remains in the surrounding document flow.
+In normal flow, block boxes follow the block axis and inline content wraps when space runs out. The case card uses `position: relative` to establish a positioning context without losing its place. Its badge uses `position: absolute` and leaves normal flow.
 
-`position: relative` preserves the element’s original space and often establishes the containing block for absolutely positioned children. `position: absolute` and `fixed` remove elements from normal flow, so surrounding content no longer reserves room for them. Absolute positioning therefore suits badges, floating panels, and local overlays; it is a poor foundation for body content and sidebars.
+The title, summary, and “View project” link remain unpositioned, so they still determine the card’s height. Absolute positioning suits this local overlay; it is not a sound foundation for the entire header, sidebar, or project region.
 
-`position: sticky` suits tables of contents and toolbars: an element moves with the document until it reaches a specified threshold, then stays within its container’s bounds. With any positioning method, check overlaps, scrolling containers, and whether keyboard focus remains visible.
+As summaries grow, cards should grow naturally. Give only genuine scrolling regions explicit size constraints and `overflow: auto`. Do not hide errors with `overflow: hidden`, which can clip text and keyboard focus.
 
-### Let content determine height
+### Positioning rule for this step
 
-Avoid fixed heights for body content where possible. A box naturally grows as its text gets longer. If a scrolling region is necessary, use explicit size constraints and `overflow: auto`. Do not hide layout errors with `overflow: hidden`, which can clip both text and focusable controls.
+Keep structural content in normal flow and position only status information that needs no reserved space. Then check that the badge does not cover the heading and that keyboard focus remains visible.
 
 </div>
 </TabsContent>
@@ -108,35 +115,31 @@ Avoid fixed heights for body content where possible. A box naturally grows as it
 <TabsContent keepMounted value="code">
 <div className="prose">
 
-### Take only the badge out of normal flow
+### Take only the project badge out of normal flow
 
-```html locale="en-US" title="positioned-card.html"
-<article class="card">
-  <span class="card-badge">NEW</span>
-  <h2>Course announcement</h2>
-  <p>The body stays in normal flow and determines the card’s height.</p>
+```html locale="en-US" title="positioned-project-card.html"
+<article class="project-card">
+  <span class="project-card__badge">NEW</span>
+  <h2>Urban Heat Island Map</h2>
+  <p>Compare temperature and green-space coverage.</p>
+  <a href="#urban-heat">View project</a>
 </article>
 ```
 
-```css locale="en-US" title="positioned-card.css"
-.card {
+```css locale="en-US" title="positioned-project-card.css"
+.project-card {
   position: relative;
   padding: 24px;
 }
 
-.card-badge {
+.project-card__badge {
   position: absolute;
   inset-block-start: 12px;
   inset-inline-end: 12px;
 }
-
-.scroll-region {
-  max-width: 100%;
-  overflow-x: auto;
-}
 ```
 
-The parent’s `position: relative` establishes the positioning context while preserving its place in normal flow. Only the badge leaves the flow; the heading and body still expand the card naturally.
+The parent stays in normal flow; only the badge leaves it. The title, summary, and link take space in sequence and naturally make the project card taller when its summary grows.
 
 </div>
 </TabsContent>
@@ -144,30 +147,30 @@ The parent’s `position: relative` establishes the positioning context while pr
 <TabsContent keepMounted value="demo">
 <div className="prose">
 
-### Compare flow and local overlays
+### Compare two treatments of the project card
 
-In “Normal flow,” the heading, body, and actions each occupy space in sequence. In “Local positioning,” only the badge is absolutely positioned in the card’s top-right corner; the body keeps its original order.
+The left card keeps every item in normal flow. The right card positions only the project badge in its top-right corner. This step confirms that a local overlay does not change the title, summary, and link order or remove the card’s natural height.
 
 </div>
 <FlowDemo />
 </TabsContent>
 </HomeworkTabs>
 
-## Build the page structure with Grid
+## Step 3: build the project gallery with Grid
 
-When a layout involves both rows and columns, CSS Grid places page regions on a shared two-dimensional grid. Define the page structure first, then nest smaller grids inside the main content to keep the hierarchy clearer than a stack of margin adjustments.
+Now place the stable card inside the complete page. The case needs a header, filter sidebar, project region, and footer, while the project region itself contains three cards. This two-dimensional relationship is a good fit for Grid.
 
 <HomeworkTabs>
 <TabsContent keepMounted value="explanation">
 <div className="prose">
 
-### Describe space as tracks
+### Describe the case regions as tracks
 
-A Grid container consists of rows, columns, and gutters (gaps). `grid-template-columns: 160px minmax(0, 1fr)` gives the sidebar a fixed `160px` track and lets the main content fill the remaining space. The `0` in `minmax(0, 1fr)` explicitly allows the main column to shrink, a useful way to prevent overflow from long headings, code blocks, and tables.
+The outer Grid uses `160px minmax(0, 1fr)`: the filter sidebar has a fixed `160px` track and the project region fills the rest. The `0` in `minmax(0, 1fr)` lets the main track shrink so long project titles do not force the whole page wider.
 
-Use `grid-template-areas` when page regions have clear roles: `header`, `sidebar`, `main`, and `footer` express the layout directly. For repeated cards, `repeat()` and `minmax()` are often a better way to describe repeated columns.
+Because the case regions have clear roles, `grid-template-areas` names `header`, `sidebar`, `main`, and `footer`. A nested Grid in the project region uses `repeat(3, minmax(0, 1fr))` for the three cards.
 
-Grid distributes space between regions; it does not replace HTML semantics. Keep structural elements such as `header`, `aside`, `main`, and `footer`, and use CSS Grid to control their visual positions.
+Grid distributes space; it does not replace HTML semantics. Keep `header`, `aside`, `main`, and `footer` in the document and use CSS to control their visual arrangement.
 
 </div>
 </TabsContent>
@@ -175,25 +178,25 @@ Grid distributes space between regions; it does not replace HTML semantics. Keep
 <TabsContent keepMounted value="code">
 <div className="prose">
 
-### Build a structure with named areas
+### Combine the header, filters, and project region
 
-```html locale="en-US" title="page.html"
-<div class="page">
-  <header class="page-header">Site title and navigation</header>
-  <aside class="page-sidebar">Filters and notes</aside>
-  <main class="page-main">
-    <div class="cards">
-      <article>Content A</article>
-      <article>Content B</article>
-      <article>Content C</article>
+```html locale="en-US" title="project-gallery.html"
+<div class="project-gallery">
+  <header class="gallery-header">Visualization Project Gallery · Course navigation</header>
+  <aside class="gallery-sidebar">Filter projects by topic and year</aside>
+  <main class="gallery-main">
+    <div class="project-grid">
+      <article>Urban Heat</article>
+      <article>Commuting Flows</article>
+      <article>Air Quality</article>
     </div>
   </main>
-  <footer class="page-footer">Additional information</footer>
+  <footer class="gallery-footer">Course notes and data sources</footer>
 </div>
 ```
 
-```css locale="en-US" title="page.css"
-.page {
+```css locale="en-US" title="project-gallery.css"
+.project-gallery {
   display: grid;
   grid-template-columns: 160px minmax(0, 1fr);
   grid-template-areas:
@@ -203,12 +206,12 @@ Grid distributes space between regions; it does not replace HTML semantics. Keep
   gap: 16px;
 }
 
-.page-header { grid-area: header; }
-.page-sidebar { grid-area: sidebar; }
-.page-main { grid-area: main; min-width: 0; }
-.page-footer { grid-area: footer; }
+.gallery-header { grid-area: header; }
+.gallery-sidebar { grid-area: sidebar; }
+.gallery-main { grid-area: main; min-width: 0; }
+.gallery-footer { grid-area: footer; }
 
-.cards {
+.project-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
@@ -221,30 +224,30 @@ Grid distributes space between regions; it does not replace HTML semantics. Keep
 <TabsContent keepMounted value="demo">
 <div className="prose">
 
-### Inspect rows, columns, and areas
+### Inspect the project page’s region mapping
 
-This example uses two columns: the header and footer span the full row, the sidebar occupies a fixed track, and the main content contains three cards. Below a 560px viewport, it switches to a single column.
+The demo maps the case header, filter sidebar, project region, and footer to named areas, then arranges three concrete project cards inside the main region. This step produces a recognizable project-gallery structure.
 
 </div>
 <GridDemo />
 </TabsContent>
 </HomeworkTabs>
 
-## Use Flexbox for one-dimensional alignment
+## Step 4: arrange the project toolbar with Flexbox
 
-When elements mainly follow a single axis, Flexbox provides a direct way to align them and distribute remaining space. Navigation, toolbars, button groups, and card headings are common examples.
+With the page structure in place, add an overview toolbar above the cards. Its left side shows “Course projects / 12 projects,” and its right side summarizes map, chart, and story projects. These items follow one primary axis, making Flexbox appropriate.
 
 <HomeworkTabs>
 <TabsContent keepMounted value="explanation">
 <div className="prose">
 
-### Set the main axis, then align the cross axis
+### Distribute the toolbar’s remaining space
 
-`display: flex` lays out items horizontally by default. `flex-direction` sets the main axis, `justify-content` distributes space along it, and `align-items` controls alignment on the cross axis. Their effects change when the main axis changes direction.
+`display: flex` arranges items horizontally by default. `justify-content: space-between` places the title and type summary at opposite ends, while `align-items: center` aligns them vertically.
 
-For toolbars with content of varying lengths, a common combination is `align-items: center`, `gap` between items, `justify-content: space-between` for opposite-end alignment, and `flex-wrap: wrap` when there are many buttons. To let a title fill the remaining space while buttons retain their width, give the title `flex: 1` and use `min-width: 0` on items that long text might otherwise stretch.
+The title group uses `flex: 1 1 220px` and `min-width: 0`, so it can fill remaining space and still shrink. The type summary keeps its intrinsic width. With `flex-wrap: wrap`, the summary moves below the title in a narrow embed instead of being clipped.
 
-Grid and Flexbox can be nested: Grid handles the major page regions, and Flexbox handles a row of controls within a region. Choose based on spatial relationships rather than component names.
+This step also demonstrates nesting: Grid manages the page regions, while Flexbox manages one row inside the project region.
 
 </div>
 </TabsContent>
@@ -252,23 +255,24 @@ Grid and Flexbox can be nested: Grid handles the major page regions, and Flexbox
 <TabsContent keepMounted value="code">
 <div className="prose">
 
-### Put the title and buttons on one row
+### Put the project heading and type summary on one row
 
-```html locale="en-US" title="toolbar.html"
-<div class="toolbar">
-  <div class="toolbar-title">
-    <strong>Layout lab</strong>
-    <span>The title fills the remaining space</span>
+```html locale="en-US" title="project-toolbar.html"
+<div class="project-toolbar">
+  <div class="project-toolbar__title">
+    <strong>Course projects</strong>
+    <span>12 projects</span>
   </div>
-  <div class="toolbar-actions">
-    <button type="button">Fluid width</button>
-    <button type="button">Narrow container</button>
+  <div class="project-toolbar__summary" aria-label="Project type summary">
+    <span>Maps · 4</span>
+    <span>Charts · 5</span>
+    <span>Stories · 3</span>
   </div>
 </div>
 ```
 
-```css locale="en-US" title="toolbar.css"
-.toolbar {
+```css locale="en-US" title="project-toolbar.css"
+.project-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -276,7 +280,7 @@ Grid and Flexbox can be nested: Grid handles the major page regions, and Flexbox
   gap: 12px 20px;
 }
 
-.toolbar-title {
+.project-toolbar__title {
   display: flex;
   align-items: baseline;
   flex: 1 1 220px;
@@ -284,9 +288,10 @@ Grid and Flexbox can be nested: Grid handles the major page regions, and Flexbox
   gap: 12px;
 }
 
-.toolbar-actions {
+.project-toolbar__summary {
   display: flex;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
   gap: 8px;
 }
 ```
@@ -297,30 +302,30 @@ Grid and Flexbox can be nested: Grid handles the major page regions, and Flexbox
 <TabsContent keepMounted value="demo">
 <div className="prose">
 
-### Inspect remaining space on the main axis
+### Change the project toolbar’s real width
 
-The example places the title and actions on the same Flex axis. Select “Narrow container” to reduce the preview width: `flex-wrap` lets the actions move to the next line instead of overflowing. Select “Fluid width” to restore the available width. When enough space is available, the title and buttons share a row again.
+Select “Narrow container” to constrain the toolbar demo to `320px`; the type summary moves below the heading. Select “Fluid width” to restore the available width. This step leaves the toolbar complete and readable in either container.
 
 </div>
 <FlexDemo />
 </TabsContent>
 </HomeworkTabs>
 
-## Adapt layouts with container queries
+## Step 5: adapt the gallery to its container
 
-Responsive layout changes relationships between regions instead of simply shrinking everything. A sidebar can move above the body, three card columns can become one, and a toolbar can wrap. Container queries let us respond to the component’s own width instead of only the browser viewport.
+The wide layout is complete, but the gallery must also work inside the course platform. In a narrow container, filters should move above the project list and three card columns should become one. Simply shrinking everything does not solve those spatial relationships.
 
 <HomeworkTabs>
 <TabsContent keepMounted value="explanation">
 <div className="prose">
 
-### Let a component adapt to its container
+### Rearrange the case based on its own width
 
-Declare `container-type: inline-size` on the parent you want to observe, then query its inline size with `@container`. The same card can then adapt to its actual available width, whether it appears in a wide main area or a narrow sidebar.
+Declare `container-type: inline-size` on the gallery embed, then query its inline size with `@container`. The same gallery can now respond to the width it actually receives in either a full page or a narrow course-platform region.
 
-Container queries suit reusable components. `@media` still suits viewport-level changes, such as showing navigation or changing page margins. Both can coexist, but breakpoints should address specific space constraints rather than arbitrary device categories.
+Container queries suit this reusable region. `@media` still suits viewport-level changes such as site navigation and page margins. A breakpoint should answer a concrete problem: Is the sidebar squeezing the project region? Can three cards still sit comfortably side by side?
 
-A useful approach is to begin with a safe layout for narrow spaces, then add columns in wider containers. Every breakpoint should answer an observable question: Can the cards still sit comfortably side by side? Is the sidebar squeezing the body?
+The case uses `560px` as its rearrangement point. Below it, the outer layout and project-card Grid both become a single column. No project content is removed, and the sidebar width setting temporarily has no effect.
 
 </div>
 </TabsContent>
@@ -328,33 +333,34 @@ A useful approach is to begin with a safe layout for narrow spaces, then add col
 <TabsContent keepMounted value="code">
 <div className="prose">
 
-### Declare a container and rearrange at a breakpoint
+### Declare a container breakpoint for the gallery
 
-```css locale="en-US" title="responsive-layout.css"
-.content-region {
+```css locale="en-US" title="responsive-project-gallery.css"
+.gallery-embed {
   container-type: inline-size;
 }
 
-.content-layout,
-.card-list {
+.gallery-layout {
   display: grid;
   grid-template-columns: 160px minmax(0, 1fr);
   gap: 16px;
 }
 
-.card-list {
+.project-grid {
+  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
 }
 
 @container (max-width: 560px) {
-  .content-layout,
-  .card-list {
+  .gallery-layout,
+  .project-grid {
     grid-template-columns: 1fr;
   }
 }
 ```
 
-`@container` queries the width of `.content-region`. Selecting “Narrow container” in the demo sets the container to `360px`, below the `560px` breakpoint, triggering the rule without resizing the browser window.
+“Narrow container” constrains the case preview to `360px`, below the `560px` breakpoint. You can therefore see the rearrangement without resizing the browser window.
 
 </div>
 </TabsContent>
@@ -362,66 +368,67 @@ A useful approach is to begin with a safe layout for narrow spaces, then add col
 <TabsContent keepMounted value="demo">
 <div className="prose">
 
-### Adjust the controls and observe the rearrangement
+### Complete the responsive gallery experiment
 
-First increase the sidebar width and region gap, then select “Narrow container.” Notice how the sidebar width no longer controls a side-by-side split: the page flows vertically and the three cards become a single column.
+First adjust the filter sidebar, region gap, and region padding to see which space each parameter controls. Then select “Narrow container.” The goal is to move filters above the project list, stack all three cards, and preserve every piece of content.
 
 </div>
 <LayoutDemo />
 </TabsContent>
 </HomeworkTabs>
 
-## Turn layout problems into a verification process
+## Step 6: verify the complete case
 
-A finished layout is not necessarily a reliable one. Replace “looks about right” with conditions you can check in the browser to uncover overflow, alignment, and responsive layout problems.
+The first five steps have progressed from one project card to a complete responsive gallery. Replace “looks about right” with checks that prove each step supports the same case.
 
 <div className="prose">
 
-### A four-step check
+### Follow the case through verification
 
-1. **Inspect structure:** use developer tools to inspect Grid rows, columns, and areas, along with the Flex main axis. Confirm that the visual hierarchy still reflects the HTML semantics.
-2. **Inspect dimensions:** work inward through margin, border, padding, and content, and confirm that width calculations match your `box-sizing` choice.
-3. **Test extreme content:** try long headings, long words, button groups, and empty states. Check for horizontal scrolling, overlaps, and controls that cannot be clicked.
-4. **Vary the available space:** resize the container and check that each `@container` breakpoint solves a specific problem. Then navigate with the Tab key to confirm that layout changes do not hide focus.
+1. **Inspect project cards:** confirm that `border-box` makes their widths predictable and that internal `padding` and inter-card `gap` have distinct roles.
+2. **Inspect card content:** add a longer project title and summary. Confirm that content increases the card height and only the badge leaves normal flow.
+3. **Inspect page structure:** confirm that the header, filter sidebar, project region, and footer keep semantic elements while Grid controls their visual arrangement.
+4. **Inspect the project toolbar:** switch between wide and narrow containers. Confirm that the heading and type summary wrap without clipping.
+5. **Inspect the embedded state:** select the narrow container, confirm that filters sit above a single-column project list, then use the Tab key to check visible focus.
 
-### Keep adjustable parameters together
+### Keep the case’s adjustable parameters together
 
-```css locale="en-US" title="layout-tokens.css"
-.layout-sandbox {
+```css locale="en-US" title="project-gallery-tokens.css"
+.project-gallery {
   --content-max: 72rem;
-  --space: 16px;
+  --region-gap: 16px;
+  --region-padding: 16px;
   --sidebar: 160px;
   width: min(100%, var(--content-max));
   margin-inline: auto;
-  padding-inline: var(--space);
+  padding-inline: var(--region-padding);
+  container-type: inline-size;
 }
 
-.layout-sandbox__body {
+.project-gallery__body {
   display: grid;
   grid-template-columns: var(--sidebar) minmax(0, 1fr);
-  gap: var(--space);
+  gap: var(--region-gap);
 }
 
 @container (max-width: 560px) {
-  .layout-sandbox__body {
+  .project-gallery__body {
     grid-template-columns: 1fr;
   }
 }
 ```
 
-Extracting widths and spacing into custom properties lets you change them together from the layout lab or a debugging panel. When something goes wrong, it also makes it easier to identify whether the cause is a track, a gap, or the box model.
+These properties correspond to the controls in Step 5. When a problem appears, you can identify whether the filter sidebar, region gap, region padding, or container breakpoint caused it.
 
-### Final checklist
+### Case completion criteria
 
-After completing a page, verify at least the following:
-
-- At wide viewport sizes, the main regions have clear boundaries and the main content can shrink.
-- Grid handles two-dimensional regions, Flexbox handles one-dimensional alignment, and `gap` expresses spacing between siblings.
-- Long content does not break out of its container or cause unnecessary horizontal scrolling.
-- Narrow containers rearrange as intended, and all content remains visible, readable, and usable.
+- In a wide container, the filter sidebar has a fixed width, the project region fills the remaining space, and three cards sit side by side.
+- Grid manages the two-dimensional page regions, Flexbox arranges the one-dimensional toolbar, and `gap` expresses space between siblings.
+- Long project titles and summaries do not break out of their cards or create unnecessary horizontal scrolling.
+- In a narrow container, filters and projects stack, cards use one column, and all content remains visible, readable, and operable.
 
 ### Further reading
 
-This chapter draws on MDN’s official learning materials: [`CSS layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout), [`The box model`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model), [`Block and inline layout in normal flow`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Block_and_inline_layout), [`Positioning`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning), [`CSS grid layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Grids), [`Flexbox`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Flexbox), [`CSS container queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries), and [`Overflowing content`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Overflow). Follow them in chapter order and reproduce their examples with browser developer tools.
+This chapter draws on MDN’s official learning materials: [`CSS layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout), [`The box model`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model), [`Block and inline layout in normal flow`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Block_and_inline_layout), [`Positioning`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning), [`CSS grid layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Grids), [`Flexbox`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Flexbox), [`CSS container queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries), and [`Overflowing content`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Overflow). Follow them in the same six-step order and reproduce the case with browser developer tools.
 
 </div>
