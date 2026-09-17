@@ -21,7 +21,7 @@ Web layout answers three questions: How much space does an element occupy? How a
 
 </div>
 
-The six steps develop the same page in sequence: create a predictably sized project card, preserve its content flow while positioning a badge, build the page with Grid, arrange the project toolbar with Flexbox, add container queries, and verify the result. The first five steps use independent “Explanation / Key code / Demo” tabs; the sixth connects all the results.
+The six steps develop the same page in sequence: create a predictably sized project card, preserve its content flow while positioning a badge, build the page with Grid, arrange the project toolbar with Flexbox, add container queries, and verify the result. Along the way, whitespace, visual hierarchy, Gestalt grouping, reading order, and information priority explain why the layout works—not only how to write its CSS. The first five steps use independent “Explanation / Key code / Demo” tabs; the sixth connects all the results.
 
 ## Step 1: define the project card box model
 
@@ -39,11 +39,14 @@ The default `content-box` adds padding and borders outside the declared width. W
 
 Use `padding` inside each card and let the Grid’s `gap` control consistent space between cards. Project titles may be long, so Grid items must also be allowed to shrink instead of forcing the page wider.
 
+From a visualization perspective, whitespace is not “empty.” It is a visual variable that establishes grouping. Under the Gestalt principle of **proximity**, a card’s closely spaced title, metadata, and summary are perceived as one group; a larger gap between cards signals the start of another project. A border adds a **common-region** cue by enclosing related information. Too many borders create visual noise, so use whitespace first and add a border only when the card boundary remains unclear.
+
 ### Decision order for this step
 
 1. Set the project card’s visible width and use `border-box`.
 2. Use `padding` inside cards and `gap` between cards.
 3. Use `min-width: 0` where long titles must be able to shrink.
+4. Check that spacing within a card is smaller than spacing between cards, so grouping is recognizable at a glance.
 
 </div>
 </TabsContent>
@@ -55,6 +58,7 @@ Use `padding` inside each card and let the Grid’s `gap` control consistent spa
 
 ```html locale="en-US" title="project-card.html"
 <article class="project-card">
+  <p class="project-card__meta">Map · 2026</p>
   <h2>Urban Heat Island Map</h2>
   <p>Compare temperature and green-space coverage.</p>
 </article>
@@ -72,7 +76,7 @@ Use `padding` inside each card and let the Grid’s `gap` control consistent spa
 }
 ```
 
-The card’s visible width is `320px`; the content area automatically subtracts horizontal padding and borders. With the default `content-box`, the visible width becomes `364px` (`320 + 40 + 4`), making the future three-column layout more likely to exceed its intended width.
+The card’s visible width is `320px`; the content area automatically subtracts horizontal padding and borders. With the default `content-box`, the visible width becomes `364px` (`320 + 40 + 4`), making the future three-column layout more likely to exceed its intended width. The metadata, title, and summary share the same padding, so they read as one project.
 
 </div>
 </TabsContent>
@@ -105,6 +109,8 @@ The title, summary, and “View project” link remain unpositioned, so they sti
 
 As summaries grow, cards should grow naturally. Give only genuine scrolling regions explicit size constraints and `overflow: auto`. Do not hide errors with `overflow: hidden`, which can clip text and keyboard focus.
 
+Normal flow also carries the card’s **reading order**: category and year first, then title, summary, and the path into the project. Keep visual order close to DOM order instead of using positioning to make content merely look correct. Visual scanning, keyboard navigation, and screen readers then receive the same information narrative. The badge is secondary status: it may make a new project easier to recognize, but it should not become more prominent than the project title.
+
 ### Positioning rule for this step
 
 Keep structural content in normal flow and position only status information that needs no reserved space. Then check that the badge does not cover the heading and that keyboard focus remains visible.
@@ -120,6 +126,7 @@ Keep structural content in normal flow and position only status information that
 ```html locale="en-US" title="positioned-project-card.html"
 <article class="project-card">
   <span class="project-card__badge">NEW</span>
+  <p class="project-card__meta">Map · 2026</p>
   <h2>Urban Heat Island Map</h2>
   <p>Compare temperature and green-space coverage.</p>
   <a href="#urban-heat">View project</a>
@@ -171,6 +178,8 @@ The outer Grid uses `160px minmax(0, 1fr)`: the filter sidebar has a fixed `160p
 Because the case regions have clear roles, `grid-template-areas` names `header`, `sidebar`, `main`, and `footer`. A nested Grid in the project region uses `repeat(3, minmax(0, 1fr))` for the three cards.
 
 Grid distributes space; it does not replace HTML semantics. Keep `header`, `aside`, `main`, and `footer` in the document and use CSS to control their visual arrangement.
+
+These regions also establish a **visual hierarchy**. Course navigation provides global context, the filter sidebar affects which projects are shown, the project region carries the primary browsing task, and footer material comes last. Regular grid lines create **alignment**, equal card widths support rapid comparison, and the gap between the sidebar and projects separates “controls” from “results” through proximity. The flow also follows a common visualization pattern: provide an overview, let people filter it, then offer details on demand through each card.
 
 </div>
 </TabsContent>
@@ -228,6 +237,8 @@ Grid distributes space; it does not replace HTML semantics. Keep `header`, `asid
 
 The demo maps the case header, filter sidebar, project region, and footer to named areas, then arranges three concrete project cards inside the main region. This step produces a recognizable project-gallery structure.
 
+Do not inspect only whether the regions form two columns. Also ask whether the eye reaches the project region first, whether the three projects are easy to compare, and whether filters are clear without overpowering the primary content.
+
 </div>
 <GridDemo />
 </TabsContent>
@@ -248,6 +259,8 @@ With the page structure in place, add an overview toolbar above the cards. Its l
 The title group uses `flex: 1 1 220px` and `min-width: 0`, so it can fill remaining space and still shrink. The type summary keeps its intrinsic width. With `flex-wrap: wrap`, the summary moves below the title in a narrow embed instead of being clipped.
 
 This step also demonstrates nesting: Grid manages the page regions, while Flexbox manages one row inside the project region.
+
+The toolbar also demonstrates **visual hierarchy and consistent encoding**. Type size and weight make “Course projects” the local heading. The count is supporting information: weaker than the heading, but stronger than ordinary notes. Maps, charts, and stories use the same shape and style because they are peer categories. Assigning each an arbitrary color would add unnecessary color semantics and make the interface less robust for people with color-vision differences.
 
 </div>
 </TabsContent>
@@ -306,6 +319,8 @@ This step also demonstrates nesting: Grid manages the page regions, while Flexbo
 
 Select “Narrow container” to constrain the toolbar demo to `320px`; the type summary moves below the heading. Select “Fluid width” to restore the available width. This step leaves the toolbar complete and readable in either container.
 
+Keep evaluating hierarchy as you switch widths: after wrapping, the heading should still be read before the category summary, and all three categories should retain the same encoding rather than changing meaning with space.
+
 </div>
 <FlexDemo />
 </TabsContent>
@@ -326,6 +341,8 @@ Declare `container-type: inline-size` on the gallery embed, then query its inlin
 Container queries suit this reusable region. `@media` still suits viewport-level changes such as site navigation and page margins. A breakpoint should answer a concrete problem: Is the sidebar squeezing the project region? Can three cards still sit comfortably side by side?
 
 The case uses `560px` as its rearrangement point. Below it, the outer layout and project-card Grid both become a single column. No project content is removed, and the sidebar width setting temporarily has no effect.
+
+Responsive visualization should preserve the user’s task and information priority, not the desktop layout’s geometry. A wide container supports side-by-side comparison; a narrow one supports sequential reading. Reflow may change position, but it should retain key semantics such as project title, type, year, and entry point. Choose a breakpoint when comparison becomes difficult or labels become crowded, not because it happens to match a named device.
 
 </div>
 </TabsContent>
@@ -372,6 +389,8 @@ The case uses `560px` as its rearrangement point. Below it, the outer layout and
 
 First adjust the filter sidebar, region gap, and region padding to see which space each parameter controls. Then select “Narrow container.” The goal is to move filters above the project list, stack all three cards, and preserve every piece of content.
 
+Treat this as an information-design experiment. An oversized sidebar weakens the overview, too little gap merges controls with results, and too much padding lowers information density. There is no universally correct number; the useful value keeps grouping, comparison, and reading tasks working together.
+
 </div>
 <LayoutDemo />
 </TabsContent>
@@ -385,11 +404,12 @@ The first five steps have progressed from one project card to a complete respons
 
 ### Follow the case through verification
 
-1. **Inspect project cards:** confirm that `border-box` makes their widths predictable and that internal `padding` and inter-card `gap` have distinct roles.
-2. **Inspect card content:** add a longer project title and summary. Confirm that content increases the card height and only the badge leaves normal flow.
-3. **Inspect page structure:** confirm that the header, filter sidebar, project region, and footer keep semantic elements while Grid controls their visual arrangement.
-4. **Inspect the project toolbar:** switch between wide and narrow containers. Confirm that the heading and type summary wrap without clipping.
-5. **Inspect the embedded state:** select the narrow container, confirm that filters sit above a single-column project list, then use the Tab key to check visible focus.
+1. **Inspect grouping:** temporarily ignore the borders and confirm that whitespace alone distinguishes “inside one card” from “between neighboring cards.”
+2. **Inspect reading order:** scan category and year, title, summary, and link in sequence, then use the Tab key and document structure to confirm that the DOM tells the same story.
+3. **Inspect overview and comparison:** verify that the project region is easy to find, cards align for comparison, and the filter sidebar is clear without overpowering the results.
+4. **Inspect visual hierarchy:** verify a stable strength relationship among the page title, project-region title, project titles, and supporting metadata. Badges and category summaries should not take the primary attention.
+5. **Inspect changing space:** switch between wide and narrow containers. The layout should move from side-by-side comparison to sequential reading while preserving project type, year, title, and entry point.
+6. **Inspect extreme states:** add long titles, an empty result, and more categories, then check overflow, grouping, color dependence, and keyboard focus.
 
 ### Keep the case’s adjustable parameters together
 
@@ -426,9 +446,13 @@ These properties correspond to the controls in Step 5. When a problem appears, y
 - Grid manages the two-dimensional page regions, Flexbox arranges the one-dimensional toolbar, and `gap` expresses space between siblings.
 - Long project titles and summaries do not break out of their cards or create unnecessary horizontal scrolling.
 - In a narrow container, filters and projects stack, cards use one column, and all content remains visible, readable, and operable.
+- Whitespace and common regions express project grouping, alignment supports comparison, and headings and supporting metadata form a clear visual hierarchy.
+- Layout changes preserve the “overview → filter → view a project” task path rather than merely keeping the CSS from breaking at different widths.
 
 ### Further reading
 
 This chapter draws on MDN’s official learning materials: [`CSS layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout), [`The box model`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model), [`Block and inline layout in normal flow`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Block_and_inline_layout), [`Positioning`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning), [`CSS grid layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Grids), [`Flexbox`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Flexbox), [`CSS container queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries), and [`Overflowing content`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Overflow). Follow them in the same six-step order and reproduce the case with browser developer tools.
+
+For the visualization theory behind these decisions, continue with Tamara Munzner’s *Visualization Analysis and Design* for task-driven design, Colin Ware’s *Information Visualization: Perception for Design* for perception, grouping, and visual attention, and Ben Shneiderman’s *The Eyes Have It* for the interaction path from overview through filtering to details on demand. Together, they move the evaluation beyond “does the CSS work?” toward “is the information easy to find, group, compare, and understand?”
 
 </div>

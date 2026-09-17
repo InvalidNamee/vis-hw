@@ -21,7 +21,7 @@ import LayoutDemo from '../../homework/hw01/components/LayoutDemo.astro';
 
 </div>
 
-六个步骤会依次完成同一页面：先做尺寸可预测的作品卡片，再处理卡片内部的正常流和角标，接着用 Grid 搭页面骨架、用 Flex 排作品工具栏，然后加入容器查询，最后统一验收。前五步各自使用“讲解 / 关键代码 / 展示”标签；第六步把成果连起来检查。
+六个步骤会依次完成同一页面：先做尺寸可预测的作品卡片，再处理卡片内部的正常流和角标，接着用 Grid 搭页面骨架、用 Flex 排作品工具栏，然后加入容器查询，最后统一验收。过程中不仅学习 CSS，还会用留白、视觉层级、格式塔分组、阅读顺序和信息优先级解释“为什么要这样布局”。前五步各自使用“讲解 / 关键代码 / 展示”标签；第六步把成果连起来检查。
 
 ## 第一步：确定作品卡片的盒模型
 
@@ -39,11 +39,14 @@ import LayoutDemo from '../../homework/hw01/components/LayoutDemo.astro';
 
 卡片内部用 `padding`，卡片网格中的统一间距稍后交给 Grid 的 `gap`。作品标题可能很长，所以 Grid 子项还应允许收缩，避免最小内容尺寸撑破页面。
 
+从可视化角度看，留白不是“没有内容”，而是建立分组关系的视觉变量。根据格式塔的**邻近原则**，卡片内部彼此靠近的标题、元数据和摘要会被看成一组；卡片之间更大的间距则告诉读者“这里开始了另一个作品”。边框属于**共同区域**线索：它把相关信息包在同一边界内。边框太多会制造视觉噪声，所以应先用留白分组，只在卡片边界不够清楚时再加边框。
+
 ### 本步判断顺序
 
 1. 确定作品卡片的可见宽度，并使用 `border-box`。
 2. 用 `padding` 控制卡片内部留白，用 `gap` 控制卡片之间的距离。
 3. 为长标题区域设置 `min-width: 0`，保留收缩空间。
+4. 检查“卡片内间距 < 卡片间间距”，让分组关系仅靠扫视就能被识别。
 
 </div>
 </TabsContent>
@@ -55,6 +58,7 @@ import LayoutDemo from '../../homework/hw01/components/LayoutDemo.astro';
 
 ```html title="project-card.html"
 <article class="project-card">
+  <p class="project-card__meta">地图 · 2026</p>
   <h2>城市热岛地图</h2>
   <p>比较温度与绿地覆盖率。</p>
 </article>
@@ -72,7 +76,7 @@ import LayoutDemo from '../../homework/hw01/components/LayoutDemo.astro';
 }
 ```
 
-作品卡片的可见宽度是 `320px`，内容区会自动扣掉左右 `padding` 和 `border`。如果使用默认的 `content-box`，可见宽度会变成 `364px`（`320 + 40 + 4`），三列排列时更容易超出预期。
+作品卡片的可见宽度是 `320px`，内容区会自动扣掉左右 `padding` 和 `border`。如果使用默认的 `content-box`，可见宽度会变成 `364px`（`320 + 40 + 4`），三列排列时更容易超出预期。元数据、标题和摘要共享同一内边距，因此在视觉上属于同一作品。
 
 </div>
 </TabsContent>
@@ -105,6 +109,8 @@ import LayoutDemo from '../../homework/hw01/components/LayoutDemo.astro';
 
 摘要变长时，卡片应自动增高。只有确实需要独立滚动的区域才设置明确尺寸和 `overflow: auto`；不要用 `overflow: hidden` 掩盖问题，否则文字和键盘焦点都可能被裁掉。
 
+正常流也承载了作品卡片的**阅读顺序**：先看到类别和年份，再读标题、摘要，最后进入作品。视觉顺序应尽量与 DOM 顺序一致，避免只用定位把元素“挪到看起来正确的位置”。这样，视觉浏览、键盘导航和屏幕阅读器会得到一致的信息叙事。角标是次要状态，只应增强“新作品”的识别，不应抢过作品标题成为最显眼的元素。
+
 ### 本步定位原则
 
 保留结构内容的正常流，只定位不需要占位的状态信息。定位后还要检查角标是否遮住标题，以及键盘焦点是否可见。
@@ -120,6 +126,7 @@ import LayoutDemo from '../../homework/hw01/components/LayoutDemo.astro';
 ```html title="positioned-project-card.html"
 <article class="project-card">
   <span class="project-card__badge">NEW</span>
+  <p class="project-card__meta">地图 · 2026</p>
   <h2>城市热岛地图</h2>
   <p>比较温度与绿地覆盖率。</p>
   <a href="#urban-heat">查看作品</a>
@@ -171,6 +178,8 @@ import LayoutDemo from '../../homework/hw01/components/LayoutDemo.astro';
 案例区域有清楚的语义，所以使用 `grid-template-areas` 表达 `header`、`sidebar`、`main` 和 `footer`。作品区内部再嵌套一个 Grid，用 `repeat(3, minmax(0, 1fr))` 排列三张卡片。
 
 Grid 只负责空间分配，不替代 HTML 语义。页头、侧栏、主内容和页脚仍使用 `header`、`aside`、`main`、`footer`。
+
+这套区域安排同时建立了**视觉层级**：课程导航提供全局上下文，筛选侧栏影响“看哪些作品”，作品区承担主要浏览任务，页脚信息最后阅读。规则化的列线提供**对齐**，相同卡片宽度支持快速比较；侧栏与作品区之间的 `gap` 则用邻近关系区分“控制”与“结果”。这也对应可视化中常见的“先总览，再筛选，最后按需查看细节”：页面先展示作品集合，侧栏缩小范围，卡片入口再通向单个作品。
 
 </div>
 </TabsContent>
@@ -228,6 +237,8 @@ Grid 只负责空间分配，不替代 HTML 语义。页头、侧栏、主内容
 
 展示把案例中的页头、筛选侧栏、作品区和页脚映射成命名区域，再在作品区排列三张具体作品卡片。完成这一步后，页面已有可识别的作品库骨架。
 
+观察时不要只看区域是否排成两列，还要检查第一眼是否落在作品区、三个作品是否容易横向比较，以及筛选区是否清楚但没有压过主要内容。
+
 </div>
 <GridDemo />
 </TabsContent>
@@ -248,6 +259,8 @@ Grid 只负责空间分配，不替代 HTML 语义。页头、侧栏、主内容
 左侧标题区设置 `flex: 1 1 220px` 和 `min-width: 0`，可以占据剩余空间也可以收缩；右侧类型摘要保留自身宽度。工具栏设置 `flex-wrap: wrap` 后，嵌入区域变窄时，类型摘要会换到标题下方，不会被裁切。
 
 这一步也说明 Grid 和 Flex 可以嵌套：Grid 管理作品页的大区域，Flex 管理作品区内部的一行信息。
+
+工具栏还体现了**视觉层级与一致编码**。文字大小和字重让“课程作品”成为这一局部区域的标题；数量是辅助信息，应弱于标题但强于普通说明。地图、图表、叙事使用相同形状和样式，表示它们属于同一层级的类别，不能仅靠三种颜色区分，否则会引入无必要的颜色语义，也不利于色觉差异用户。
 
 </div>
 </TabsContent>
@@ -306,6 +319,8 @@ Grid 只负责空间分配，不替代 HTML 语义。页头、侧栏、主内容
 
 点击“窄容器”会把工具栏展示区限制为 `320px`，类型摘要换到标题下方；点击“自适应宽度”恢复可用宽度。完成这一步后，作品工具栏可以在宽、窄容器中保留完整内容。
 
+切换时继续检查层级：换行后标题仍应先于类别摘要被读到，三类数量仍保持同一种编码，而不是因为空间变小就改变含义。
+
 </div>
 <FlexDemo />
 </TabsContent>
@@ -326,6 +341,8 @@ Grid 只负责空间分配，不替代 HTML 语义。页头、侧栏、主内容
 容器查询适合这种可复用区域；`@media` 仍适合整站导航和页面边距等视口级变化。断点应对应具体问题：侧栏是否挤压作品区？三张卡片是否无法舒适并排？
 
 案例把 `560px` 作为重排点。更窄时，外层布局和作品卡片网格都改为单列；作品内容不删减，侧栏宽度设置暂时失效。
+
+响应式可视化的目标不是维持桌面版的几何形状，而是维持用户任务和信息优先级。宽容器适合并排比较多个作品；窄容器更适合按顺序阅读。重排时要保留作品标题、类型、年份和入口等关键语义，允许位置变化，但不要把核心信息藏起来。断点也应由“比较是否已经困难、标签是否开始拥挤”决定，而不是机械对应某一种设备名称。
 
 </div>
 </TabsContent>
@@ -372,6 +389,8 @@ Grid 只负责空间分配，不替代 HTML 语义。页头、侧栏、主内容
 
 先分别调整筛选侧栏、区域间距和区域内边距，观察三种参数影响的空间；再选择“窄容器”。验收目标是筛选项移到作品列表上方、三张卡片变为单列，并且任何内容都没有被裁切。
 
+把它当作一个信息设计实验：侧栏过宽会削弱作品总览，间距过小会让控制区和结果区混成一组，内边距过大会降低信息密度。没有唯一正确数值，合适的值应让分组、比较和阅读任务同时成立。
+
 </div>
 <LayoutDemo />
 </TabsContent>
@@ -385,11 +404,12 @@ Grid 只负责空间分配，不替代 HTML 语义。页头、侧栏、主内容
 
 ### 按案例路径检查
 
-1. **检查作品卡片**：确认 `border-box` 让卡片宽度可预测，内部 `padding` 与卡片间 `gap` 各司其职。
-2. **检查卡片内容**：输入更长的作品标题和摘要，确认正文自然撑高卡片，只有角标脱离正常流。
-3. **检查页面结构**：确认页头、筛选侧栏、作品区和页脚保留语义元素，Grid 只负责视觉分区。
-4. **检查作品工具栏**：切换宽、窄容器，确认标题和类型摘要可以换行，没有内容被裁切。
-5. **检查嵌入状态**：切到窄容器，确认筛选项位于作品列表上方、三张卡片改为单列，再用 Tab 键确认焦点可见。
+1. **检查分组**：遮住边框再看作品卡片，确认仅靠内外留白也能分清“一张卡片内部”和“相邻卡片”。
+2. **检查阅读顺序**：从类别与年份、标题、摘要到入口依次浏览，再用 Tab 键和页面结构检查 DOM 顺序是否一致。
+3. **检查总览与比较**：确认第一眼能找到作品区，同一行卡片边界对齐，三个作品可以快速比较；筛选侧栏清楚但不喧宾夺主。
+4. **检查视觉层级**：确认页面标题、作品区标题、作品标题、辅助元数据形成稳定的强弱关系，角标和类别摘要不会抢走主要注意力。
+5. **检查空间变化**：切换宽、窄容器，确认布局从并排比较转为顺序阅读，但作品类型、年份、标题和入口等核心语义仍然存在。
+6. **检查极端状态**：加入长标题、空结果和更多类别，再检查溢出、分组、颜色依赖以及键盘焦点。
 
 ### 集中管理案例中的可调参数
 
@@ -426,9 +446,13 @@ Grid 只负责空间分配，不替代 HTML 语义。页头、侧栏、主内容
 - Grid 负责作品页二维分区，Flex 负责作品工具栏一维排列，`gap` 表达兄弟元素间距。
 - 长作品标题和摘要不会撑破卡片，也没有不必要的横向滚动。
 - 窄容器中，筛选项与作品列表上下排列，卡片改为单列，全部内容仍然可见、可读、可操作。
+- 留白和共同区域能表达作品分组，对齐支持比较，标题与辅助信息具有明确的视觉层级。
+- 布局变化保留了“总览 → 筛选 → 查看作品”的任务路径，而不只是让 CSS 在不同宽度下不报错。
 
 ### 教程参考
 
 本章内容参考 MDN 的官方学习材料：[`CSS layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout)、[`The box model`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Box_model)、[`Block and inline layout in normal flow`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Block_and_inline_layout)、[`Positioning`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning)、[`CSS grid layout`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Grids)、[`Flexbox`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Flexbox)、[`CSS container queries`](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries) 和 [`Overflowing content`](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Overflow)。可以按六个步骤继续阅读对应章节，并用浏览器开发者工具复现案例。
+
+可视化理论部分可以继续参考 Tamara Munzner 的 *Visualization Analysis and Design*（从任务出发组织可视化设计）、Colin Ware 的 *Information Visualization: Perception for Design*（知觉、分组与视觉注意），以及 Ben Shneiderman 的 *The Eyes Have It*（总览、筛选与按需查看细节的交互路径）。这些材料帮助我们把布局判断从“CSS 是否生效”推进到“信息是否容易被发现、分组、比较和理解”。
 
 </div>

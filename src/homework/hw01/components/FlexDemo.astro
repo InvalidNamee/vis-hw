@@ -20,7 +20,7 @@ const t = translator(Astro.url);
       </div>
     </div>
   </div>
-  <p class="flex-demo-status" data-status aria-live="polite">{t("自适应宽度：作品标题与类型摘要在空间充足时保持同行。")}</p>
+  <p class="flex-demo-status" data-status aria-live="polite">{t("宽容器：作品标题先建立视觉层级，三类摘要使用一致编码并保持同行。")}</p>
   <div class="flex-demo-axis"><span>{t("主轴：justify-content")}</span><span>{t("交叉轴：align-items")}</span></div>
 </flex-demo>
 
@@ -40,8 +40,8 @@ const t = translator(Astro.url);
         viewport.dataset.size = size;
         buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.size === size)));
         status.textContent = narrow
-          ? t("窄容器：作品类型摘要换到标题下方，内容保持完整。")
-          : t("自适应宽度：作品标题与类型摘要在空间充足时保持同行。");
+          ? t("窄容器：类型摘要换到标题下方，但标题仍先被读到，三类摘要的编码保持一致。")
+          : t("宽容器：作品标题先建立视觉层级，三类摘要使用一致编码并保持同行。");
       };
 
       buttons.forEach(button => button.addEventListener('click', () => setSize(button.dataset.size ?? 'wide')));
