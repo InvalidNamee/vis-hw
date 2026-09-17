@@ -8,7 +8,7 @@
 
 ## 已确定的约定
 
-- Astro 静态多页，路由 `/hw01/` 至 `/hw09/`；没有后端。
+- Astro 静态多页，路由 `/hw01/` 至 `/hw06/`；没有后端。
 - Tailwind CSS + Starwind 按需组件；冷灰蓝主题。首页为两列作业卡片，文档页为无外框白底。
 - 公共导航与元信息由 BaseLayout 提供。文档页可使用 DocumentLayout，大型可视化可只使用 BaseLayout。
 - 固定 Tab 名称与 value：讲解 `explanation`、关键代码 `code`、展示 `demo`。
@@ -80,7 +80,7 @@ import { TabsContent } from '../../components/starwind/tabs';
 - 标题生成 chapter-section-N 锚点，不受中文、重复标题影响。插入或重排小节会改变编号锚点，不应将其当作永久外链标识。
 - src/components/TableOfContents.astro：接收静态 entries，输出原生锚点；浏览器脚本负责滚动高亮和折叠行为，点击不会切换任何 Tab。
 - 少于两个目录项时不显示目录；桌面仍保留 200px 目录列和 48px 间隔。小于 1024px 时目录移到正文之前并默认折叠。
-- HW1 当前所有标题都在 Tab 内，因此目录为空是预期行为。重组 HW1 必须另行获得任务授权。
+- HW1 的二级标题和章末验证流程标题位于 Tab 外，目录会自动展示；Tab 内的讲解标题不会进入目录。
 - 不要手动填写 frontmatter.toc；插件每次构建都会覆盖它。
 
 ## 验证与交接
@@ -130,4 +130,4 @@ ArticleLayout 中的 `.document-content .prose` 统一控制正文：取消限�
 - 新作业的正文和演示组件使用 `src/styles/theme.css` 中的语义颜色变量，例如 `--surface`、`--text-primary`、`--border-soft`，避免写死白色背景和深色文字。实心按钮使用 `--action` 与 `--on-action`。
 - 新增内容需检查明暗主题下的文字、交互控件与图表可读性。
 
-深色主题采用与 Expressive Code `github-dark` 协调的中性灰：正文和卡片 `#24292e`、页面底色 `#1b1f23`、抬高表面 `#2f363d`，蓝色用于链接和选中态。浅色主题保持冷灰蓝。
+深色模式采用与 Expressive Code `github-dark` 协调的中性灰：正文和卡片 `#24292e`、页面底色 `#1b1f23`、抬高表面 `#2f363d`，蓝色用于链接和选中态。浅色模式保持冷灰蓝，深色模式使用 GitHub 风格的中性灰黑。

@@ -19,6 +19,12 @@ npm run preview
 
 构建产物在 `dist/`。静态托管需要支持目录下的 `index.html`，无需 SPA 回退规则。若部署到仓库子路径，在 `astro.config.mjs` 中设置 `base`；公共导航使用统一的基础路径函数。
 
+## 部署
+
+网站采用 Astro 静态构建，执行 `npm run build` 后产物生成于 `dist/`，可直接部署至静态托管平台。
+
+当前线上环境部署于 **腾讯云 EdgeOne Makers**（原 EdgeOne Pages），访问地址为 <https://vis.starlab.top>。项目为纯静态站点，无后端服务，也无需配置 SPA 回退规则。
+
 ## 内容组织
 
 - `src/homework/hwNN/meta.ts`：每章唯一的标题、简介、状态和封面配置；`src/config/homework.ts` 汇总并提供 getHomework。
@@ -31,11 +37,11 @@ npm run preview
 
 新增作业时，创建并注册独立的 `meta.ts`，设置 `ready`、标题和简介，再创建对应 `src/pages/hwNN/index.mdx` 或 `index.astro`。占位路由会自动排除已完成作业，避免重复路径。大型可视化页面可直接使用 BaseLayout，不必使用文档布局。
 
-三标签中的内容写在 MDX 的 `TabsContent` 内；交互演示作为独立 Astro 组件导入。全站为冷灰蓝浅色主题，不使用 emoji。后续图标统一使用已安装的 `@lucide/astro`，按需导入，不全量加载。
+三标签中的内容写在 MDX 的 `TabsContent` 内；交互演示作为独立 Astro 组件导入。全站提供冷灰蓝浅色模式与 GitHub 风格深色模式，不使用 emoji。后续图标统一使用已安装的 `@lucide/astro`，按需导入，不全量加载。
 
 ## 代码块与图标
 
-MDX 围栏代码块由 Expressive Code 自动渲染，使用 GitHub Light 主题，提供语法高亮、复制按钮，以及 `title="layout.css"` 文件名标题。集成配置位于 `astro.config.mjs`，Expressive Code 排在 MDX 之前。
+MDX 围栏代码块由 Expressive Code 自动渲染，使用 GitHub Light / GitHub Dark 主题并随站点主题切换，提供语法高亮、复制按钮，以及 `title="layout.css"` 文件名标题。集成配置位于 `astro.config.mjs`，Expressive Code 排在 MDX 之前。
 
 Lucide 已安装供后续界面使用，例如在 Astro 的 frontmatter 中 `import { ArrowRight } from "@lucide/astro"`，再渲染 `<ArrowRight size={18} aria-hidden="true" />`。装饰图标隐藏于辅助技术；仅图标按钮必须提供可访问名称。
 
@@ -43,7 +49,7 @@ Lucide 已安装供后续界面使用，例如在 Astro 的 frontmatter 中 `imp
 
 每份作业的新会话先读 [作业开发与交接指南](docs/HOMEWORK-HANDOFF.md)，其中包含可直接复制的提示词、小节级三标签 MDX 模板与验证要求。当前作业状态见 [HW1 交接](docs/hw01.md)。
 
-文档页使用白底并预留右侧目录。自定义 remark 插件在构建时采集 Tab 外的 Markdown h2/h3，TableOfContents 组件负责展示、锚点与阅读位置高亮。目录少于两项时隐藏；当前 HW1 保留原有整章 Tab 结构，因此暂不显示目录。
+文档页使用白底并预留右侧目录。自定义 remark 插件在构建时采集 Tab 外的 Markdown h2/h3，TableOfContents 组件负责展示、锚点与阅读位置高亮。目录少于两项时隐藏；当前 HW1 的章节标题位于各小节 Tab 外，目录会正常显示。
 
 ## 中英文内容
 
