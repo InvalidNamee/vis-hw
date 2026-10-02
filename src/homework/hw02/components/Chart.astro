@@ -1,0 +1,18 @@
+---
+import Source from './Source.astro';
+import {dataset,type Lang} from '../content';
+import {localeFromUrl} from '../../../i18n';
+interface Props {kind:string; title:string; description?:string; ids?:string[]; records?:string[]; note?:string; class?:string;}
+const {kind,title,description,ids=[],records=[],note,class:className}=Astro.props;
+const lang:Lang=localeFromUrl(Astro.url)==='en'?'en':'zh';
+const data=dataset.records.filter(r=>records.includes(r.id));
+---
+<ai-viz data-kind={kind} data-lang={lang} class:list={['viz-card',className, { 'industry-hero': kind === 'industry' }]}>
+ <div class="viz-heading"><div><h2>{title}</h2>{description&&<p>{description}</p>}</div><span class="viz-tag">{lang==='en'?'EXPLORE':'交互探索'}</span></div>
+ <slot />
+ <div class="chart-stage" data-chart role="group" aria-label={title}></div>
+ <p class="chart-status" data-status aria-live="polite"></p>
+ <noscript><p>{lang==='en'?'Enable JavaScript for interactive charts. Data and explanations remain available below.':'启用 JavaScript 可操作图表，下方数据与说明仍可阅读。'}</p></noscript>
+ {ids.length>0&&<Source ids={ids} note={note}/>}
+ {data.length>0&&<details class="data-disclosure"><summary>{lang==='en'?'View chart data':'查看图表数据'}</summary><div class="table-scroll"><table><thead><tr>{(lang==='en'?['Indicator','Year','Value','Unit','Type']:['指标','年份','数值','单位','类型']).map(h=><th>{h}</th>)}</tr></thead><tbody>{data.map(r=><tr><td>{r.label[lang]}</td><td>{r.period}</td><td>{r.value}</td><td>{r.unit}</td><td>{lang==='en'?r.kind:({observed:'观测/研究结果',estimate:'历史估计',projection:'情景预测'}[r.kind]??r.kind)}</td></tr>)}</tbody></table></div></details>}
+</ai-viz>

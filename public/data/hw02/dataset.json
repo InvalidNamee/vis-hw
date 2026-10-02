@@ -1,0 +1,590 @@
+{
+  "version": "2026-10-01-v1",
+  "sources": [
+    {
+      "id": "hai25",
+      "title": "Stanford AI Index 2025 · Economy",
+      "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report/economy",
+      "section": "Highlights 3–4",
+      "note": {
+        "zh": "组织采用率为调查结果；私人投资不含全部公共投资。",
+        "en": "Adoption is survey-based; private investment excludes some public funding."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "hai26",
+      "title": "Stanford AI Index 2026 · Economy",
+      "url": "https://hai.stanford.edu/ai-index/2026-ai-index-report/economy",
+      "section": "Highlight 5",
+      "note": {
+        "zh": "2025 年受访组织采用率；跨年样本可能变化。",
+        "en": "2025 adoption among surveyed organizations; samples may change across years."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "nber",
+      "title": "NBER · Brynjolfsson et al. · Generative AI at Work (2023)",
+      "url": "https://www.nber.org/papers/w31161",
+      "section": "Working Paper 31161 · 2023 abstract",
+      "note": {
+        "zh": "采用 2023 工作论文口径：平均 +14%，新手与低技能组 +34%；非全行业平均。",
+        "en": "2023 working-paper estimates: +14% overall, +34% for novice/low-skilled workers; not an economy-wide effect."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "writing",
+      "title": "Noy & Zhang · Science (2023)",
+      "url": "https://doi.org/10.1126/science.adh2586",
+      "section": "Abstract · professional writing experiment",
+      "note": {
+        "zh": "职业写作实验：完成时间 −40%，质量评分 +18%；两者不是同一种指标。",
+        "en": "Professional writing experiment: time −40%, quality score +18%; these are different outcomes."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "iea",
+      "title": "IEA · Energy and AI (2025)",
+      "url": "https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai",
+      "section": "The outlook for energy demand from data centres",
+      "note": {
+        "zh": "固定 2025 报告版本；2024 为历史估计，2030 为基准情景预测。涵盖全部数据中心，不等于 AI 用电。CC BY 4.0。",
+        "en": "Fixed 2025 edition: 2024 historical estimate; 2030 Base Case projection. All data centres, not AI alone. CC BY 4.0."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "worldbank",
+      "title": "World Bank · AI Foundations (2025)",
+      "url": "https://www.worldbank.org/en/publication/dptr2025-ai-foundations",
+      "section": "Report overview",
+      "note": {
+        "zh": "用于解释基础条件与扩散差异，不构造国家综合评分。",
+        "en": "Used to explain foundations and diffusion; no invented country scores."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "mvtec",
+      "title": "MVTec AD · Industrial Anomaly Detection",
+      "url": "https://www.mvtec.com/research-teaching/datasets/mvtec-ad",
+      "section": "Dataset introduction",
+      "note": {
+        "zh": "工业检测研究基准，用于说明应用机制；不是工厂实测收益。",
+        "en": "Industrial inspection benchmark; illustrates a mechanism, not factory productivity gains."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "alpha",
+      "title": "Jumper et al. · AlphaFold (Nature, 2021)",
+      "url": "https://www.nature.com/articles/s41586-021-03819-2",
+      "section": "Abstract",
+      "note": {
+        "zh": "蛋白质结构预测研究；预测仍需科学验证。",
+        "en": "Protein structure prediction research; predictions still require scientific validation."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "fda",
+      "title": "FDA · AI-enabled medical devices",
+      "url": "https://www.fda.gov/medical-devices/artificial-intelligence-enabled-medical-devices/list-artificial-intelligence-enabled-medical-devices",
+      "section": "Device list and introduction",
+      "note": {
+        "zh": "监管设备清单仅说明应用存在，不代表统一的临床效果。",
+        "en": "The regulatory list documents applications, not a uniform clinical benefit."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "agri",
+      "title": "World Bank · AI sowing advisory",
+      "url": "https://airepository.worldbank.org/use-case/icrisat-microsoft-ai-sowing-app-weather-prediction",
+      "section": "Use-case overview",
+      "note": {
+        "zh": "播种决策支持案例；本页不引用未经核验的增产比例。",
+        "en": "Sowing decision-support case; no unverified yield increase is reported."
+      },
+      "retrieved": "2026-10-01"
+    },
+    {
+      "id": "concept",
+      "title": "新质生产力 · 概念出处 / Concept reference",
+      "url": "https://www.moe.gov.cn/jyb_xwfb/moe_176/202405/t20240531_1133413.html",
+      "section": "2024-05-31",
+      "note": {
+        "zh": "高科技、高效能、高质量；关注生产要素及其组合的变化。",
+        "en": "Focuses on technology, efficiency, quality, and the configuration of productive factors."
+      },
+      "retrieved": "2026-10-01"
+    }
+  ],
+  "records": [
+    {
+      "id": "adoption-2023",
+      "label": {
+        "zh": "组织 AI 采用率",
+        "en": "Organizational AI adoption"
+      },
+      "value": 55,
+      "unit": "%",
+      "period": 2023,
+      "scope": {
+        "zh": "全球受访组织",
+        "en": "Surveyed organizations worldwide"
+      },
+      "source": "hai25",
+      "kind": "observed"
+    },
+    {
+      "id": "adoption-2024",
+      "label": {
+        "zh": "组织 AI 采用率",
+        "en": "Organizational AI adoption"
+      },
+      "value": 78,
+      "unit": "%",
+      "period": 2024,
+      "scope": {
+        "zh": "全球受访组织",
+        "en": "Surveyed organizations worldwide"
+      },
+      "source": "hai25",
+      "kind": "observed"
+    },
+    {
+      "id": "adoption-2025",
+      "label": {
+        "zh": "组织 AI 采用率",
+        "en": "Organizational AI adoption"
+      },
+      "value": 88,
+      "unit": "%",
+      "period": 2025,
+      "scope": {
+        "zh": "全球受访组织",
+        "en": "Surveyed organizations worldwide"
+      },
+      "source": "hai26",
+      "kind": "observed"
+    },
+    {
+      "id": "investment-us",
+      "label": {
+        "zh": "美国",
+        "en": "United States"
+      },
+      "value": 109.1,
+      "unit": "USD billion",
+      "period": 2024,
+      "scope": {
+        "zh": "AI 私人投资（所选三国）",
+        "en": "Private AI investment (three selected countries)"
+      },
+      "source": "hai25",
+      "kind": "observed"
+    },
+    {
+      "id": "investment-cn",
+      "label": {
+        "zh": "中国",
+        "en": "China"
+      },
+      "value": 9.3,
+      "unit": "USD billion",
+      "period": 2024,
+      "scope": {
+        "zh": "AI 私人投资（所选三国）",
+        "en": "Private AI investment (three selected countries)"
+      },
+      "source": "hai25",
+      "kind": "observed"
+    },
+    {
+      "id": "investment-uk",
+      "label": {
+        "zh": "英国",
+        "en": "United Kingdom"
+      },
+      "value": 4.5,
+      "unit": "USD billion",
+      "period": 2024,
+      "scope": {
+        "zh": "AI 私人投资（所选三国）",
+        "en": "Private AI investment (three selected countries)"
+      },
+      "source": "hai25",
+      "kind": "observed"
+    },
+    {
+      "id": "support",
+      "label": {
+        "zh": "客服：每小时解决问题",
+        "en": "Support: issues resolved/hour"
+      },
+      "value": 14,
+      "unit": "%",
+      "period": 2023,
+      "scope": {
+        "zh": "特定研究样本，相对基准变化",
+        "en": "Study-specific sample; relative to baseline"
+      },
+      "source": "nber",
+      "kind": "observed"
+    },
+    {
+      "id": "novice",
+      "label": {
+        "zh": "新手与低技能组",
+        "en": "Novice / low-skilled group"
+      },
+      "value": 34,
+      "unit": "%",
+      "period": 2023,
+      "scope": {
+        "zh": "特定研究样本，相对基准变化",
+        "en": "Study-specific sample; relative to baseline"
+      },
+      "source": "nber",
+      "kind": "observed"
+    },
+    {
+      "id": "time",
+      "label": {
+        "zh": "写作：完成时间",
+        "en": "Writing: completion time"
+      },
+      "value": -40,
+      "unit": "%",
+      "period": 2023,
+      "scope": {
+        "zh": "特定研究样本，相对基准变化",
+        "en": "Study-specific sample; relative to baseline"
+      },
+      "source": "writing",
+      "kind": "observed"
+    },
+    {
+      "id": "quality",
+      "label": {
+        "zh": "写作：质量评分",
+        "en": "Writing: quality score"
+      },
+      "value": 18,
+      "unit": "%",
+      "period": 2023,
+      "scope": {
+        "zh": "特定研究样本，相对基准变化",
+        "en": "Study-specific sample; relative to baseline"
+      },
+      "source": "writing",
+      "kind": "observed"
+    },
+    {
+      "id": "energy-2024",
+      "label": {
+        "zh": "历史估计",
+        "en": "Historical estimate"
+      },
+      "value": 415,
+      "unit": "TWh",
+      "period": 2024,
+      "scope": {
+        "zh": "全球全部数据中心",
+        "en": "All data centres worldwide"
+      },
+      "source": "iea",
+      "kind": "estimate"
+    },
+    {
+      "id": "energy-2030",
+      "label": {
+        "zh": "基准情景预测",
+        "en": "Base Case projection"
+      },
+      "value": 945,
+      "unit": "TWh",
+      "period": 2030,
+      "scope": {
+        "zh": "全球全部数据中心",
+        "en": "All data centres worldwide"
+      },
+      "source": "iea",
+      "kind": "projection"
+    }
+  ],
+  "cases": [
+    {
+      "id": "manufacturing",
+      "name": {
+        "zh": "智能制造",
+        "en": "Manufacturing"
+      },
+      "capabilities": [
+        "vision",
+        "prediction"
+      ],
+      "task": {
+        "zh": "发现异常，辅助质检",
+        "en": "Detect anomalies, assist inspection"
+      },
+      "before": {
+        "zh": [
+          "采集图像",
+          "人工逐项检查",
+          "记录缺陷"
+        ],
+        "en": [
+          "Capture images",
+          "Inspect manually",
+          "Log defects"
+        ]
+      },
+      "after": {
+        "zh": [
+          "采集图像",
+          "模型标记异常",
+          "人员复核处置"
+        ],
+        "en": [
+          "Capture images",
+          "Flag anomalies",
+          "Human review"
+        ]
+      },
+      "meaning": {
+        "zh": "把重复的视觉筛查变为可重复运行的检测流程，人员集中处理疑难缺陷。",
+        "en": "Repeatable visual screening lets people focus on ambiguous defects."
+      },
+      "limit": {
+        "zh": "MVTec 是研究基准；不能据此推断真实产线的节约比例。",
+        "en": "MVTec is a benchmark, not evidence of savings on a production line."
+      },
+      "source": "mvtec"
+    },
+    {
+      "id": "agriculture",
+      "name": {
+        "zh": "智慧农业",
+        "en": "Agriculture"
+      },
+      "capabilities": [
+        "prediction"
+      ],
+      "task": {
+        "zh": "结合天气，辅助播种",
+        "en": "Weather-informed sowing"
+      },
+      "before": {
+        "zh": [
+          "观察天气",
+          "依经验选日期",
+          "播种"
+        ],
+        "en": [
+          "Observe weather",
+          "Choose by experience",
+          "Sow"
+        ]
+      },
+      "after": {
+        "zh": [
+          "整理气象数据",
+          "模型给出播种建议",
+          "农户结合当地条件决策"
+        ],
+        "en": [
+          "Prepare weather data",
+          "Generate advice",
+          "Farmer decides locally"
+        ]
+      },
+      "meaning": {
+        "zh": "将数据转成可操作的时间建议，帮助生产决策适应不确定环境。",
+        "en": "Turn data into timing advice for decisions under uncertainty."
+      },
+      "limit": {
+        "zh": "建议依赖当地数据质量和适用性，不保证增产。",
+        "en": "Advice depends on local data and suitability; yield gains are not guaranteed."
+      },
+      "source": "agri"
+    },
+    {
+      "id": "health",
+      "name": {
+        "zh": "辅助医疗",
+        "en": "Healthcare"
+      },
+      "capabilities": [
+        "vision",
+        "prediction"
+      ],
+      "task": {
+        "zh": "识别影像，辅助判断",
+        "en": "Image analysis and support"
+      },
+      "before": {
+        "zh": [
+          "采集影像",
+          "医生阅片",
+          "综合诊断"
+        ],
+        "en": [
+          "Acquire image",
+          "Read image",
+          "Clinical decision"
+        ]
+      },
+      "after": {
+        "zh": [
+          "采集影像",
+          "模型辅助识别",
+          "医生综合判断"
+        ],
+        "en": [
+          "Acquire image",
+          "AI-assisted analysis",
+          "Clinician decides"
+        ]
+      },
+      "meaning": {
+        "zh": "让识别工具进入专业工作流，支持医生处理信息。",
+        "en": "Embed recognition tools into clinical information workflows."
+      },
+      "limit": {
+        "zh": "监管清单说明应用存在；具体效果须按设备与临床场景验证。",
+        "en": "A device listing is not proof of a universal benefit; validation is device-specific."
+      },
+      "source": "fda"
+    },
+    {
+      "id": "science",
+      "name": {
+        "zh": "科学发现",
+        "en": "Science"
+      },
+      "capabilities": [
+        "prediction"
+      ],
+      "task": {
+        "zh": "预测结构，缩小探索空间",
+        "en": "Predict structure, focus exploration"
+      },
+      "before": {
+        "zh": [
+          "获取序列",
+          "实验解析结构",
+          "检验科学假设"
+        ],
+        "en": [
+          "Obtain sequence",
+          "Determine structure",
+          "Test hypotheses"
+        ]
+      },
+      "after": {
+        "zh": [
+          "获取序列",
+          "预测结构与置信度",
+          "实验验证与发现"
+        ],
+        "en": [
+          "Obtain sequence",
+          "Predict structure",
+          "Validate experimentally"
+        ]
+      },
+      "meaning": {
+        "zh": "结构预测为实验设计提供线索，扩展可以研究的问题范围。",
+        "en": "Structure prediction guides experiments and broadens the space of questions."
+      },
+      "limit": {
+        "zh": "预测不是实验事实；需结合置信度与验证。",
+        "en": "Predictions are not experimental facts; confidence and validation matter."
+      },
+      "source": "alpha"
+    },
+    {
+      "id": "service",
+      "name": {
+        "zh": "知识服务",
+        "en": "Services"
+      },
+      "capabilities": [
+        "language",
+        "generation"
+      ],
+      "task": {
+        "zh": "检索知识，协助回复",
+        "en": "Retrieve knowledge, draft replies"
+      },
+      "before": {
+        "zh": [
+          "接收问题",
+          "人工查找知识",
+          "编写回复"
+        ],
+        "en": [
+          "Receive question",
+          "Search knowledge",
+          "Write reply"
+        ]
+      },
+      "after": {
+        "zh": [
+          "接收问题",
+          "AI 提供回复建议",
+          "人员审核回复"
+        ],
+        "en": [
+          "Receive question",
+          "AI suggests reply",
+          "Human approves"
+        ]
+      },
+      "meaning": {
+        "zh": "NBER 2023 工作论文在客服样本中观察到每小时解决问题数平均提升 14%。",
+        "en": "The NBER 2023 working paper reports 14% more issues resolved per hour in its support sample."
+      },
+      "limit": {
+        "zh": "效果依赖任务和经验水平，不能外推至所有职业。",
+        "en": "Effects depend on tasks and experience, not all occupations."
+      },
+      "source": "nber"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "vision",
+      "name": {
+        "zh": "视觉识别",
+        "en": "Vision"
+      }
+    },
+    {
+      "id": "prediction",
+      "name": {
+        "zh": "预测分析",
+        "en": "Prediction"
+      }
+    },
+    {
+      "id": "language",
+      "name": {
+        "zh": "语言理解",
+        "en": "Language"
+      }
+    },
+    {
+      "id": "generation",
+      "name": {
+        "zh": "内容生成",
+        "en": "Generation"
+      }
+    }
+  ]
+}

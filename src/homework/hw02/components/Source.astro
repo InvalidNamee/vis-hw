@@ -1,0 +1,9 @@
+---
+import { sourceById } from '../content';
+import { localeFromUrl } from '../../../i18n';
+import ExternalLink from '../../../components/ExternalLink.astro';
+interface Props { ids: string[]; note?: string; }
+const {ids,note} = Astro.props;
+const en=localeFromUrl(Astro.url)==='en';
+---
+<div class="source-note"><span>{en?'SOURCE':'来源'}</span> {ids.map(id => {const s=sourceById(id);return <ExternalLink href={s.url}>{id==='concept'&&en?'Concept reference':s.title}</ExternalLink>;})}{note&&<p>{note}</p>}</div>

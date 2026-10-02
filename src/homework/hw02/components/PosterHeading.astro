@@ -1,0 +1,23 @@
+---
+import {href} from '../../../config/homework';
+import {chapters,dataset,type Lang} from '../content';
+interface Props {chapter:string;lang:Lang;}
+const {chapter,lang}=Astro.props;
+const current=chapters.find(c=>c.id===chapter)!;
+const en=lang==='en';
+const record=(id:string)=>dataset.records.find(r=>r.id===id)!.value;
+const metrics:Record<string,[string,string][]>={
+ trends:[[`${record('adoption-2025')}%`,en?'Surveyed organizations · 2025':'受访组织使用 AI · 2025'],['2023–25',en?'Adoption series':'采用率时间范围']],
+ industries:[[String(dataset.cases.length),en?'Industry cases':'产业案例'],[String(dataset.capabilities.length),en?'AI capabilities':'智能能力']],
+ work:[[`+${record('support')}%`,en?'Support productivity · study':'客服生产率 · 研究结果'],[`+${record('novice')}%`,en?'Novice / low-skilled subset':'新手与低技能子集']],
+ lab:[['4',en?'Adjustable parameters':'可调情景参数'],['2',en?'Workflows to compare':'工作方式对照']],
+ transition:[[`${record('energy-2024')}`,en?'TWh · 2024 estimate':'TWh · 2024 历史估计'],[`${record('energy-2030')}`,en?'TWh · 2030 projection':'TWh · 2030 情景预测']],
+ sources:[[String(dataset.records.length),en?'Indicator records':'指标记录'],[String(dataset.sources.length),en?'Research sources':'数据与研究来源']]
+};
+const image=['work','transition','sources'].includes(chapter)?'intelligence':'neural-layers';
+---
+<header class:list={['hw-page-heading','poster-heading',`poster-${image}`]}>
+ <img src={href(`images/hw02/${image}.webp`)} alt="" width="1600" height={image==='intelligence'?1000:900} fetchpriority="high" decoding="async" />
+ <div class="poster-title"><h1>{current.title[lang]}</h1><p>{current.desc[lang]}</p></div>
+ <div class="poster-metrics">{metrics[chapter].map(([value,label])=><div><strong>{value}</strong><span>{label}</span></div>)}</div>
+</header>

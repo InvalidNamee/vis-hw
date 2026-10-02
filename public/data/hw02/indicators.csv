@@ -1,0 +1,13 @@
+id,label_zh,label_en,value,unit,period,scope_zh,scope_en,kind,source_url,source_section,retrieved
+adoption-2023,组织 AI 采用率,Organizational AI adoption,55,%,2023,全球受访组织,Surveyed organizations worldwide,observed,https://hai.stanford.edu/ai-index/2025-ai-index-report/economy,Highlights 3–4,2026-10-01
+adoption-2024,组织 AI 采用率,Organizational AI adoption,78,%,2024,全球受访组织,Surveyed organizations worldwide,observed,https://hai.stanford.edu/ai-index/2025-ai-index-report/economy,Highlights 3–4,2026-10-01
+adoption-2025,组织 AI 采用率,Organizational AI adoption,88,%,2025,全球受访组织,Surveyed organizations worldwide,observed,https://hai.stanford.edu/ai-index/2026-ai-index-report/economy,Highlight 5,2026-10-01
+investment-us,美国,United States,109.1,USD billion,2024,AI 私人投资（所选三国）,Private AI investment (three selected countries),observed,https://hai.stanford.edu/ai-index/2025-ai-index-report/economy,Highlights 3–4,2026-10-01
+investment-cn,中国,China,9.3,USD billion,2024,AI 私人投资（所选三国）,Private AI investment (three selected countries),observed,https://hai.stanford.edu/ai-index/2025-ai-index-report/economy,Highlights 3–4,2026-10-01
+investment-uk,英国,United Kingdom,4.5,USD billion,2024,AI 私人投资（所选三国）,Private AI investment (three selected countries),observed,https://hai.stanford.edu/ai-index/2025-ai-index-report/economy,Highlights 3–4,2026-10-01
+support,客服：每小时解决问题,Support: issues resolved/hour,14,%,2023,特定研究样本，相对基准变化,Study-specific sample; relative to baseline,observed,https://www.nber.org/papers/w31161,Working Paper 31161 · 2023 abstract,2026-10-01
+novice,新手与低技能组,Novice / low-skilled group,34,%,2023,特定研究样本，相对基准变化,Study-specific sample; relative to baseline,observed,https://www.nber.org/papers/w31161,Working Paper 31161 · 2023 abstract,2026-10-01
+time,写作：完成时间,Writing: completion time,-40,%,2023,特定研究样本，相对基准变化,Study-specific sample; relative to baseline,observed,https://doi.org/10.1126/science.adh2586,Abstract · professional writing experiment,2026-10-01
+quality,写作：质量评分,Writing: quality score,18,%,2023,特定研究样本，相对基准变化,Study-specific sample; relative to baseline,observed,https://doi.org/10.1126/science.adh2586,Abstract · professional writing experiment,2026-10-01
+energy-2024,历史估计,Historical estimate,415,TWh,2024,全球全部数据中心,All data centres worldwide,estimate,https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai,The outlook for energy demand from data centres,2026-10-01
+energy-2030,基准情景预测,Base Case projection,945,TWh,2030,全球全部数据中心,All data centres worldwide,projection,https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai,The outlook for energy demand from data centres,2026-10-01
