@@ -2,10 +2,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
+const homeworkCount = Number(readFileSync(new URL('../src/config/homework.ts', import.meta.url), 'utf8').match(/length:\s*(\d+)/)[1]);
 const read = path => readFileSync(new URL(`../dist/${path}index.html`, import.meta.url), 'utf8');
 
 test('all pages have matching language routes and localized navigation', () => {
-  for (const path of ['', 'about/', ...Array.from({ length: 9 }, (_, i) => `hw${String(i + 1).padStart(2, '0')}/`)]) {
+  for (const path of ['', 'about/', ...Array.from({ length: homeworkCount }, (_, i) => `hw${String(i + 1).padStart(2, '0')}/`)]) {
     for (const prefix of ['', 'en/']) {
       const html = read(prefix + path);
       assert.match(html, new RegExp(`<html lang="${prefix ? 'en' : 'zh-CN'}"`));
@@ -18,7 +19,7 @@ test('all pages have matching language routes and localized navigation', () => {
         assert.doesNotMatch(visible, /\p{Script=Han}/u, path);
         const nav = html.match(/<nav class="desktop-nav"[\s\S]*?<\/nav>/)?.[0];
         assert.ok(nav);
-        assert.equal([...nav.matchAll(/href="\/en\/hw\d+\/"/g)].length, 9);
+        assert.equal([...nav.matchAll(/href="\/en\/hw\d+\/"/g)].length, homeworkCount);
       }
     }
   }
