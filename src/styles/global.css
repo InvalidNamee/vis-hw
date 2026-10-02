@@ -47,6 +47,8 @@ a.assignment:hover { border-color: var(--border-hover); box-shadow: 0 4px 18px #
 .assignment-bottom { border-top: 1px solid var(--surface-raised); padding-top: 14px; font-size: 13px; color: var(--text-subtle); }
 .assignment-ready .assignment-bottom span:last-child { color: var(--blue); }
 .site-footer { max-width: 1120px; margin: auto; padding: 24px 0 32px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; color: var(--text-subtle); font-size: 13px; }
+.site-workspace { --workspace-max-width: 1760px; }
+.site-workspace .nav-shell { max-width: var(--workspace-max-width); }
 .back-link { display: inline-block; color: var(--text-muted); font-size: 14px; margin: 30px 0 35px; }
 .back-link:hover { color: var(--blue); }
 .lesson-heading { margin-bottom: 32px; }

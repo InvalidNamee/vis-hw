@@ -5,5 +5,7 @@ export interface HomeworkMeta {
   ready: boolean;
   /** Image path relative to public/. */
   cover?: string;
+  /** Optional dark-mode cover path relative to public/. */
+  coverDark?: string;
   coverAlt?: string;
 }

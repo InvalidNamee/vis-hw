@@ -26,7 +26,10 @@ const available = homework.filter(hw => hw.ready);
         {homework.map(hw => {
           const Card = hw.ready ? 'a' : 'div';
           return <Card class:list={['assignment', { 'assignment-ready': hw.ready }]} {...(hw.ready ? { href: localizedHref(`${hw.id}/`, locale) } : {})}>
-            {hw.cover && <img class="assignment-cover" src={href(hw.cover)} alt={hw.coverAlt ?? ''} width="640" height="360" loading="lazy" decoding="async" />}
+            {hw.cover && <div class="assignment-cover-wrap">
+              {hw.coverDark && <img class="assignment-cover assignment-cover-dark" src={href(hw.coverDark)} alt="" width="640" height="360" loading="lazy" decoding="async" />}
+              <img class:list={['assignment-cover', { 'assignment-cover-light': Boolean(hw.coverDark) }]} src={href(hw.cover)} alt={hw.coverAlt ?? ''} width="640" height="360" loading="lazy" decoding="async" />
+            </div>}
             <div class="assignment-body">
               <div class="assignment-top"><span class="assignment-id">{hw.id.toUpperCase()}</span><span class:list={['badge', { 'badge-ready': hw.ready }]}>{hw.ready ? t("可查看") : t("未添加")}</span></div>
               <h3>{homeworkName(hw, locale)}</h3><p>{t(hw.description)}</p>
@@ -48,7 +51,11 @@ const available = homework.filter(hw => hw.ready);
   .about-link:hover { color: var(--accent); }
   .assignment { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
   .assignment-ready { border-top-width: 1px; border-color: var(--border-active); }
-  .assignment-cover { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-bottom: 1px solid var(--border-soft); }
+  .assignment-cover-wrap { position: relative; aspect-ratio: 16/9; overflow: hidden; border-bottom: 1px solid var(--border-soft); background: var(--surface-muted); }
+  .assignment-cover { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .assignment-cover-dark { display: none; }
+  :global(:root.dark) .assignment-cover-light { display: none; }
+  :global(:root.dark) .assignment-cover-dark { display: block; }
   .assignment-body { display: flex; flex-direction: column; padding: 20px; flex: 1; }
   .assignment-id { font-size: 13px; letter-spacing: .06em; color: var(--text-subtle); font-weight: 600; }
   .assignment-ready .assignment-id { color: var(--accent); }

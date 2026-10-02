@@ -44,7 +44,7 @@ async function switchLanguage(target: URL, traverse = false) {
     // Capture at swap time, so scrolling/interaction during the request is respected.
     const position = { left: scrollX, top: scrollY, behavior: 'instant' as ScrollBehavior };
     const tabs = all('.homework-tabs').map(group => all('[role="tab"]', group).findIndex(tab => tab.getAttribute('aria-selected') === 'true'));
-    const controls = all<HTMLInputElement | HTMLSelectElement>('#main input, #main select').map(control => control.value);
+    const controls = all<HTMLInputElement | HTMLSelectElement>('#main input:not([data-hw02-control]), #main select:not([data-hw02-control])').map(control => control.value);
     const details = all<HTMLDetailsElement>('details').map(element => element.open);
     const flexSize = document.querySelector('flex-demo button[aria-pressed="true"]')?.getAttribute('data-size');
     const previousAnchoring = document.documentElement.style.overflowAnchor;
@@ -59,14 +59,18 @@ async function switchLanguage(target: URL, traverse = false) {
     document.documentElement.lang = incoming.documentElement.lang;
     document.title = incoming.title;
     document.querySelector('meta[name="description"]')?.setAttribute('content', incoming.querySelector('meta[name="description"]')?.getAttribute('content') ?? '');
-    for (const selector of regions) {
+    const independentRegions = regions.filter(selector => {
+      const region = incoming.querySelector(selector)!;
+      return !regions.some(parentSelector => parentSelector !== selector && incoming.querySelector(parentSelector)!.contains(region));
+    });
+    for (const selector of independentRegions) {
       const current = document.querySelector(selector)!;
       const next = incoming.querySelector(selector)!;
       current.replaceChildren(...next.childNodes);
     }
     document.dispatchEvent(new Event('astro:after-swap'));
     all('.homework-tabs').forEach((group, index) => all<HTMLElement>('[role="tab"]', group)[tabs[index]]?.click());
-    all<HTMLInputElement | HTMLSelectElement>('#main input, #main select').forEach((control, index) => {
+    all<HTMLInputElement | HTMLSelectElement>('#main input:not([data-hw02-control]), #main select:not([data-hw02-control])').forEach((control, index) => {
       if (controls[index] === undefined) return;
       control.value = controls[index];
       control.dispatchEvent(new Event('input', { bubbles: true }));

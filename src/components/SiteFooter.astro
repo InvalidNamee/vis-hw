@@ -1,0 +1,8 @@
+---
+import { translator } from '../i18n';
+const t = translator(Astro.url);
+---
+<footer class="site-footer">
+ <slot />
+ <span>{t('可视化导论')}</span><span>{t('观察 · 理解 · 表达')}</span>
+</footer>
