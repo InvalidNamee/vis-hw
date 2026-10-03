@@ -7,6 +7,7 @@ import {localizedHref,localeFromUrl} from '../../i18n';
 import {href} from '../../config/homework';
 import {ArrowDown,ArrowUpRight,FlaskConical,Network,BookOpen} from '@lucide/astro';
 import './story.css';
+import './exhibition.css';
 interface Props {lang:Lang;}
 const {lang}=Astro.props,t=(z:string,e:string)=>lang==='en'?e:z;
 const link=(path:string)=>localizedHref(`hw02/${path}`,localeFromUrl(Astro.url));

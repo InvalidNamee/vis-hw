@@ -8,6 +8,24 @@ import {sceneFamily,type SceneState} from './story-state';
 
 type G=d3.Selection<SVGGElement,string,SVGSVGElement,unknown>;
 const blue='var(--hw-blue)',mint='var(--hw-mint)',orange='var(--hw-orange)',purple='var(--hw-purple)';
+/** Presentation progress never interpolates measured values between studies. */
+export function drawScrollPhase(svg:SVGSVGElement,step:StoryStep,phase:number,reduced:boolean){
+ const layer=d3.select(svg).select<SVGGElement>('g.story-plot-layer');
+ const enter=reduced?1:Math.min(1,.35+phase*5);
+ layer.attr('opacity',enter).attr('transform',reduced?null:`translate(0,${(1-enter)*20})`);
+ svg.dataset.scrollPhase=phase.toFixed(3);
+ if(step.scene==='collaboration'){
+  const nodes=Array.from(svg.querySelectorAll<SVGGElement>('.workflow-node'));
+  const index=step.focus??0,current=nodes[index],next=nodes[Math.min(index+1,nodes.length-1)];
+  if(current&&next){
+   const a=current.transform.baseVal.consolidate()?.matrix,b=next.transform.baseVal.consolidate()?.matrix;
+   const width=Number(current.querySelector('rect')?.getAttribute('width'));
+   const t=reduced?0:Math.max(0,Math.min(1,(phase-.2)/.65));
+   if(a&&b)layer.select('.workflow-packet').attr('cx',a.e+(b.e-a.e)*t+width/2).attr('cy',a.f+(b.f-a.f)*t-10);
+  }
+ }
+ if(sceneFamily(step)==='industry')layer.selectAll<SVGPathElement,unknown>('.industry-link').attr('stroke-dasharray',function(){const length=this.getTotalLength();return `${length} ${length}`;}).attr('stroke-dashoffset',function(){return this.getTotalLength()*(1-enter);});
+}
 export function explorableHeight(step:StoryStep,w:number){
  const family=sceneFamily(step);
  return family==='collaboration'?w<500?360:290:family==='industry'?380:family==='effects'?280:family==='mosaic'?w>=600?330:370:family==='lab'?350:family==='infrastructure'?300:family==='energy'?290:family==='exposure'?330:step.scene==='medical'?310:340;

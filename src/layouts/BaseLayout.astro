@@ -9,7 +9,7 @@ import LanguageSwitch from '../components/LanguageSwitch.astro';
 import ThemeSwitch from '../components/ThemeSwitch.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { siGithub } from 'simple-icons';
-interface Props { title: string; description?: string; current?: string; variant?: 'default' | 'workspace'; }
+interface Props { title: string; description?: string; current?: string; variant?: 'default' | 'workspace' | 'exhibition'; }
 const { title, description = t("《可视化导论》课程作业：从网页基础到数据可视化。"), current, variant = 'default' } = Astro.props;
 ---
 <!doctype html>
@@ -30,9 +30,9 @@ const { title, description = t("《可视化导论》课程作业：从网页基
     <link rel="icon" type="image/svg+xml" href={href('favicon.svg')} />
     <title>{title} · {t("可视化导论")}</title>
   </head>
-  <body class:list={{'site-workspace': variant === 'workspace'}}>
+  <body class:list={{'site-workspace': variant === 'workspace','site-exhibition':variant==='exhibition'}}>
     <a class="skip-link" href="#main">{t("跳到正文")}</a>
-    <header class="site-header">
+    {variant==='exhibition'?<slot name="header"/>:<header class="site-header">
       <div class="nav-shell">
         <a class="brand" href={localizedHref("", locale)} aria-current={!current ? 'page' : undefined}>{locale === "en" ? "Visualization" : t("可视化导论")}</a>
         <nav class="desktop-nav" aria-label={t("作业导航")}>
@@ -55,7 +55,7 @@ const { title, description = t("《可视化导论》课程作业：从网页基
           </ExternalLink>
         </nav>
       </div>
-    </header>
+    </header>}
     <script is:inline>
       (() => {
         const header = document.querySelector('.site-header');

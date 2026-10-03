@@ -87,9 +87,25 @@ async function switchLanguage(target: URL, traverse = false) {
     // Suppress both hash navigation and the site's smooth scrolling during the swap.
     document.documentElement.style.setProperty('--site-header-height', `${document.querySelector('.site-header')!.getBoundingClientRect().height}px`);
     window.scrollTo(position);
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      const step = storyPosition && document.getElementById(storyPosition.id);
-      if (step && storyPosition) window.scrollTo({ top: scrollY + step.getBoundingClientRect().top - storyPosition.offset, behavior: 'instant' });
+    const settleStory=()=>{
+      const cancel=new AbortController();
+      const finish=()=>{cancel.abort();document.documentElement.style.overflowAnchor=previousAnchoring;};
+      for(const event of ['wheel','touchstart','keydown','hashchange'])window.addEventListener(event,finish,{signal:cancel.signal,once:true,passive:true});
+      let frames=0,stable=0,height=0;
+      const settle=()=>{
+        if(cancel.signal.aborted||controller.signal.aborted){finish();return;}
+        const step=storyPosition&&document.getElementById(storyPosition.id);
+        if(!step){finish();return;}
+        const nextHeight=document.documentElement.scrollHeight;
+        stable=nextHeight===height?stable+1:0;height=nextHeight;
+        window.scrollTo({top:scrollY+step.getBoundingClientRect().top-storyPosition!.offset,behavior:'instant'});
+        // Six chapter mounts and decorative refreshes can change height after
+        // the initial swap. Restore against the settled scene geometry.
+        if(++frames<40&&(frames<20||stable<3))requestAnimationFrame(settle);else finish();
+      };
+      requestAnimationFrame(settle);
+    };
+    if(storyPosition)settleStory();else requestAnimationFrame(() => requestAnimationFrame(() => {
       document.documentElement.style.overflowAnchor = previousAnchoring;
       window.dispatchEvent(new Event('scroll'));
     }));

@@ -17,6 +17,13 @@ test('all pages have matching language routes and localized navigation', () => {
       if (prefix) {
         const visible = html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, '').replaceAll('中文', '');
         assert.doesNotMatch(visible, /\p{Script=Han}/u, path);
+        if(path==='hw02/'){
+          const nav=html.match(/<nav class="exhibition-chapters"[\s\S]*?<\/nav>/)?.[0];
+          assert.ok(nav,'the independent exhibition retains localized chapter navigation');
+          assert.equal([...nav.matchAll(/data-story-nav=/g)].length,6);
+          assert.ok(!html.includes('class="desktop-nav"'));
+          continue;
+        }
         const nav = html.match(/<nav class="desktop-nav"[\s\S]*?<\/nav>/)?.[0];
         assert.ok(nav);
         assert.equal([...nav.matchAll(/href="\/en\/hw\d+\/"/g)].length, homeworkCount);

@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import {findStoryStep,storyChapters} from './story-content';
-import {drawExplorable,explorableHeight} from './story-graphics';
+import {drawExplorable,explorableHeight,drawScrollPhase} from './story-graphics';
 import {sceneState} from './story-state';
 import {renderSceneControls} from './story-interactions';
 import type {Lang} from './content';
@@ -77,7 +77,7 @@ class StoryChapter extends HTMLElement {
   const sticky=this.querySelector<HTMLElement>('.story-sticky')!;
   sticky.setAttribute('aria-hidden',String(!this.fixed));
   const steps=Array.from(this.querySelectorAll<HTMLElement>('.story-step'));
-  const threshold=this.header()+(innerHeight-this.header())*.42;
+  const threshold=this.header()+40;
   let index=0;steps.forEach((step,i)=>{if(step.getBoundingClientRect().top<=threshold)index=i;});
   const id=steps[index].dataset.storyStep!;this.dataset.activeStep=id;
   steps.forEach(step=>step.toggleAttribute('data-active',step.dataset.storyStep===id));
@@ -85,9 +85,28 @@ class StoryChapter extends HTMLElement {
   if(this.nearby&&this.fixed){
    this.sizeScenes(viewportKey);
    const scene=this.querySelector<HTMLElement>('.story-master-scenes .story-scene')!;
+   const narrative=this.querySelector<HTMLElement>('.story-narrative')!;
+   if(narrative.dataset.step!==id){
+    const copy=steps[index].querySelector('.story-step-copy')!.cloneNode(true) as HTMLElement;
+    copy.inert=false;copy.removeAttribute('aria-hidden');
+    narrative.replaceChildren(copy);
+    narrative.dataset.step=id;
+   }
    if(scene.dataset.scene!==id)this.syncScene(scene,steps[index].querySelector<HTMLElement>('.story-scene')!);
-   this.draw(scene);
-   if(sticky.getBoundingClientRect().height>innerHeight-this.header()-40){
+   this.draw(scene,false);
+   const distance=Math.max(1,steps[index].getBoundingClientRect().height);
+   const phase=Math.max(0,Math.min(1,(threshold-steps[index].getBoundingClientRect().top)/distance));
+   this.style.setProperty('--scene-phase',String(phase));
+   const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+   const entrance=reduced?1:Math.min(1,.35+phase*5);
+   const exit=reduced||index===steps.length-1?1:Math.min(1,(1-phase)*8);
+   narrative.style.opacity=String(Math.min(entrance,exit));
+   narrative.style.transform=reduced?'none':`translateY(${(1-entrance)*22-(1-exit)*12}px)`;
+   drawScrollPhase(scene.querySelector('svg')!,findStoryStep(id)!,phase,reduced);
+   scene.querySelector<SVGElement>('g.story-plot-layer')?.setAttribute('opacity',String(Math.min(entrance,exit)));
+   // The narrative and diagram form one sticky stage. Test the actual diagram,
+   // not the stage's viewport height, before falling back to ordinary reading.
+   if(scene.getBoundingClientRect().height>innerHeight-this.header()-56){
     const top=scene.getBoundingClientRect().top,focused=sticky.contains(document.activeElement);
     this.rejectedViewport=viewportKey;this.fixed=false;this.removeAttribute('data-fixed');sticky.setAttribute('aria-hidden','true');
     if(this.expandedScene===id){
@@ -99,6 +118,7 @@ class StoryChapter extends HTMLElement {
    }
   }
   if(!this.fixed)this.reserveSnapshots();
+  steps.forEach(step=>{const copy=step.querySelector<HTMLElement>('.story-step-copy')!;copy.inert=this.fixed;copy.setAttribute('aria-hidden',String(this.fixed));});
   if(!this.fixed)steps.forEach(step=>{const r=step.getBoundingClientRect();if(r.bottom>-250&&r.top<innerHeight+250)this.draw(step.querySelector<HTMLElement>('.story-scene')!);});
   if(wasFixed!==this.fixed&&pendingFocus&&(document.activeElement===document.body||this.contains(document.activeElement)))this.handoffFocus(pendingFocus);
   this.updateReadingProgress();
@@ -171,6 +191,8 @@ class StoryChapter extends HTMLElement {
   const style=getComputedStyle(scene),w=Math.max(240,scene.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight));
   const state=sceneState(step),theme=document.documentElement.dataset.theme||'light',key=`${Math.round(w)}-${theme}-${step.id}-${JSON.stringify(state)}`;
   renderSceneControls(scene.querySelector<HTMLElement>('.story-interaction')!,step,this.locale);
+  const originalLink=this.querySelector<HTMLAnchorElement>(`#${step.id} .story-more`),liveLink=this.querySelector<HTMLAnchorElement>('.story-narrative .story-more');
+  if(originalLink&&liveLink&&this.querySelector<HTMLElement>('.story-narrative')?.dataset.step===step.id)liveLink.href=originalLink.href;
   if(canvas.dataset.renderKey===key)return;
   const svg=d3.select(canvas).selectAll<SVGSVGElement,null>('svg').data([null]).join('svg').attr('id',`plot-${scene.dataset.instance}`).attr('aria-label',step.label[this.locale]);
   svg.selectAll('*').interrupt();

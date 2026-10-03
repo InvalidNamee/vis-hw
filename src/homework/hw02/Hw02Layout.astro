@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
+import LanguageSwitch from '../../components/LanguageSwitch.astro';
+import ThemeSwitch from '../../components/ThemeSwitch.astro';
 import { getHomework } from '../../config/homework';
 import { localeFromUrl,localizedHref,translate } from '../../i18n';
 import { chapters,text,type Lang } from './content';
@@ -19,9 +21,15 @@ const hw=getHomework('hw02');
 const story=chapter==='';
 const storyIcons=[Users,Network,ChartNoAxesCombined,ChartNoAxesCombined,Leaf,FlaskConical];
 ---
-<BaseLayout title={`${current.name[lang]} · ${translate(locale,hw.title)}`} description={current.desc[lang]} current="hw02" variant="workspace">
+<BaseLayout title={`${current.name[lang]} · ${translate(locale,hw.title)}`} description={current.desc[lang]} current="hw02" variant={story?'exhibition':'workspace'}>
+ {story&&<header slot="header" class="site-header exhibition-header"><div class="exhibition-nav">
+  <a class="exhibition-brand" href={link('')} aria-current="page">{t('智变','AI / SHIFT')}<small>HW02</small></a>
+  <nav class="exhibition-chapters" aria-label={t('故事章节','Story chapters')}>{storyChapters.map((c,i)=><a href={`#${c.id}`} data-story-nav={c.id}><span>{String(i+1).padStart(2,'0')}</span>{c.name[lang]}</a>)}</nav>
+  <div class="exhibition-tools"><a href={link('sources/')}>{t('数据与方法','Sources')}</a><LanguageSwitch/><ThemeSwitch/></div>
+  <details class="exhibition-menu"><summary>{t('章节','Chapters')}</summary><nav>{storyChapters.map(c=><a href={`#${c.id}`} data-story-nav={c.id}>{c.name[lang]}</a>)}<a href={localizedHref('',locale)}>{t('课程首页','Course home')}</a></nav></details>
+ </div></header>}
  <hw02-shell class="hw-shell" data-lang={lang} data-story={story?'':undefined} data-collapsed={story?'':undefined}>
-  <button class="hw-mobile-menu" aria-expanded="false" aria-controls="hw-sidebar"><Menu size={18}/>{t('专题导航','Explore chapters')}</button>
+  {!story&&<><button class="hw-mobile-menu" aria-expanded="false" aria-controls="hw-sidebar"><Menu size={18}/>{t('专题导航','Explore chapters')}</button>
   <aside class="hw-sidebar" id="hw-sidebar" aria-label={t('HW02 章节导航','HW02 chapters')}>
    <a class="hw-brand" href={link('')}><span class="hw-brand-mark"><Orbit size={25}/></span><span class="nav-label">{t('智变','AI / SHIFT')}<small>{t('AI 与新质生产力','NEW PRODUCTIVE FORCES')}</small></span></a>
    <div class="hw-side-heading"><span class="nav-label">{story?t('阅读章节','READ THE STORY'):t('探索专题','EXPLORE')}</span><button class="hw-collapse" aria-label={story?t('展开侧栏','Expand sidebar'):t('折叠侧栏','Collapse sidebar')} aria-expanded={story?"false":"true"}><PanelLeftClose size={17}/></button></div>
@@ -31,7 +39,7 @@ const storyIcons=[Users,Network,ChartNoAxesCombined,ChartNoAxesCombined,Leaf,Fla
     <nav class="story-deep-nav" aria-label={t('深入探索','Explore further')}><a href={link('')} title={t('完整故事','The full story')} aria-current="page"><Orbit size={18}/><span class="nav-label">{t('完整故事','The full story')}</span></a>{chapters.slice(1).map((c,i)=>{const Icon=icons[i+1];return <a href={link(c.id)} title={c.name[lang]}><Icon size={16}/><span class="nav-label">{c.name[lang]}</span></a>;})}</nav>
    </>:<nav>{chapters.map((c,i)=>{const Icon=icons[i];return <a href={link(c.id)} aria-current={c.id===chapter?'page':undefined} title={c.name[lang]}><Icon size={18}/><span class="nav-label">{c.name[lang]}</span><span class="nav-index">{String(i).padStart(2,'0')}</span></a>;})}</nav>}
    <div class="hw-side-bottom"><span class="live-dot"></span><span class="nav-label">{t('可视化导论 · HW02','VISUALIZATION · HW02')}<small>{t('数据 · 机制 · 实验','DATA · MECHANISMS · EXPERIMENTS')}</small></span></div>
-  </aside>
+  </aside></>}
   <div class="hw-main">
    <slot />
    <SiteFooter>

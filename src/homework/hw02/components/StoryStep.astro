@@ -2,12 +2,13 @@
 import StoryScene from './StoryScene.astro';
 import type {StoryStep} from '../story-content';
 import type {Lang} from '../content';
+import {storyBeat} from '../story-beats';
 import {localizedHref,localeFromUrl} from '../../../i18n';
 import {ArrowUpRight} from '@lucide/astro';
 interface Props {step:StoryStep;lang:Lang;number:number;total:number;}
 const {step,lang,number,total}=Astro.props;
 ---
 <article class="story-step" id={step.id} data-story-step={step.id} tabindex="-1">
- <div class="story-step-copy"><span class="story-step-index">{String(number).padStart(2,'0')} / {String(total).padStart(2,'0')}</span><h3>{step.title[lang]}</h3><p>{step.body[lang]}</p><blockquote>{step.takeaway[lang]}</blockquote><a class="story-more" href={localizedHref(`hw02/${step.link}`,localeFromUrl(Astro.url))}>{step.linkLabel[lang]}<ArrowUpRight size={16} aria-hidden="true"/></a></div>
+ <div class="story-step-copy"><span class="story-step-index">{String(number).padStart(2,'0')} / {String(total).padStart(2,'0')}</span><h3>{step.title[lang]}</h3><p>{storyBeat(step.id,lang)}</p><blockquote>{step.takeaway[lang]}</blockquote><details class="story-context-detail"><summary>{lang==='en'?'Context & limitations':'情境与限制'}</summary><p>{step.body[lang]}</p></details><a class="story-more" href={localizedHref(`hw02/${step.link}`,localeFromUrl(Astro.url))}>{step.linkLabel[lang]}<ArrowUpRight size={16} aria-hidden="true"/></a></div>
  <div class="story-snapshot"><StoryScene step={step} lang={lang} instance={`snapshot-${step.id}`}/></div>
 </article>
