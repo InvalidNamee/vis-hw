@@ -54,7 +54,7 @@ const t = translator(Astro.url);
 <style>
   flex-demo { display: block; margin: 12px 0 32px; padding: 24px; border: 1px solid var(--border-soft); border-radius: 8px; background: var(--surface-muted); }
   .flex-demo-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 16px; max-width: 720px; margin: 0 auto 12px; color: var(--text-secondary); font-size: 13px; }
-  .flex-demo-controls > div { display: flex; gap: 8px; }.flex-demo-controls button { padding: 6px 12px; border: 1px solid var(--diagram-border-strong); border-radius: 5px; background: var(--surface); color: var(--accent-strong); font-size: 13px; }.flex-demo-controls button[aria-pressed="true"] { border-color: var(--accent); background: var(--action); color: var(--on-action); }
+  .flex-demo-controls > div { display: flex; gap: 8px; }.flex-demo-controls button { display:inline-flex;align-items:center;justify-content:center;min-height:var(--control-height); padding: 6px 12px; border: 1px solid var(--diagram-border-strong); border-radius: 5px; background: var(--surface); color: var(--accent-strong); font-size: 13px; }.flex-demo-controls button[aria-pressed="true"] { border-color: var(--accent); background: var(--action); color: var(--on-action); }
   .flex-demo-stage { min-height: 118px; padding: 12px; border-radius: 6px; background: var(--border-soft); }
   .flex-demo-viewport { width: 100%; max-width: 720px; margin: 0 auto; transition: max-width 180ms ease; }
   .flex-demo-viewport[data-size="narrow"] { max-width: 320px; }

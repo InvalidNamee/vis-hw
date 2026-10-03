@@ -5,7 +5,7 @@ interface Props { title: string; description: string; current?: string; eyebrow?
 const { title, description, current, eyebrow, toc = [] } = Astro.props;
 ---
 <BaseLayout title={title} description={description} current={current}>
-  <div class="page-shell lesson-shell">
+  <div class:list={["page-shell lesson-shell", {"reading-page": !toc.length}]}>
     <header class="lesson-heading">
       {eyebrow && <p class="eyebrow">{eyebrow}</p>}
       <h1>{title}</h1>
@@ -13,12 +13,14 @@ const { title, description, current, eyebrow, toc = [] } = Astro.props;
     </header>
     <div class="document-grid">
       <div class="document-content"><slot /></div>
-      <aside class="document-toc"><TableOfContents entries={toc} /></aside>
+      {toc.length>0&&<aside class="document-toc"><TableOfContents entries={toc} /></aside>}
     </div>
   </div>
 </BaseLayout>
 <style is:global>
   .lesson-shell { padding-top: 32px; }
+  .reading-page{max-width:calc(800px + 2 * var(--page-gutter));}
+  .reading-page .document-grid{grid-template-columns:minmax(0,1fr);gap:0;}
   body:has(.lesson-shell) { background: var(--surface); }
   .document-grid { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 48px; align-items: start; }
   .document-content { min-width: 0; }
