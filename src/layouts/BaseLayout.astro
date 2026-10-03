@@ -32,7 +32,7 @@ const { title, description = t("《可视化导论》课程作业：从网页基
   </head>
   <body class:list={{'site-workspace': variant === 'workspace','site-exhibition':variant==='exhibition'}}>
     <a class="skip-link" href="#main">{t("跳到正文")}</a>
-    {variant==='exhibition'?<slot name="header"/>:<header class="site-header">
+    <header class="site-header">
       <div class="nav-shell">
         <a class="brand" href={localizedHref("", locale)} aria-current={!current ? 'page' : undefined}>{locale === "en" ? "Visualization" : t("可视化导论")}</a>
         <nav class="desktop-nav" aria-label={t("作业导航")}>
@@ -55,7 +55,7 @@ const { title, description = t("《可视化导论》课程作业：从网页基
           </ExternalLink>
         </nav>
       </div>
-    </header>}
+    </header>
     <script is:inline>
       (() => {
         const header = document.querySelector('.site-header');

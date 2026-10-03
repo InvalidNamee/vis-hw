@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import LanguageSwitch from '../../components/LanguageSwitch.astro';
-import ThemeSwitch from '../../components/ThemeSwitch.astro';
 import { getHomework } from '../../config/homework';
 import { localeFromUrl,localizedHref,translate } from '../../i18n';
 import { chapters,text,type Lang } from './content';
@@ -22,12 +20,7 @@ const story=chapter==='';
 const storyIcons=[Users,Network,ChartNoAxesCombined,ChartNoAxesCombined,Leaf,FlaskConical];
 ---
 <BaseLayout title={`${current.name[lang]} · ${translate(locale,hw.title)}`} description={current.desc[lang]} current="hw02" variant={story?'exhibition':'workspace'}>
- {story&&<header slot="header" class="site-header exhibition-header"><div class="exhibition-nav">
-  <a class="exhibition-brand" href={link('')} aria-current="page">{t('智变','AI / SHIFT')}<small>HW02</small></a>
-  <nav class="exhibition-chapters" aria-label={t('故事章节','Story chapters')}>{storyChapters.map((c,i)=><a href={`#${c.id}`} data-story-nav={c.id}><span>{String(i+1).padStart(2,'0')}</span>{c.name[lang]}</a>)}</nav>
-  <div class="exhibition-tools"><a href={link('sources/')}>{t('数据与方法','Sources')}</a><LanguageSwitch/><ThemeSwitch/></div>
-  <details class="exhibition-menu"><summary>{t('章节','Chapters')}</summary><nav>{storyChapters.map(c=><a href={`#${c.id}`} data-story-nav={c.id}>{c.name[lang]}</a>)}<a href={localizedHref('',locale)}>{t('课程首页','Course home')}</a></nav></details>
- </div></header>}
+
  <hw02-shell class="hw-shell" data-lang={lang} data-story={story?'':undefined} data-collapsed={story?'':undefined}>
   {!story&&<><button class="hw-mobile-menu" aria-expanded="false" aria-controls="hw-sidebar"><Menu size={18}/>{t('专题导航','Explore chapters')}</button>
   <aside class="hw-sidebar" id="hw-sidebar" aria-label={t('HW02 章节导航','HW02 chapters')}>

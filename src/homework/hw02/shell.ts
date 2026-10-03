@@ -2,12 +2,7 @@ class HwShell extends HTMLElement {
  private stop?:AbortController;
  connectedCallback(){
   this.stop=new AbortController(); const opts={signal:this.stop.signal};
-  if(this.hasAttribute('data-story')){
-   const menu=document.querySelector<HTMLDetailsElement>('.exhibition-menu');
-   menu?.addEventListener('click',event=>{if((event.target as Element).closest('a'))menu.open=false;},opts);
-   menu?.addEventListener('keydown',event=>{if(event.key==='Escape'){menu.open=false;menu.querySelector('summary')?.focus();}},opts);
-   return;
-  }
+  if(this.hasAttribute('data-story'))return;
   const mobile=this.querySelector<HTMLButtonElement>('.hw-mobile-menu')!;
   const side=this.querySelector<HTMLElement>('.hw-sidebar')!;
   const collapse=this.querySelector<HTMLButtonElement>('.hw-collapse')!;
