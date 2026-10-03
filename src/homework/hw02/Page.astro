@@ -1,95 +1,39 @@
 ---
-import Hw02Layout from './Hw02Layout.astro';
-import Story from './Story.astro';
-import Chart from './components/Chart.astro';
-import IndustryEvidence from './components/IndustryEvidence.astro';
-import Choice from './components/Choice.astro';
-import Source from './components/Source.astro';
-import PosterHeading from './components/PosterHeading.astro';
-import ExternalLink from '../../components/ExternalLink.astro';
-import {dataset,text,formatRecord,periodText,type Lang} from './content';
-import {href} from '../../config/homework';
-import {localeFromUrl,localizedHref} from '../../i18n';
-import {ArrowRight,Download,Sparkles,MoveUpRight,Network,Grid2x2} from '@lucide/astro';
-interface Props {chapter:string;}
-const {chapter}=Astro.props, locale=localeFromUrl(Astro.url),lang:Lang=locale==='en'?'en':'zh';
-const t=(z:string,e:string)=>text(lang,z,e);
-const link=(id:string)=>localizedHref(`hw02/${id?`${id}/`:''}`,locale);
-
+import Hw02Layout from "./Hw02Layout.astro";
+import Story from "./story/Story.astro";
+import PosterHeading from "./components/PosterHeading.astro";
+import { localeFromUrl } from "../../i18n";
+import Trends from "./pages/Trends.astro";
+import Industries from "./pages/Industries.astro";
+import Work from "./pages/Work.astro";
+import Lab from "./pages/Lab.astro";
+import Transition from "./pages/Transition.astro";
+import Sources from "./pages/Sources.astro";
+interface Props {
+  chapter: string;
+}
+const { chapter } = Astro.props;
+const lang = localeFromUrl(Astro.url) === "en" ? "en" : "zh";
+const pages = {
+  trends: Trends,
+  industries: Industries,
+  work: Work,
+  lab: Lab,
+  transition: Transition,
+  sources: Sources,
+};
+const Content = pages[chapter as keyof typeof pages];
 ---
+
 <Hw02Layout chapter={chapter}>
- <div class="chapter-content" data-chapter={chapter}>
- {chapter===''?<Story lang={lang}/>:<PosterHeading chapter={chapter} lang={lang}/>}
-
- {chapter==='trends'&&<>
-  <Chart kind="pathway" class="explanation-graph" title={t('从技术投入，到实际产出','From investment to useful output')} description={t('选择环节查看机制。连线不表示资金流量。','Select a stage to inspect the mechanism. Links are not financial flows.')} ids={['hai25','concept']}/>
-  <Chart kind="adoption" title={t('AI 正在进入更多组织','AI is reaching more organizations')} description={t('受访组织使用 AI 的比例 · % · 2023–2025','Surveyed organizations reporting AI use · % · 2023–2025')} ids={['hai25','hai26']} records={['adoption-2023','adoption-2024','adoption-2025']} note={t('三次年度调查，样本可能变化；不是全球所有企业的普及率。选项仅聚焦已报告年份。','Annual survey samples may differ; this is not the share of all firms worldwide. Selection focuses reported years only.')}>
-   <div class="chart-controls"><Choice control="year" label={t('聚焦年份','Focus year')} options={['all','2023','2024','2025'].map(value=>({value,label:value==='all'?t('全部','All'):value}))}/></div>
-  </Chart>
-  <div class="two-col"><Chart kind="investment" title={t('投入的地区差异','Where private investment goes')} description={t('2025 年 AI 私人投资 · 十亿美元 · 所选三国','2025 private AI investment · USD billion · three selected countries')} ids={['hai26']} records={['investment-us','investment-cn','investment-uk']} note={t('不含所有公共投资，不构成完整的全球排名。','Excludes some public funding; not a complete world ranking.')}></Chart>
-  <Chart kind="enterprise" title={t('企业越大，采用越普遍？','How does adoption vary by firm size?')} description={t('2025 年欧盟 · 按企业人数分组 · %','EU, 2025 · enterprise size by persons employed · %')} ids={['eurostat']} records={['eu-small','eu-medium','eu-large']} note={t('覆盖行业的 10 人及以上企业。与上方 Stanford 受访组织不属同一总体，不能直接比较。','Enterprises with 10+ persons in covered sectors. A different population from the Stanford survey above; not directly comparable.')}/></div>
- </>}
-
- {chapter==='industries'&&<>
-  <Chart kind="industry" title={t('连接能力与产业','Connect capabilities to industries')} description={t('点击节点，查看关联能力与产业案例。','Select a node to explore connected capabilities and industry cases.')} note={undefined}>
-   <div class="chart-controls industry-toolbar"><Choice control="industry" label={t('选择产业','Industry')} responsive options={dataset.cases.map(c=>({value:c.id,label:c.name[lang]}))}/><div class="industry-view"><span id="industry-view-label">{t('展示方式','View')}</span><div class="segmented" role="group" aria-labelledby="industry-view-label"><button data-view="network" aria-pressed="true"><Network size={15} aria-hidden="true"/>{t('关系网络','Network')}</button><button data-view="matrix" aria-pressed="false"><Grid2x2 size={15} aria-hidden="true"/>{t('能力矩阵','Matrix')}</button></div></div></div>
-   <div class="legend"><span><i class="dot blue"></i>{t('产业','Industry')}</span><span><i class="dot mint"></i>{t('AI 能力','AI capability')}</span><span>{t('连线表示应用关系，不表示强度','Links show applications, not their strength')}</span></div>
-  </Chart>
-  <div class="case-collection"><article class="case-detail" data-capability-panel hidden><h2 data-capability-title></h2><p>{t('该能力连接以下产业。选择一个产业查看具体案例。','This capability connects the industries below. Select an industry to explore its case.')}</p><div class="capability-cases" data-capability-cases></div></article>{dataset.cases.map((c,i)=><article class="case-detail" data-case={c.id} hidden={i!==0}><div class="case-heading"><span class="hw-kicker">{String(i+1).padStart(2,'0')} / {c.name[lang]}</span><h2>{c.task[lang]}</h2><p>{c.meaning[lang]}</p></div><div class="flow-comparison"><div><small>{t('传统流程 · 示意','CONVENTIONAL · SCHEMATIC')}</small><ol>{c.before[lang].map(v=><li>{v}</li>)}</ol></div><div><small>{t('AI 协作流程 · 示意','AI-ASSISTED · SCHEMATIC')}</small><ol class="ai-flow">{c.after[lang].map(v=><li>{v}</li>)}</ol></div></div><Source ids={[c.source]} note={c.limit[lang]}/></article>)}</div>
-  <IndustryEvidence lang={lang}/>
-  <div class="insight-strip"><MoveUpRight size={20}/><p>{t('共同点：把感知、预测或生成能力放入具体流程。差异：每个行业的验证条件与人的责任都不同。','The common thread is a capability embedded in a workflow. Validation and human responsibility differ by industry.')}</p></div>
- </>}
-
- {chapter==='work'&&<>
-  <Chart kind="collaboration" class="explanation-graph" title={t('知识如何到达一个工作现场','How knowledge reaches the workplace')} description={t('沿着关系图，观察知识、AI 与人的分工。点击节点展开说明。','Follow the connections between knowledge, AI, and human judgment. Select a node for details.')} ids={['nber']} note={t('基于客服辅助场景的机制图；连线不表示研究测得的效应大小。','A mechanism diagram for AI-assisted support; links do not encode measured effect sizes.')}/>
-  <Chart kind="effects" title={t('任务中的变化，可以被测量','Measurable changes in specific tasks')} description={t('各研究基准 = 100；选择指标，比较同一研究内的变化。','Baseline = 100 within each study. Select an outcome for a within-study comparison.')} ids={['nber','writing']} records={['support','time','quality']} note={t('指数由报告的相对变化换算。各研究的基准、样本和结果不同，不能按指数排名或求平均。','Indices are derived from reported relative changes. Different studies and outcomes cannot be ranked or averaged together.')}>
-   <div class="chart-controls"><Choice control="effect" label={t('研究指标','Study outcome')} options={[{value:'support',label:t('客服效率','Support')},{value:'time',label:t('写作耗时','Writing time')},{value:'quality',label:t('写作质量','Writing quality')}]}/></div>
-  </Chart>
-  <div class="two-col"><Chart kind="developers" title={t('不同工作现场，结果为何不同？','Why do results differ across workplaces?')} description={t('两项独立研究 · 任务数量与任务耗时分别比较','Two independent studies · task counts and time compared separately')} ids={['developers','metr','metr26']} records={['dev-tasks','dev-time']} note={t('METR 2026 后续实验受选择偏差与计时问题影响，不能据早期结果判断当前工具。标准误不等于置信区间。','METR’s 2026 follow-up has selection and timing issues; early results do not describe current tools. Standard error is not a confidence interval.')}/>
-  <article class="editorial-card"><p class="hw-kicker">WHAT THIS MEANS</p><h2>{t('收益需要什么条件？','What makes gains possible?')}</h2><p>{t('AI 辅助可能帮助经验较少的员工调用已有知识。效果取决于任务、工具与工作环境。','AI assistance can help less experienced workers access existing knowledge. Effects depend on tasks, tools, and context.')}</p><div class="quote-note">{t('一个客服样本的收益，不是所有岗位的未来。','One support sample does not predict the future of every job.')}</div><h3>{t('任务、经验、复核与组织','Tasks, experience, review and organization')}</h3><ul><li>{t('测量的是时间、数量，还是质量？','Does it measure time, quantity, or quality?')}</li><li>{t('对谁有效，在哪种任务里？','For whom, and in which tasks?')}</li><li>{t('复核与学习成本是否被计入？','Are review and learning costs included?')}</li><li>{t('组织是否允许把节省的时间转成有效产出？','Can the organization turn saved time into useful output?')}</li></ul><Source ids={['nber','developers','metr26']}/></article></div>
- </>}
-
- {chapter==='lab'&&<>
-  <div class="insight-strip"><Sparkles size={20}/><p>{t('情景模拟 · 不是现实预测。比较相同任务量，只有“内容生产”阶段接受 AI 加速。','SCENARIO SIMULATION · Not a forecast. Equal workloads; AI accelerates only the production stage.')}</p></div>
-  <Chart kind="lab" title={t('一个流程，两种工作方式','One workflow. Two ways to work.')} description={t('调整参数，比较串行任务的总工时。动画使用同一时间比例。','Adjust the parameters to compare serial task effort. Both animations use the same time scale.')}>
-   <div class="chart-controls preset-controls"><span>{t('教学情景','Teaching scenarios')}</span>{[['low-review',t('低复核成本','Low review')],['high-review',t('高复核成本','High review')],['low-adoption',t('低参与比例','Low participation')]].map(([id,label])=><button data-preset={id} aria-pressed="false">{label}</button>)}<small data-preset-label></small></div>
-   <div class="lab-controls">{[
-    ['tasks',t('任务数量','Number of tasks'),1,100,20,1,t('项','tasks')],['adoption',t('AI 参与比例','AI participation'),0,100,60,5,'%'],['speed',t('参与任务加速倍率','Speed-up on AI tasks'),1,8,3,0.5,'×'],['review',t('每项额外复核','Extra review per task'),0,30,4,1,t('分钟','min')]
-   ].map(([key,label,min,max,value,step,unit])=><label>{label}<span><output data-output={key}>{value}</output> {unit}</span><input data-hw02-control data-control={key} aria-label={String(label)} type="range" min={min} max={max} value={value} step={step}/></label>)}</div>
-   <div class="lab-results" aria-live="polite"><div><span>{t('原流程','BASELINE')}</span><strong data-result="baseline">—</strong></div><div><span>{t('AI 协作','AI-ASSISTED')}</span><strong data-result="assisted">—</strong></div><div><span>{t('节省工时比例','EFFORT SAVED')}</span><strong data-result="saved">—</strong></div></div>
-   <div class="chart-controls"><button data-action="play" class="hw-primary">{t('播放流程','Play workflow')}</button><button data-action="reset">{t('恢复默认','Reset')}</button><button data-action="share">{t('复制情景链接','Copy scenario link')}</button><Choice control="playback" label={t('播放速度','Playback speed')} options={['1','2','4'].map(value=>({value,label:`${value}×`}))}/></div>
-  </Chart>
-  <div class="lab-context">
-  <Chart kind="sensitivity" title={t('何时，才能真正节省工时？','When does acceleration pay off?')} description={t('跟随上方参数，查看 AI 参与比例与总工时的关系。','Using the parameters above, compare AI participation with total effort.')}><div class="legend"><span><i class="dot blue"></i>{t('AI 情景','AI scenario')}</span><span><i class="dot gray"></i>{t('原流程','Baseline')}</span></div></Chart>
-  <details class="method-panel" open><summary>{t('模型假设与计算方法','Model assumptions and calculation')}</summary><div class="method-content"><p>{t('每项任务：需求整理 10 分钟、内容生产 30 分钟、原有复核 10 分钟、交付 5 分钟。AI 只加速内容生产；额外复核 r 对每项任务都计入。所有时间均为教学假设。','Each task: briefing 10 min, production 30 min, existing review 10 min, delivery 5 min. AI accelerates production only; extra review r applies to every task. All times are teaching assumptions.')}</p><code>T = n × [10 + 30 × (1 − a + a / s) + 10 + r + 5]</code><p>{t('n 为任务数，a 为参与比例，s 为加速倍率。模型不包含并行、质量变化或经济收益；最长阶段只表示耗时重点，不等于并行产线瓶颈。','n = task count, a = participation, s = speed-up. This model excludes parallelism, quality changes, and economic returns. The longest stage is an effort concentration, not a parallel-system bottleneck.')}</p></div></details>
- </div>
- </>}
-
- {chapter==='transition'&&<>
-  <Chart kind="infrastructure" class="explanation-graph" title={t('一次智能服务，背后的资源网络','The resources behind an AI service')} description={t('电力、算力与数据共同支撑应用。点击节点查看它的作用。','Power, compute, and data support applications. Select a node to explore its role.')} ids={['iea','worldbank']} note={t('基础设施关系示意；路径宽度不代表能源消耗比例。','Infrastructure schematic; path widths do not represent energy shares.')}/>
-  <Chart kind="energy" title={t('智能背后，是物理基础设施','Intelligence has a physical footprint')} description={t('全球全部数据中心用电 · TWh · IEA 2026 报告版本','Global electricity use of all data centres · TWh · IEA 2026 edition')} ids={['iea']} records={['energy-2025','energy-2030']} note={t('485 TWh 为 2025 年历史估计；约 950 TWh 为 2030 年中央情景预测。数据中心包含多种负载，不能全部归因于 AI。','485 TWh is the 2025 historical estimate; about 950 TWh is the 2030 central projection. Data centres host many workloads, not AI alone.')}><div class="chart-controls"><Choice control="energy" label={t('展示口径','Display')} options={[{value:'absolute',label:t('用电量','Electricity')},{value:'index',label:t('相对指数','Index')}]}/></div></Chart>
-  <Chart kind="exposure" title={t('工作会改变，但暴露不等于失业','Work may change; exposure is not job loss')} description={t('ILO 2025 指数 · 各收入组总就业中潜在暴露的比例','ILO 2025 index · potentially exposed share of employment in each income group')} ids={['ilo']} records={['exposure-low','exposure-global','exposure-high','exposure-highest']} note={t('潜在职业暴露不是实际采用率或岗位消失概率。全球组包含各收入组，不可相加。','Potential exposure is not actual adoption or a probability of job loss. Global employment includes income groups; values are not additive.')}/>
-  <article class="editorial-card"><p class="hw-kicker">TASKS / TRANSFORMATION</p><h2>{t('重新分配任务，保留人的责任','Reallocate tasks, retain human responsibility')}</h2><ol class="evidence-flow">{[t('拆解岗位：检索、起草、沟通与判断','Break work into retrieval, drafting, communication and judgment'),t('识别可辅助的任务，检查质量与成本','Identify assistable tasks; check quality and cost'),t('培训与重组流程，持续验证结果','Train people, redesign work and validate results')].map(s=><li>{s}</li>)}</ol><Source ids={['ilo','worldbank']}/></article>
-  <section class="hw-section"><div class="section-intro"><p class="hw-kicker">FOUNDATIONS FOR PROGRESS</p><h2>{t('把条件补齐，让收益发生','Build the conditions for gains')}</h2><p>{t('以下是机制解释，不是国家或行业评分。','These are mechanisms, not scores assigned to countries or industries.')}</p></div><div class="foundation-grid">{[
-   [t('数据与连接','Data & connectivity'),t('可用的数据，稳定的基础设施','Usable data, dependable infrastructure'),t('数据质量影响结果，连接能力影响谁能够使用。','Data quality shapes outputs; connectivity shapes access.')],
-   [t('人才与组织','Skills & organizations'),t('学会使用，也重设工作流程','Learn the tools, redesign the work'),t('培训、职责与复核机制，让新工具进入日常生产。','Training, ownership, and review bring new tools into daily work.')],
-   [t('能源与效率','Energy & efficiency'),t('同时考虑收益与资源消耗','Account for gains and resources'),t('高效模型与合理部署，是降低基础设施压力的路径。','Efficient models and deployment can ease infrastructure demands.')]
-  ].map((a,i)=><article><span class="concept-number">0{i+1}</span><h3>{a[0]}</h3><strong>{a[1]}</strong><p>{a[2]}</p></article>)}</div><Source ids={['worldbank','iea']}/></section>
-  <section class="journey-banner"><Sparkles size={26}/><div><h2>{t('意义，在于更好的生产与创造','The goal is better production and creation')}</h2><p>{t('用证据判断收益，用实验理解机制，用设计让更多人看懂变化。','Use evidence to assess gains, experiments to understand mechanisms, and design to make change legible.')}</p></div><a class="hw-text-link" href={link('sources')}>{t('检查所有来源','Inspect the sources')}<ArrowRight size={17}/></a></section>
- </>}
-
- {chapter==='sources'&&<>
-  <section class="image-credits" id="artwork"><h2>{t('视觉素材 / Visualising AI','Visual artwork / Visualising AI')}</h2><div>{[
-   ['intelligence','https://unsplash.com/photos/a-close-up-of-a-blue-and-purple-object-tawZVa3EBXQ','Twistedpoly'],
-   ['neural-layers','https://unsplash.com/photos/a-close-up-of-several-blue-pills-_HnJfS6WhA8','Rose Pilkington']
-  ].map(([file,url,artist])=><article><img src={href(`images/hw02/${file}.webp`)} alt={t('AI 主题艺术配图','AI-themed artwork')} width="160" height="90" loading="lazy"/><div><ExternalLink href={url}>{artist} / Google DeepMind</ExternalLink><p>{t('概念艺术配图，非实测数据图。','Conceptual artwork, not a measured data visualization.')} <ExternalLink href="https://unsplash.com/license">Unsplash License</ExternalLink></p></div></article>)}</div></section>
-  <div class="download-bar"><div><strong>{t('开放数据笔记','Open data notebook')}</strong><p>{t(`${dataset.records.length} 个指标记录 · ${dataset.cases.length} 个产业案例 · ${dataset.sources.length} 个来源`,`${dataset.records.length} indicator records · ${dataset.cases.length} industry cases · ${dataset.sources.length} sources`)}</p></div><a download href={href('data/hw02/indicators.csv')}><Download size={17}/> CSV</a><a download href={href('data/hw02/dataset.json')}><Download size={17}/> JSON</a></div>
-  <ai-viz class="viz-card" data-kind="sources" data-lang={lang}><div class="chart-controls"><label class="search-label">{t('检索来源','Search sources')}<input type="search" data-control="search" data-hw02-control placeholder={t('机构、标题或口径…','Organization, title, or scope…')}/></label><Choice control="sourceType" label={t('证据类型','Evidence type')} options={['all','statistics','study','case'].map(value=>({value,label:({all:t('全部','All'),statistics:t('统计','Statistics'),study:t('研究','Studies'),case:t('案例与概念','Cases & concepts')})[value]!}))}/><span data-count aria-live="polite"></span></div><div class="source-list">{dataset.sources.map((s,i)=><article data-source-row data-evidence-type={s.evidenceType}><span>{String(i+1).padStart(2,'0')}</span><div><h2><ExternalLink href={s.url}>{s.id==='concept'&&lang==='en'?'New quality productive forces · Concept reference':s.title}</ExternalLink></h2><small>{s.section} · {t('发表/版本','Published/edition')}: {s.publishedAt==='not-confirmed'?t('未确认','Not confirmed'):s.publishedAt} · {t('核验','Verified')}: {s.verifiedAt}</small><p>{s.note[lang]}</p>{dataset.records.some(r=>r.source===s.id)&&<details class="source-records"><summary>{t('样本、期间与限制','Samples, periods & limitations')}</summary>{dataset.records.filter(r=>r.source===s.id).map(r=><div><strong>{r.label[lang]} · {formatRecord(r.id,lang)} {r.unit}</strong><p>{t('数据期间','Data period')}: {periodText(r.period,lang)}<br/>{r.scope[lang]}<br/>{r.limitation[lang]}</p></div>)}</details>}</div></article>)}</div><p data-status class="chart-status" aria-live="polite"></p></ai-viz>
-  <div class="two-col"><article class="editorial-card"><p class="hw-kicker">DATA DICTIONARY</p><h2>{t('先看口径，再看数字','Read the definition before the number')}</h2><dl><dt>{t('观测与研究结果','Observations & study results')}</dt><dd>{t('对应特定样本、时期和任务，不表示普遍规律。','Bound to a sample, period, and task; not a universal law.')}</dd><dt>{t('历史估计与情景预测','Estimates & projections')}</dt><dd>{t('历史估计仍有不确定性；未来情景依赖模型假设。','Historical estimates have uncertainty; future projections depend on assumptions.')}</dd><dt>{t('机制图与模拟','Mechanisms & simulations')}</dt><dd>{t('关系图为编辑整理；实验室的参数是假设，不混入观测数据。','Connections are editorial synthesis; lab parameters are assumptions, separate from observations.')}</dd></dl></article>
-  <article class="editorial-card"><p class="hw-kicker">D3 / UNDER THE HOOD</p><h2>{t('数据，如何成为图形','How data becomes a visual')}</h2><p>{t('比例尺把数值映射到坐标；轴给出参照；数据绑定让每个图形对应稳定的记录。','Scales map values to positions; axes provide reference; data joins keep records attached to their marks.')}</p><ul><li><code>selection.join</code> — {t('数据与图形对应','bind records to marks')}</li><li><code>scale / axis / shape</code> — {t('量化、参照与几何','encoding, reference, geometry')}</li><li><code>selection.on / SVG path</code> — {t('固定关系图、图解与点击联动','fixed relationship diagrams, illustrations, and linked selection')}</li><li><code>transition / timer</code> — {t('联动与连续变化','linked views and continuous change')}</li></ul><ExternalLink href="https://d3js.org/">{t('D3 官方文档','D3 documentation')}</ExternalLink></article></div>
-  <article class="editorial-card story-method"><p class="hw-kicker">SCROLL / READING</p><h2>{t('滚动故事怎样工作','How the scrolling story works')}</h2><p>{t('首页将同一批数据组织成六幕。当前文字步骤决定图形状态；详细页的筛选和实验参数由读者控制，两者互不覆盖。','The homepage organizes the same data into six chapters. The current text step determines the scene; filters and experiment parameters on detailed pages remain under your control.')}</p><p>{t('IntersectionObserver 在图接近视口时初始化，普通滚动更新当前步骤。宽屏且高度足够时图卡固定；窄屏、矮窗口或展开内容超出可用高度时改为就近快照。','IntersectionObserver initializes scenes near the viewport. Ordinary scrolling updates the current step. Wide, tall windows use a sticky scene; narrower or shorter windows, and expanded content that exceeds the available height, use nearby snapshots.')}</p><p>{t('减少动态效果设置会取消转场；关闭 JavaScript 仍能阅读论点、关键数值、来源与数据表。滚动不改变实验参数、URL 查询或键盘焦点。','Reduced motion disables transitions. Without JavaScript, arguments, key values, sources and data tables remain readable. Scrolling does not change experiment parameters, URL queries or keyboard focus.')}</p></article>
-  <details class="method-panel"><summary>{t('查看实际实现片段：稳定的数据绑定','Implementation excerpt: stable data joins')}</summary><div class="method-content"><pre><code>{`svg.selectAll('circle.point')\n  .data(records, d => d.id)\n  .join('circle')\n  .attr('class', 'point')\n  .attr('cx', d => x(d.period))\n  .attr('cy', d => y(d.value));`}</code></pre><p>{t('采用率图使用记录 ID 作为键，筛选年份时保留同一条数据与图形的对应关系。','The adoption chart uses record IDs as keys so filtering preserves the association between each record and its mark.')}</p></div></details>
- </>}
- </div>
- {chapter!==''&&<p class="art-credit">{t('视觉配图','Artwork')} · Google DeepMind / Visualising AI · <a href={`${link('sources')}#artwork`}>{t('素材与署名','Image credits')}</a></p>}
+  <div class="chapter-content" data-chapter={chapter}>
+    {chapter === "" ? (
+      <Story lang={lang} />
+    ) : (
+      <>
+        <PosterHeading chapter={chapter} lang={lang} />
+        <Content lang={lang} />
+      </>
+    )}
+  </div>
 </Hw02Layout>

@@ -1,0 +1,32 @@
+/* HW02 owns these values; site navigation keeps the global theme. */
+.hw-shell {
+  --hw-blue: #5065bb;
+  --hw-on-blue: #fff;
+  --hw-mint: #287a68;
+  --hw-purple: #81619b;
+  --hw-orange: #ad692e;
+  --hw-gutter: 48px;
+  --control-height: 44px;
+  --control-radius: 8px;
+  --control-gap: 8px;
+}
+.dark .hw-shell {
+  --hw-blue: #a8b6ed;
+  --hw-on-blue: #172039;
+  --hw-mint: #91cdbb;
+  --hw-purple: #c7aad9;
+  --hw-orange: #e0ad77;
+}
+@media (max-width: 1200px) {
+  .hw-shell {
+    --hw-gutter: 24px;
+  }
+}
+@media (max-width: 640px) {
+  .hw-shell {
+    --hw-gutter: 16px;
+  }
+}
+html:has(.hw-shell[data-story]) {
+  scroll-behavior: auto;
+}

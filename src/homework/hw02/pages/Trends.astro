@@ -1,0 +1,76 @@
+---
+import Chart from "../components/Chart.astro";
+import Choice from "../components/Choice.astro";
+import { text, type Lang } from "../content";
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = (z: string, e: string) => text(lang, z, e);
+---
+
+<Chart
+  kind="pathway"
+  class="explanation-graph"
+  title={t("从技术投入，到实际产出", "From investment to useful output")}
+  description={t(
+    "选择环节查看机制。连线不表示资金流量。",
+    "Select a stage to inspect the mechanism. Links are not financial flows.",
+  )}
+  ids={["hai25", "concept"]}
+/>
+<Chart
+  kind="adoption"
+  title={t("AI 正在进入更多组织", "AI is reaching more organizations")}
+  description={t(
+    "受访组织使用 AI 的比例 · % · 2023–2025",
+    "Surveyed organizations reporting AI use · % · 2023–2025",
+  )}
+  ids={["hai25", "hai26"]}
+  records={["adoption-2023", "adoption-2024", "adoption-2025"]}
+  note={t(
+    "三次年度调查，样本可能变化；不是全球所有企业的普及率。选项仅聚焦已报告年份。",
+    "Annual survey samples may differ; this is not the share of all firms worldwide. Selection focuses reported years only.",
+  )}
+>
+  <div class="chart-controls">
+    <Choice
+      control="year"
+      label={t("聚焦年份", "Focus year")}
+      options={["all", "2023", "2024", "2025"].map((value) => ({
+        value,
+        label: value === "all" ? t("全部", "All") : value,
+      }))}
+    />
+  </div>
+</Chart>
+<div class="two-col">
+  <Chart
+    kind="investment"
+    title={t("投入的地区差异", "Where private investment goes")}
+    description={t(
+      "2025 年 AI 私人投资 · 十亿美元 · 所选三国",
+      "2025 private AI investment · USD billion · three selected countries",
+    )}
+    ids={["hai26"]}
+    records={["investment-us", "investment-cn", "investment-uk"]}
+    note={t(
+      "不含所有公共投资，不构成完整的全球排名。",
+      "Excludes some public funding; not a complete world ranking.",
+    )}
+  />
+  <Chart
+    kind="enterprise"
+    title={t("企业越大，采用越普遍？", "How does adoption vary by firm size?")}
+    description={t(
+      "2025 年欧盟 · 按企业人数分组 · %",
+      "EU, 2025 · enterprise size by persons employed · %",
+    )}
+    ids={["eurostat"]}
+    records={["eu-small", "eu-medium", "eu-large"]}
+    note={t(
+      "覆盖行业的 10 人及以上企业。与上方 Stanford 受访组织不属同一总体，不能直接比较。",
+      "Enterprises with 10+ persons in covered sectors. A different population from the Stanford survey above; not directly comparable.",
+    )}
+  />
+</div>

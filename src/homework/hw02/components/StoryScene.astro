@@ -1,25 +1,137 @@
 ---
-import Source from './Source.astro';
-import {formatRecord,recordById,periodText,type Lang} from '../content';
-import {calculate} from '../model.mjs';
-import {storyLabParams,type StoryStep} from '../story-content';
-interface Props {step:StoryStep;lang:Lang;instance:string;}
-const {step,lang,instance}=Astro.props;
-const t=(z:string,e:string)=>lang==='en'?e:z;
-const records=step.records.map(recordById);
-const result=step.scene==='lab'?calculate(storyLabParams(step.lab)):undefined;
-const mechanism=step.scene==='collaboration'?['知识','AI 辅助','人的判断','服务交付']:step.scene==='industry'?['产业任务','智能能力','人员复核','验证结果']:step.scene==='discovery'?['分子输入','结构预测','实验验证','新问题']:['电力','算力','数据连接','产业应用'];
-const mechanismEn=step.scene==='collaboration'?['Knowledge','AI assistance','Human judgment','Service delivery']:step.scene==='industry'?['Industry task','AI capability','Human review','Validate results']:step.scene==='discovery'?['Molecules','Prediction','Validation','New questions']:['Power','Compute','Data access','Applications'];
+import Source from "./Source.astro";
+import { formatRecord, recordById, periodText, type Lang } from "../content";
+import { calculate } from "../model.mjs";
+import { storyLabParams, type StoryStep } from "../story/content";
+interface Props {
+  step: StoryStep;
+  lang: Lang;
+  instance: string;
+}
+const { step, lang, instance } = Astro.props;
+const t = (z: string, e: string) => (lang === "en" ? e : z);
+const records = step.records.map(recordById);
+const result =
+  step.scene === "lab" ? calculate(storyLabParams(step.lab)) : undefined;
+const mechanism =
+  step.scene === "collaboration"
+    ? ["知识", "AI 辅助", "人的判断", "服务交付"]
+    : step.scene === "industry"
+      ? ["产业任务", "智能能力", "人员复核", "验证结果"]
+      : step.scene === "discovery"
+        ? ["分子输入", "结构预测", "实验验证", "新问题"]
+        : ["电力", "算力", "数据连接", "产业应用"];
+const mechanismEn =
+  step.scene === "collaboration"
+    ? ["Knowledge", "AI assistance", "Human judgment", "Service delivery"]
+    : step.scene === "industry"
+      ? ["Industry task", "AI capability", "Human review", "Validate results"]
+      : step.scene === "discovery"
+        ? ["Molecules", "Prediction", "Validation", "New questions"]
+        : ["Power", "Compute", "Data access", "Applications"];
 ---
+
 <figure class="story-scene" data-scene={step.id} data-instance={instance}>
- <figcaption><span class="story-scene-type">{result?t('教学假设','TEACHING MODEL'):records.length?t('研究与统计','EVIDENCE'):t('机制图解','MECHANISM')}</span><strong>{step.label[lang]}</strong></figcaption>
- <div class="story-canvas" data-story-canvas aria-hidden="true"></div>
- <div class="story-fallback">
-  {result?<div class="story-model-fallback"><span>{t('原流程','Baseline')} <strong>{(result.baseTotal/60).toFixed(1)} {t('小时','h')}</strong></span><span>{t('当前情景','Scenario')} <strong>{(result.aiTotal/60).toFixed(1)} {t('小时','h')}</strong></span><span>{t('节省工时','Effort saved')} <strong>{result.saved.toFixed(1)}%</strong></span></div>:records.length?<dl class="story-records">{records.map(r=><div><dt>{r.label[lang]}</dt><dd>{formatRecord(r.id,lang)} <small>{r.unit}</small></dd></div>)}</dl>:<ol class="story-mechanism">{mechanism.map((name,i)=><li class:list={{active:step.focus===i}}><span>{String(i+1).padStart(2,'0')}</span>{lang==='en'?mechanismEn[i]:name}</li>)}</ol>}
- </div>
- <div class="story-interaction" hidden></div>
- {step.scene==='collaboration'&&records.length>0&&<p class="story-result"><strong>+{formatRecord('support',lang)}%</strong><span>{t('该客服研究的总体生产率提升，非所有任务的收益。','Overall productivity gain in this customer-support study; not a gain for every task.')}</span></p>}
- <p class="story-scene-note">{step.note[lang]}</p>
- {step.sources.length>0&&<Source ids={step.sources}/>}
- {records.length>0&&<details class="story-data"><summary>{t('查看数据、样本与口径','View data, samples and definitions')}</summary><div class="table-scroll"><table><thead><tr><th>{t('指标','Indicator')}</th><th>{t('数值','Value')}</th><th>{t('期间','Period')}</th><th>{t('范围与限制','Scope and limitations')}</th></tr></thead><tbody>{records.map(r=><tr><td>{r.label[lang]}</td><td>{formatRecord(r.id,lang)} {r.unit}</td><td>{periodText(r.period,lang)}</td><td>{r.scope[lang]}<br/>{r.limitation[lang]}</td></tr>)}</tbody></table></div></details>}
+  <figcaption>
+    <span class="story-scene-type">
+      {result
+        ? t("教学假设", "TEACHING MODEL")
+        : records.length
+          ? t("研究与统计", "EVIDENCE")
+          : t("机制图解", "MECHANISM")}
+    </span>
+    <strong>{step.label[lang]}</strong>
+  </figcaption>
+  <div class="story-canvas" data-story-canvas aria-hidden="true"></div>
+  <div class="story-fallback">
+    {result ? (
+      <div class="story-model-fallback">
+        <span>
+          {t("原流程", "Baseline")}{" "}
+          <strong>
+            {(result.baseTotal / 60).toFixed(1)} {t("小时", "h")}
+          </strong>
+        </span>
+        <span>
+          {t("当前情景", "Scenario")}{" "}
+          <strong>
+            {(result.aiTotal / 60).toFixed(1)} {t("小时", "h")}
+          </strong>
+        </span>
+        <span>
+          {t("节省工时", "Effort saved")}{" "}
+          <strong>{result.saved.toFixed(1)}%</strong>
+        </span>
+      </div>
+    ) : records.length ? (
+      <dl class="story-records">
+        {records.map((r) => (
+          <div>
+            <dt>{r.label[lang]}</dt>
+            <dd>
+              {formatRecord(r.id, lang)} <small>{r.unit}</small>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    ) : (
+      <ol class="story-mechanism">
+        {mechanism.map((name, i) => (
+          <li class:list={{ active: step.focus === i }}>
+            <span>{String(i + 1).padStart(2, "0")}</span>
+            {lang === "en" ? mechanismEn[i] : name}
+          </li>
+        ))}
+      </ol>
+    )}
+  </div>
+  <div class="story-interaction" hidden></div>
+  {step.scene === "collaboration" && records.length > 0 && (
+    <p class="story-result">
+      <strong>+{formatRecord("support", lang)}%</strong>
+      <span>
+        {t(
+          "该客服研究的总体生产率提升，非所有任务的收益。",
+          "Overall productivity gain in this customer-support study; not a gain for every task.",
+        )}
+      </span>
+    </p>
+  )}
+  <p class="story-scene-note">{step.note[lang]}</p>
+  {step.sources.length > 0 && <Source ids={step.sources} />}
+  {records.length > 0 && (
+    <details class="story-data">
+      <summary>
+        {t("查看数据、样本与口径", "View data, samples and definitions")}
+      </summary>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>{t("指标", "Indicator")}</th>
+              <th>{t("数值", "Value")}</th>
+              <th>{t("期间", "Period")}</th>
+              <th>{t("范围与限制", "Scope and limitations")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {records.map((r) => (
+              <tr>
+                <td>{r.label[lang]}</td>
+                <td>
+                  {formatRecord(r.id, lang)} {r.unit}
+                </td>
+                <td>{periodText(r.period, lang)}</td>
+                <td>
+                  {r.scope[lang]}
+                  <br />
+                  {r.limitation[lang]}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  )}
 </figure>

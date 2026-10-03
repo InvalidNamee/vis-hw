@@ -1,18 +1,140 @@
 ---
-import Source from './Source.astro';
-import {dataset,formatRecord,periodText,sourceById,type Lang} from '../content';
-import {localeFromUrl} from '../../../i18n';
-interface Props {kind:string; title:string; description?:string; ids?:string[]; records?:string[]; note?:string; class?:string;}
-const {kind,title,description,ids=[],records=[],note,class:className}=Astro.props;
-const lang:Lang=localeFromUrl(Astro.url)==='en'?'en':'zh';
-const data=dataset.records.filter(r=>records.includes(r.id));
+import Source from "./Source.astro";
+import {
+  dataset,
+  formatRecord,
+  periodText,
+  sourceById,
+  type Lang,
+} from "../content";
+import { localeFromUrl } from "../../../i18n";
+interface Props {
+  kind: string;
+  title: string;
+  description?: string;
+  ids?: string[];
+  records?: string[];
+  note?: string;
+  class?: string;
+}
+const {
+  kind,
+  title,
+  description,
+  ids = [],
+  records = [],
+  note,
+  class: className,
+} = Astro.props;
+const lang: Lang = localeFromUrl(Astro.url) === "en" ? "en" : "zh";
+const data = dataset.records.filter((r) => records.includes(r.id));
 ---
-<ai-viz data-kind={kind} data-lang={lang} class:list={['viz-card',className, { 'industry-hero': kind === 'industry' }]}>
- <div class="viz-heading"><div><h2>{title}</h2>{description&&<p>{description}</p>}</div><span class="viz-tag">{kind==='sensitivity'?(lang==='en'?'LINKED SCENARIO':'情景联动'):['investment','enterprise','robots','medical','developers','exposure'].includes(kind)?(lang==='en'?'EVIDENCE':'研究对比'):(lang==='en'?'EXPLORE':'交互探索')}</span></div>
- <slot />
- <div class="chart-stage" data-chart role="group" aria-label={title}></div>
- <p class="chart-status" data-status aria-live="polite"></p>
- <noscript><p>{lang==='en'?'Enable JavaScript for interactive charts. Data and explanations remain available below.':'启用 JavaScript 可操作图表，下方数据与说明仍可阅读。'}</p></noscript>
- {ids.length>0&&<Source ids={ids} note={note}/>}
- {data.length>0&&<details class="data-disclosure"><summary>{lang==='en'?'View data & definitions':'查看数据与口径'}</summary><div class="table-scroll"><table><thead><tr>{(lang==='en'?['Indicator','Data period','Value','Unit','Published/edition','Type','Scope / denominator','Limitation']:['指标','数据期间','数值','单位','发表/版本','类型','范围 / 分母','限制']).map(h=><th>{h}</th>)}</tr></thead><tbody>{data.map(r=><tr><td>{r.label[lang]}</td><td>{periodText(r.period,lang)}</td><td>{formatRecord(r.id,lang)}</td><td>{r.unit}</td><td>{sourceById(r.source).publishedAt}</td><td>{lang==='en'?r.kind:({observed:'观测/实验',estimate:'估计',projection:'预测'}[r.kind])}</td><td>{r.scope[lang]}<br/>{r.denominator[lang]}</td><td>{r.limitation[lang]}</td></tr>)}</tbody></table></div></details>}
+
+<ai-viz
+  data-kind={kind}
+  data-lang={lang}
+  class:list={["viz-card", className, { "industry-hero": kind === "industry" }]}
+>
+  <div class="viz-heading">
+    <div>
+      <h2>{title}</h2>
+      {description && <p>{description}</p>}
+    </div>
+    <span class="viz-tag">
+      {kind === "sensitivity"
+        ? lang === "en"
+          ? "LINKED SCENARIO"
+          : "情景联动"
+        : [
+              "investment",
+              "enterprise",
+              "robots",
+              "medical",
+              "developers",
+              "exposure",
+            ].includes(kind)
+          ? lang === "en"
+            ? "EVIDENCE"
+            : "研究对比"
+          : lang === "en"
+            ? "EXPLORE"
+            : "交互探索"}
+    </span>
+  </div>
+  <slot />
+  <div class="chart-stage" data-chart role="group" aria-label={title}></div>
+  <p class="chart-status" data-status aria-live="polite"></p>
+  <noscript>
+    <p>
+      {lang === "en"
+        ? "Enable JavaScript for interactive charts. Data and explanations remain available below."
+        : "启用 JavaScript 可操作图表，下方数据与说明仍可阅读。"}
+    </p>
+  </noscript>
+  {ids.length > 0 && <Source ids={ids} note={note} />}
+  {data.length > 0 && (
+    <details class="data-disclosure">
+      <summary>
+        {lang === "en" ? "View data & definitions" : "查看数据与口径"}
+      </summary>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              {(lang === "en"
+                ? [
+                    "Indicator",
+                    "Data period",
+                    "Value",
+                    "Unit",
+                    "Published/edition",
+                    "Type",
+                    "Scope / denominator",
+                    "Limitation",
+                  ]
+                : [
+                    "指标",
+                    "数据期间",
+                    "数值",
+                    "单位",
+                    "发表/版本",
+                    "类型",
+                    "范围 / 分母",
+                    "限制",
+                  ]
+              ).map((h) => (
+                <th>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((r) => (
+              <tr>
+                <td>{r.label[lang]}</td>
+                <td>{periodText(r.period, lang)}</td>
+                <td>{formatRecord(r.id, lang)}</td>
+                <td>{r.unit}</td>
+                <td>{sourceById(r.source).publishedAt}</td>
+                <td>
+                  {lang === "en"
+                    ? r.kind
+                    : {
+                        observed: "观测/实验",
+                        estimate: "估计",
+                        projection: "预测",
+                      }[r.kind]}
+                </td>
+                <td>
+                  {r.scope[lang]}
+                  <br />
+                  {r.denominator[lang]}
+                </td>
+                <td>{r.limitation[lang]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  )}
 </ai-viz>

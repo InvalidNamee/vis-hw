@@ -1,0 +1,247 @@
+---
+import Choice from "../components/Choice.astro";
+import ExternalLink from "../../../components/ExternalLink.astro";
+import { dataset, text, formatRecord, periodText, type Lang } from "../content";
+import { href } from "../../../config/homework";
+import { Download } from "@lucide/astro";
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = (z: string, e: string) => text(lang, z, e);
+---
+
+<section class="image-credits" id="artwork">
+  <h2>{t("视觉素材 / Visualising AI", "Visual artwork / Visualising AI")}</h2>
+  <div>
+    {[
+      [
+        "intelligence",
+        "https://unsplash.com/photos/a-close-up-of-a-blue-and-purple-object-tawZVa3EBXQ",
+        "Twistedpoly",
+      ],
+      [
+        "neural-layers",
+        "https://unsplash.com/photos/a-close-up-of-several-blue-pills-_HnJfS6WhA8",
+        "Rose Pilkington",
+      ],
+    ].map(([file, url, artist]) => (
+      <article>
+        <img
+          src={href(`images/hw02/${file}.webp`)}
+          alt={t("AI 主题艺术配图", "AI-themed artwork")}
+          width="160"
+          height="90"
+          loading="lazy"
+        />
+        <div>
+          <ExternalLink href={url}>{artist} / Google DeepMind</ExternalLink>
+          <p>
+            {t(
+              "概念艺术配图，非实测数据图。",
+              "Conceptual artwork, not a measured data visualization.",
+            )}{" "}
+            <ExternalLink href="https://unsplash.com/license">
+              Unsplash License
+            </ExternalLink>
+          </p>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+<div class="download-bar">
+  <div>
+    <strong>{t("开放数据笔记", "Open data notebook")}</strong>
+    <p>
+      {t(
+        `${dataset.records.length} 个指标记录 · ${dataset.cases.length} 个产业案例 · ${dataset.sources.length} 个来源`,
+        `${dataset.records.length} indicator records · ${dataset.cases.length} industry cases · ${dataset.sources.length} sources`,
+      )}
+    </p>
+  </div>
+  <a download href={href("data/hw02/indicators.csv")}>
+    <Download size={17} /> CSV
+  </a>
+  <a download href={href("data/hw02/dataset.json")}>
+    <Download size={17} /> JSON
+  </a>
+</div>
+<ai-viz class="viz-card" data-kind="sources" data-lang={lang}>
+  <div class="chart-controls">
+    <label class="search-label">
+      {t("检索来源", "Search sources")}
+      <input
+        type="search"
+        data-control="search"
+        data-hw02-control
+        placeholder={t("机构、标题或口径…", "Organization, title, or scope…")}
+      />
+    </label>
+    <Choice
+      control="sourceType"
+      label={t("证据类型", "Evidence type")}
+      options={["all", "statistics", "study", "case"].map((value) => ({
+        value,
+        label: {
+          all: t("全部", "All"),
+          statistics: t("统计", "Statistics"),
+          study: t("研究", "Studies"),
+          case: t("案例与概念", "Cases & concepts"),
+        }[value]!,
+      }))}
+    />
+    <span data-count aria-live="polite"></span>
+  </div>
+  <div class="source-list">
+    {dataset.sources.map((s, i) => (
+      <article data-source-row data-evidence-type={s.evidenceType}>
+        <span>{String(i + 1).padStart(2, "0")}</span>
+        <div>
+          <h2>
+            <ExternalLink href={s.url}>
+              {s.id === "concept" && lang === "en"
+                ? "New quality productive forces · Concept reference"
+                : s.title}
+            </ExternalLink>
+          </h2>
+          <small>
+            {s.section} · {t("发表/版本", "Published/edition")}:{" "}
+            {s.publishedAt === "not-confirmed"
+              ? t("未确认", "Not confirmed")
+              : s.publishedAt}{" "}
+            · {t("核验", "Verified")}: {s.verifiedAt}
+          </small>
+          <p>{s.note[lang]}</p>
+          {dataset.records.some((r) => r.source === s.id) && (
+            <details class="source-records">
+              <summary>
+                {t("样本、期间与限制", "Samples, periods & limitations")}
+              </summary>
+              {dataset.records
+                .filter((r) => r.source === s.id)
+                .map((r) => (
+                  <div>
+                    <strong>
+                      {r.label[lang]} · {formatRecord(r.id, lang)} {r.unit}
+                    </strong>
+                    <p>
+                      {t("数据期间", "Data period")}:{" "}
+                      {periodText(r.period, lang)}
+                      <br />
+                      {r.scope[lang]}
+                      <br />
+                      {r.limitation[lang]}
+                    </p>
+                  </div>
+                ))}
+            </details>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+  <p data-status class="chart-status" aria-live="polite"></p>
+</ai-viz>
+<div class="two-col">
+  <article class="editorial-card">
+    <p class="hw-kicker">DATA DICTIONARY</p>
+    <h2>{t("先看口径，再看数字", "Read the definition before the number")}</h2>
+    <dl>
+      <dt>{t("观测与研究结果", "Observations & study results")}</dt>
+      <dd>
+        {t(
+          "对应特定样本、时期和任务，不表示普遍规律。",
+          "Bound to a sample, period, and task; not a universal law.",
+        )}
+      </dd>
+      <dt>{t("历史估计与情景预测", "Estimates & projections")}</dt>
+      <dd>
+        {t(
+          "历史估计仍有不确定性；未来情景依赖模型假设。",
+          "Historical estimates have uncertainty; future projections depend on assumptions.",
+        )}
+      </dd>
+      <dt>{t("机制图与模拟", "Mechanisms & simulations")}</dt>
+      <dd>
+        {t(
+          "关系图为编辑整理；实验室的参数是假设，不混入观测数据。",
+          "Connections are editorial synthesis; lab parameters are assumptions, separate from observations.",
+        )}
+      </dd>
+    </dl>
+  </article>
+  <article class="editorial-card">
+    <p class="hw-kicker">D3 / UNDER THE HOOD</p>
+    <h2>{t("数据，如何成为图形", "How data becomes a visual")}</h2>
+    <p>
+      {t(
+        "比例尺把数值映射到坐标；轴给出参照；数据绑定让每个图形对应稳定的记录。",
+        "Scales map values to positions; axes provide reference; data joins keep records attached to their marks.",
+      )}
+    </p>
+    <ul>
+      <li>
+        <code>selection.join</code> —{" "}
+        {t("数据与图形对应", "bind records to marks")}
+      </li>
+      <li>
+        <code>scale / axis / shape</code> —{" "}
+        {t("量化、参照与几何", "encoding, reference, geometry")}
+      </li>
+      <li>
+        <code>selection.on / SVG path</code> —{" "}
+        {t(
+          "固定关系图、图解与点击联动",
+          "fixed relationship diagrams, illustrations, and linked selection",
+        )}
+      </li>
+      <li>
+        <code>transition / timer</code> —{" "}
+        {t("联动与连续变化", "linked views and continuous change")}
+      </li>
+    </ul>
+    <ExternalLink href="https://d3js.org/">
+      {t("D3 官方文档", "D3 documentation")}
+    </ExternalLink>
+  </article>
+</div>
+<article class="editorial-card story-method">
+  <p class="hw-kicker">SCROLL / READING</p>
+  <h2>{t("滚动故事怎样工作", "How the scrolling story works")}</h2>
+  <p>
+    {t(
+      "首页将同一批数据组织成六幕。当前文字步骤决定图形状态；详细页的筛选和实验参数由读者控制，两者互不覆盖。",
+      "The homepage organizes the same data into six chapters. The current text step determines the scene; filters and experiment parameters on detailed pages remain under your control.",
+    )}
+  </p>
+  <p>
+    {t(
+      "IntersectionObserver 在图接近视口时初始化，普通滚动更新当前步骤。宽屏且高度足够时图卡固定；窄屏、矮窗口或展开内容超出可用高度时改为就近快照。",
+      "IntersectionObserver initializes scenes near the viewport. Ordinary scrolling updates the current step. Wide, tall windows use a sticky scene; narrower or shorter windows, and expanded content that exceeds the available height, use nearby snapshots.",
+    )}
+  </p>
+  <p>
+    {t(
+      "减少动态效果设置会取消转场；关闭 JavaScript 仍能阅读论点、关键数值、来源与数据表。滚动不改变实验参数、URL 查询或键盘焦点。",
+      "Reduced motion disables transitions. Without JavaScript, arguments, key values, sources and data tables remain readable. Scrolling does not change experiment parameters, URL queries or keyboard focus.",
+    )}
+  </p>
+</article>
+<details class="method-panel">
+  <summary>
+    {t(
+      "查看实际实现片段：稳定的数据绑定",
+      "Implementation excerpt: stable data joins",
+    )}
+  </summary>
+  <div class="method-content">
+    <pre><code>{`svg.selectAll('circle.point')\n  .data(records, d => d.id)\n  .join('circle')\n  .attr('class', 'point')\n  .attr('cx', d => x(d.period))\n  .attr('cy', d => y(d.value));`}</code></pre>
+    <p>
+      {t(
+        "采用率图使用记录 ID 作为键，筛选年份时保留同一条数据与图形的对应关系。",
+        "The adoption chart uses record IDs as keys so filtering preserves the association between each record and its mark.",
+      )}
+    </p>
+  </div>
+</details>

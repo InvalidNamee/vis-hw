@@ -1,0 +1,113 @@
+---
+import Chart from "../components/Chart.astro";
+import IndustryEvidence from "../components/IndustryEvidence.astro";
+import Choice from "../components/Choice.astro";
+import Source from "../components/Source.astro";
+import { dataset, text, type Lang } from "../content";
+import { MoveUpRight, Network, Grid2x2 } from "@lucide/astro";
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = (z: string, e: string) => text(lang, z, e);
+---
+
+<Chart
+  kind="industry"
+  title={t("连接能力与产业", "Connect capabilities to industries")}
+  description={t(
+    "点击节点，查看关联能力与产业案例。",
+    "Select a node to explore connected capabilities and industry cases.",
+  )}
+  note={undefined}
+>
+  <div class="chart-controls industry-toolbar">
+    <Choice
+      control="industry"
+      label={t("选择产业", "Industry")}
+      responsive
+      options={dataset.cases.map((c) => ({ value: c.id, label: c.name[lang] }))}
+    />
+    <div class="industry-view">
+      <span id="industry-view-label">{t("展示方式", "View")}</span>
+      <div class="segmented" role="group" aria-labelledby="industry-view-label">
+        <button data-view="network" aria-pressed="true">
+          <Network size={15} aria-hidden="true" />
+          {t("关系网络", "Network")}
+        </button>
+        <button data-view="matrix" aria-pressed="false">
+          <Grid2x2 size={15} aria-hidden="true" />
+          {t("能力矩阵", "Matrix")}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="legend">
+    <span>
+      <i class="dot blue"></i>
+      {t("产业", "Industry")}
+    </span>
+    <span>
+      <i class="dot mint"></i>
+      {t("AI 能力", "AI capability")}
+    </span>
+    <span>
+      {t(
+        "连线表示应用关系，不表示强度",
+        "Links show applications, not their strength",
+      )}
+    </span>
+  </div>
+</Chart>
+<div class="case-collection">
+  <article class="case-detail" data-capability-panel hidden>
+    <h2 data-capability-title></h2>
+    <p>
+      {t(
+        "该能力连接以下产业。选择一个产业查看具体案例。",
+        "This capability connects the industries below. Select an industry to explore its case.",
+      )}
+    </p>
+    <div class="capability-cases" data-capability-cases></div>
+  </article>
+  {dataset.cases.map((c, i) => (
+    <article class="case-detail" data-case={c.id} hidden={i !== 0}>
+      <div class="case-heading">
+        <span class="hw-kicker">
+          {String(i + 1).padStart(2, "0")} / {c.name[lang]}
+        </span>
+        <h2>{c.task[lang]}</h2>
+        <p>{c.meaning[lang]}</p>
+      </div>
+      <div class="flow-comparison">
+        <div>
+          <small>{t("传统流程 · 示意", "CONVENTIONAL · SCHEMATIC")}</small>
+          <ol>
+            {c.before[lang].map((v) => (
+              <li>{v}</li>
+            ))}
+          </ol>
+        </div>
+        <div>
+          <small>{t("AI 协作流程 · 示意", "AI-ASSISTED · SCHEMATIC")}</small>
+          <ol class="ai-flow">
+            {c.after[lang].map((v) => (
+              <li>{v}</li>
+            ))}
+          </ol>
+        </div>
+      </div>
+      <Source ids={[c.source]} note={c.limit[lang]} />
+    </article>
+  ))}
+</div>
+<IndustryEvidence lang={lang} />
+<div class="insight-strip">
+  <MoveUpRight size={20} />
+  <p>
+    {t(
+      "共同点：把感知、预测或生成能力放入具体流程。差异：每个行业的验证条件与人的责任都不同。",
+      "The common thread is a capability embedded in a workflow. Validation and human responsibility differ by industry.",
+    )}
+  </p>
+</div>

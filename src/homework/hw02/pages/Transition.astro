@@ -1,0 +1,181 @@
+---
+import Chart from "../components/Chart.astro";
+import Choice from "../components/Choice.astro";
+import Source from "../components/Source.astro";
+import { text, type Lang } from "../content";
+import { localeFromUrl, localizedHref } from "../../../i18n";
+import { ArrowRight, Sparkles } from "@lucide/astro";
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props,
+  locale = localeFromUrl(Astro.url);
+const t = (z: string, e: string) => text(lang, z, e);
+const link = (id: string) =>
+  localizedHref(`hw02/${id ? `${id}/` : ""}`, locale);
+---
+
+<Chart
+  kind="infrastructure"
+  class="explanation-graph"
+  title={t(
+    "一次智能服务，背后的资源网络",
+    "The resources behind an AI service",
+  )}
+  description={t(
+    "电力、算力与数据共同支撑应用。点击节点查看它的作用。",
+    "Power, compute, and data support applications. Select a node to explore its role.",
+  )}
+  ids={["iea", "worldbank"]}
+  note={t(
+    "基础设施关系示意；路径宽度不代表能源消耗比例。",
+    "Infrastructure schematic; path widths do not represent energy shares.",
+  )}
+/>
+<Chart
+  kind="energy"
+  title={t("智能背后，是物理基础设施", "Intelligence has a physical footprint")}
+  description={t(
+    "全球全部数据中心用电 · TWh · IEA 2026 报告版本",
+    "Global electricity use of all data centres · TWh · IEA 2026 edition",
+  )}
+  ids={["iea"]}
+  records={["energy-2025", "energy-2030"]}
+  note={t(
+    "485 TWh 为 2025 年历史估计；约 950 TWh 为 2030 年中央情景预测。数据中心包含多种负载，不能全部归因于 AI。",
+    "485 TWh is the 2025 historical estimate; about 950 TWh is the 2030 central projection. Data centres host many workloads, not AI alone.",
+  )}
+>
+  <div class="chart-controls">
+    <Choice
+      control="energy"
+      label={t("展示口径", "Display")}
+      options={[
+        { value: "absolute", label: t("用电量", "Electricity") },
+        { value: "index", label: t("相对指数", "Index") },
+      ]}
+    />
+  </div>
+</Chart>
+<Chart
+  kind="exposure"
+  title={t(
+    "工作会改变，但暴露不等于失业",
+    "Work may change; exposure is not job loss",
+  )}
+  description={t(
+    "ILO 2025 指数 · 各收入组总就业中潜在暴露的比例",
+    "ILO 2025 index · potentially exposed share of employment in each income group",
+  )}
+  ids={["ilo"]}
+  records={[
+    "exposure-low",
+    "exposure-global",
+    "exposure-high",
+    "exposure-highest",
+  ]}
+  note={t(
+    "潜在职业暴露不是实际采用率或岗位消失概率。全球组包含各收入组，不可相加。",
+    "Potential exposure is not actual adoption or a probability of job loss. Global employment includes income groups; values are not additive.",
+  )}
+/>
+<article class="editorial-card">
+  <p class="hw-kicker">TASKS / TRANSFORMATION</p>
+  <h2>
+    {t(
+      "重新分配任务，保留人的责任",
+      "Reallocate tasks, retain human responsibility",
+    )}
+  </h2>
+  <ol class="evidence-flow">
+    {[
+      t(
+        "拆解岗位：检索、起草、沟通与判断",
+        "Break work into retrieval, drafting, communication and judgment",
+      ),
+      t(
+        "识别可辅助的任务，检查质量与成本",
+        "Identify assistable tasks; check quality and cost",
+      ),
+      t(
+        "培训与重组流程，持续验证结果",
+        "Train people, redesign work and validate results",
+      ),
+    ].map((s) => (
+      <li>{s}</li>
+    ))}
+  </ol>
+  <Source ids={["ilo", "worldbank"]} />
+</article>
+<section class="hw-section">
+  <div class="section-intro">
+    <p class="hw-kicker">FOUNDATIONS FOR PROGRESS</p>
+    <h2>{t("把条件补齐，让收益发生", "Build the conditions for gains")}</h2>
+    <p>
+      {t(
+        "以下是机制解释，不是国家或行业评分。",
+        "These are mechanisms, not scores assigned to countries or industries.",
+      )}
+    </p>
+  </div>
+  <div class="foundation-grid">
+    {[
+      [
+        t("数据与连接", "Data & connectivity"),
+        t(
+          "可用的数据，稳定的基础设施",
+          "Usable data, dependable infrastructure",
+        ),
+        t(
+          "数据质量影响结果，连接能力影响谁能够使用。",
+          "Data quality shapes outputs; connectivity shapes access.",
+        ),
+      ],
+      [
+        t("人才与组织", "Skills & organizations"),
+        t("学会使用，也重设工作流程", "Learn the tools, redesign the work"),
+        t(
+          "培训、职责与复核机制，让新工具进入日常生产。",
+          "Training, ownership, and review bring new tools into daily work.",
+        ),
+      ],
+      [
+        t("能源与效率", "Energy & efficiency"),
+        t("同时考虑收益与资源消耗", "Account for gains and resources"),
+        t(
+          "高效模型与合理部署，是降低基础设施压力的路径。",
+          "Efficient models and deployment can ease infrastructure demands.",
+        ),
+      ],
+    ].map((a, i) => (
+      <article>
+        <span class="concept-number">0{i + 1}</span>
+        <h3>{a[0]}</h3>
+        <strong>{a[1]}</strong>
+        <p>{a[2]}</p>
+      </article>
+    ))}
+  </div>
+  <Source ids={["worldbank", "iea"]} />
+</section>
+<section class="journey-banner">
+  <Sparkles size={26} />
+  <div>
+    <h2>
+      {t(
+        "意义，在于更好的生产与创造",
+        "The goal is better production and creation",
+      )}
+    </h2>
+    <p>
+      {t(
+        "用证据判断收益，用实验理解机制，用设计让更多人看懂变化。",
+        "Use evidence to assess gains, experiments to understand mechanisms, and design to make change legible.",
+      )}
+    </p>
+  </div>
+  <a class="hw-text-link" href={link("sources")}>
+    {t("检查所有来源", "Inspect the sources")}
+    <ArrowRight size={17} />
+  </a>
+</section>

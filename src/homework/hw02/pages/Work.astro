@@ -1,0 +1,115 @@
+---
+import Chart from "../components/Chart.astro";
+import Choice from "../components/Choice.astro";
+import Source from "../components/Source.astro";
+import { text, type Lang } from "../content";
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = (z: string, e: string) => text(lang, z, e);
+---
+
+<Chart
+  kind="collaboration"
+  class="explanation-graph"
+  title={t("知识如何到达一个工作现场", "How knowledge reaches the workplace")}
+  description={t(
+    "沿着关系图，观察知识、AI 与人的分工。点击节点展开说明。",
+    "Follow the connections between knowledge, AI, and human judgment. Select a node for details.",
+  )}
+  ids={["nber"]}
+  note={t(
+    "基于客服辅助场景的机制图；连线不表示研究测得的效应大小。",
+    "A mechanism diagram for AI-assisted support; links do not encode measured effect sizes.",
+  )}
+/>
+<Chart
+  kind="effects"
+  title={t("任务中的变化，可以被测量", "Measurable changes in specific tasks")}
+  description={t(
+    "各研究基准 = 100；选择指标，比较同一研究内的变化。",
+    "Baseline = 100 within each study. Select an outcome for a within-study comparison.",
+  )}
+  ids={["nber", "writing"]}
+  records={["support", "time", "quality"]}
+  note={t(
+    "指数由报告的相对变化换算。各研究的基准、样本和结果不同，不能按指数排名或求平均。",
+    "Indices are derived from reported relative changes. Different studies and outcomes cannot be ranked or averaged together.",
+  )}
+>
+  <div class="chart-controls">
+    <Choice
+      control="effect"
+      label={t("研究指标", "Study outcome")}
+      options={[
+        { value: "support", label: t("客服效率", "Support") },
+        { value: "time", label: t("写作耗时", "Writing time") },
+        { value: "quality", label: t("写作质量", "Writing quality") },
+      ]}
+    />
+  </div>
+</Chart>
+<div class="two-col">
+  <Chart
+    kind="developers"
+    title={t(
+      "不同工作现场，结果为何不同？",
+      "Why do results differ across workplaces?",
+    )}
+    description={t(
+      "两项独立研究 · 任务数量与任务耗时分别比较",
+      "Two independent studies · task counts and time compared separately",
+    )}
+    ids={["developers", "metr", "metr26"]}
+    records={["dev-tasks", "dev-time"]}
+    note={t(
+      "METR 2026 后续实验受选择偏差与计时问题影响，不能据早期结果判断当前工具。标准误不等于置信区间。",
+      "METR’s 2026 follow-up has selection and timing issues; early results do not describe current tools. Standard error is not a confidence interval.",
+    )}
+  />
+  <article class="editorial-card">
+    <p class="hw-kicker">WHAT THIS MEANS</p>
+    <h2>{t("收益需要什么条件？", "What makes gains possible?")}</h2>
+    <p>
+      {t(
+        "AI 辅助可能帮助经验较少的员工调用已有知识。效果取决于任务、工具与工作环境。",
+        "AI assistance can help less experienced workers access existing knowledge. Effects depend on tasks, tools, and context.",
+      )}
+    </p>
+    <div class="quote-note">
+      {t(
+        "一个客服样本的收益，不是所有岗位的未来。",
+        "One support sample does not predict the future of every job.",
+      )}
+    </div>
+    <h3>
+      {t(
+        "任务、经验、复核与组织",
+        "Tasks, experience, review and organization",
+      )}
+    </h3>
+    <ul>
+      <li>
+        {t(
+          "测量的是时间、数量，还是质量？",
+          "Does it measure time, quantity, or quality?",
+        )}
+      </li>
+      <li>{t("对谁有效，在哪种任务里？", "For whom, and in which tasks?")}</li>
+      <li>
+        {t(
+          "复核与学习成本是否被计入？",
+          "Are review and learning costs included?",
+        )}
+      </li>
+      <li>
+        {t(
+          "组织是否允许把节省的时间转成有效产出？",
+          "Can the organization turn saved time into useful output?",
+        )}
+      </li>
+    </ul>
+    <Source ids={["nber", "developers", "metr26"]} />
+  </article>
+</div>
