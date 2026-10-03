@@ -1,0 +1,14 @@
+---
+import StoryStep from './StoryStep.astro';
+import StoryScene from './StoryScene.astro';
+import type {StoryChapter} from '../story-content';
+import type {Lang} from '../content';
+import {href} from '../../../config/homework';
+interface Props {chapter:StoryChapter;lang:Lang;number:number;}
+const {chapter,lang,number}=Astro.props;
+---
+<story-chapter id={chapter.id} data-chapter-id={chapter.id} data-lang={lang} aria-labelledby={`${chapter.id}-heading`}>
+ <header class="story-chapter-heading"><img src={href(`images/hw02/${chapter.image}.webp`)} alt="" width="1600" height="900" loading="lazy"/><div><span>{String(number).padStart(2,'0')} / 06</span><h2 id={`${chapter.id}-heading`}>{chapter.title[lang]}</h2><p>{chapter.intro[lang]}</p></div></header>
+ <div class="story-chapter-grid"><div class="story-steps">{chapter.steps.map((step,i)=><StoryStep step={step} lang={lang} number={i+1} total={chapter.steps.length}/>)}</div><div class="story-sticky" aria-hidden="true"><div class="story-master-scenes">{chapter.steps.map(step=><div data-master-step={step.id} hidden={step.id!==chapter.steps[0].id}><StoryScene step={step} lang={lang} instance={`master-${step.id}`}/></div>)}</div><div class="story-scene-progress" aria-hidden="true">{chapter.steps.map((step,i)=><span data-progress-step={step.id}>{String(i+1).padStart(2,'0')}</span>)}</div></div></div>
+ <slot />
+</story-chapter>

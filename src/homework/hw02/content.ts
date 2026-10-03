@@ -1,10 +1,21 @@
 import raw from '../../../public/data/hw02/dataset.json';
 export const dataset = raw;
+export const recordById = (id:string) => {
+ const record=dataset.records.find(r=>r.id===id);
+ if(!record)throw new Error(`Unknown HW02 record: ${id}`);
+ return record;
+};
+export const energyBaseline=recordById('energy-2025');
+export const periodText=(period:string|number,lang:Lang)=>period==='not-confirmed'?(lang==='en'?'Collection period not confirmed':'采集期未确认'):String(period);
+export const formatRecord=(id:string,lang:Lang)=>{
+ const r=recordById(id),prefix=r.precision==='greater-than'?'> ':r.precision==='approximate'?(lang==='en'?'≈ ':'约 '):'';
+ return prefix+r.value.toLocaleString(lang==='en'?'en-US':'zh-CN');
+};
 export type Lang = 'zh' | 'en';
 export type LocalText = { zh: string; en: string };
 export const text = (lang: Lang, zh: string, en: string) => lang === 'en' ? en : zh;
 export const chapters = [
- {id:'', name:{zh:'总览',en:'Overview'}, title:{zh:'智变',en:'The intelligence shift'}, desc:{zh:'人工智能，如何成为新质生产力？',en:'How does AI become a new productive force?'}, kicker:'THE BIG PICTURE'},
+ {id:'', name:{zh:'完整故事',en:'The full story'}, title:{zh:'智变',en:'The intelligence shift'}, desc:{zh:'人工智能，如何成为新质生产力？',en:'How does AI become a new productive force?'}, kicker:'THE BIG PICTURE'},
  {id:'trends',name:{zh:'发展脉络',en:'The momentum'},title:{zh:'从技术突破，到广泛采用',en:'From breakthrough to adoption'},desc:{zh:'投入为创新创造条件，采用让技术走进实际工作。',en:'Investment enables innovation. Adoption brings it into everyday work.'},kicker:'01 / THE MOMENTUM'},
  {id:'industries',name:{zh:'产业图谱',en:'Industry atlas'},title:{zh:'一种能力，多种产业可能',en:'One capability. Many possibilities.'},desc:{zh:'沿着关系网络，探索 AI 在生产流程中真正发生作用的位置。',en:'Follow the connections to see where AI enters a productive process.'},kicker:'02 / INDUSTRY ATLAS'},
  {id:'work',name:{zh:'人机协作',en:'Working together'},title:{zh:'生产力的变化，从任务开始',en:'Productivity starts with a task'},desc:{zh:'走进具体研究：谁得到了帮助，改善了什么，又有哪些限制？',en:'Look inside the studies: who benefits, what improves, and where are the limits?'},kicker:'03 / HUMAN + AI'},

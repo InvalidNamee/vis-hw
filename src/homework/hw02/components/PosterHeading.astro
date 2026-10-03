@@ -1,6 +1,6 @@
 ---
 import {href} from '../../../config/homework';
-import {chapters,dataset,type Lang} from '../content';
+import {chapters,dataset,formatRecord,type Lang} from '../content';
 interface Props {chapter:string;lang:Lang;}
 const {chapter,lang}=Astro.props;
 const current=chapters.find(c=>c.id===chapter)!;
@@ -9,9 +9,9 @@ const record=(id:string)=>dataset.records.find(r=>r.id===id)!.value;
 const metrics:Record<string,[string,string][]>={
  trends:[[`${record('adoption-2025')}%`,en?'Surveyed organizations · 2025':'受访组织使用 AI · 2025'],['2023–25',en?'Adoption series':'采用率时间范围']],
  industries:[[String(dataset.cases.length),en?'Industry cases':'产业案例'],[String(dataset.capabilities.length),en?'AI capabilities':'智能能力']],
- work:[[`+${record('support')}%`,en?'Support productivity · study':'客服生产率 · 研究结果'],[`+${record('novice')}%`,en?'Novice / low-skilled subset':'新手与低技能子集']],
+ work:[[`+${record('support')}%`,en?'Support productivity · study':'客服生产率 · 研究结果'],['3',en?'Task settings · support, writing, code':'任务场景 · 客服、写作、开发']],
  lab:[['4',en?'Adjustable parameters':'可调情景参数'],['2',en?'Workflows to compare':'工作方式对照']],
- transition:[[`${record('energy-2024')}`,en?'TWh · 2024 estimate':'TWh · 2024 历史估计'],[`${record('energy-2030')}`,en?'TWh · 2030 projection':'TWh · 2030 情景预测']],
+ transition:[[formatRecord('energy-2025',lang),en?'TWh · 2025 estimate':'TWh · 2025 历史估计'],[formatRecord('energy-2030',lang),en?'TWh · 2030 projection':'TWh · 2030 情景预测']],
  sources:[[String(dataset.records.length),en?'Indicator records':'指标记录'],[String(dataset.sources.length),en?'Research sources':'数据与研究来源']]
 };
 const image=['work','transition','sources'].includes(chapter)?'intelligence':'neural-layers';

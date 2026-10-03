@@ -1,5 +1,10 @@
 /** Transparent, serial-effort teaching model. Units: minutes per task. */
 export const defaults = Object.freeze({ tasks:20, adoption:60, speed:3, review:4 });
+export const presets=Object.freeze({
+ 'low-review':Object.freeze({tasks:20,adoption:80,speed:3,review:1}),
+ 'high-review':Object.freeze({tasks:20,adoption:80,speed:3,review:20}),
+ 'low-adoption':Object.freeze({tasks:20,adoption:15,speed:3,review:4}),
+});
 export const limits = Object.freeze({ tasks:[1,100], adoption:[0,100], speed:[1,8], review:[0,30] });
 export function normalize(input = {}) {
   return Object.fromEntries(Object.entries(defaults).map(([key,fallback])=>{

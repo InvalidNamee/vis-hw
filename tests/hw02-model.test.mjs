@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculate,normalize } from '../src/homework/hw02/model.mjs';
+import { calculate,normalize,presets } from '../src/homework/hw02/model.mjs';
 
 test('no AI and no extra review preserves the baseline exactly',()=>{
  const r=calculate({tasks:20,adoption:0,speed:8,review:0});
@@ -29,4 +29,11 @@ test('savings are monotonic in participation when review is fixed',()=>{
   let previous=Infinity;
   for(let a=0;a<=100;a+=5){const r=calculate({adoption:a,speed});assert.ok(r.aiTotal<=previous);previous=r.aiTotal;}
  }
+});
+
+test('teaching presets demonstrate gains, review loss, and participation limits',()=>{
+ for(const preset of Object.values(presets))assert.deepEqual(normalize(preset),preset);
+ assert.ok(calculate(presets['low-review']).saved>0);
+ assert.ok(calculate(presets['high-review']).saved<0);
+ assert.ok(calculate(presets['low-adoption']).saved<calculate(presets['low-review']).saved);
 });

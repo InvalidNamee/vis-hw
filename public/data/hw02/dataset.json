@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-01-v1",
+  "version": "2026-10-02-v2",
   "sources": [
     {
       "id": "hai25",
@@ -10,29 +10,41 @@
         "zh": "组织采用率为调查结果；私人投资不含全部公共投资。",
         "en": "Adoption is survey-based; private investment excludes some public funding."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "2025",
+      "evidenceType": "statistics",
+      "verifiedAt": "2026-10-01",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "hai26",
       "title": "Stanford AI Index 2026 · Economy",
       "url": "https://hai.stanford.edu/ai-index/2026-ai-index-report/economy",
-      "section": "Highlight 5",
+      "section": "Economy · Highlight 5; Figure 4.2.8, p.182",
       "note": {
         "zh": "2025 年受访组织采用率；跨年样本可能变化。",
         "en": "2025 adoption among surveyed organizations; samples may change across years."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "2026",
+      "evidenceType": "statistics",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "nber",
-      "title": "NBER · Brynjolfsson et al. · Generative AI at Work (2023)",
-      "url": "https://www.nber.org/papers/w31161",
-      "section": "Working Paper 31161 · 2023 abstract",
+      "title": "Brynjolfsson et al. · Generative AI at Work (QJE, 2025)",
+      "url": "https://academic.oup.com/qje/article/140/2/889/7990658",
+      "section": "Abstract · 5,172 customer-support agents",
       "note": {
-        "zh": "采用 2023 工作论文口径：平均 +14%，新手与低技能组 +34%；非全行业平均。",
-        "en": "2023 working-paper estimates: +14% overall, +34% for novice/low-skilled workers; not an economy-wide effect."
+        "zh": "正式发表版：平均 +15%；特定客服样本，不是全行业平均。旧版子组数值未混用。",
+        "en": "Published version: +15% overall in a specific support sample, not an economy-wide effect. Earlier subgroup estimates are not mixed in."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "2025-02-04",
+      "evidenceType": "study",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "writing",
@@ -43,18 +55,26 @@
         "zh": "职业写作实验：完成时间 −40%，质量评分 +18%；两者不是同一种指标。",
         "en": "Professional writing experiment: time −40%, quality score +18%; these are different outcomes."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "2023",
+      "evidenceType": "study",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "iea",
-      "title": "IEA · Energy and AI (2025)",
-      "url": "https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai",
-      "section": "The outlook for energy demand from data centres",
+      "title": "IEA · Key Questions on Energy and AI (2026)",
+      "url": "https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary",
+      "section": "Updated data centre electricity demand outlook",
       "note": {
-        "zh": "固定 2025 报告版本；2024 为历史估计，2030 为基准情景预测。涵盖全部数据中心，不等于 AI 用电。CC BY 4.0。",
-        "en": "Fixed 2025 edition: 2024 historical estimate; 2030 Base Case projection. All data centres, not AI alone. CC BY 4.0."
+        "zh": "2026 版：2025 年历史估计与 2030 年中央预测；全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
+        "en": "2026 edition: 2025 historical estimate and 2030 central projection; all data centres, not AI alone. CC BY 4.0."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "2026",
+      "evidenceType": "statistics",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "worldbank",
@@ -65,7 +85,11 @@
         "zh": "用于解释基础条件与扩散差异，不构造国家综合评分。",
         "en": "Used to explain foundations and diffusion; no invented country scores."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "2025",
+      "evidenceType": "case",
+      "verifiedAt": "2026-10-01",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "mvtec",
@@ -76,18 +100,26 @@
         "zh": "工业检测研究基准，用于说明应用机制；不是工厂实测收益。",
         "en": "Industrial inspection benchmark; illustrates a mechanism, not factory productivity gains."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "not-confirmed",
+      "evidenceType": "case",
+      "verifiedAt": "2026-10-01",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "alpha",
-      "title": "Jumper et al. · AlphaFold (Nature, 2021)",
-      "url": "https://www.nature.com/articles/s41586-021-03819-2",
-      "section": "Abstract",
+      "title": "Abramson et al. · AlphaFold 3 (Nature, 2024)",
+      "url": "https://www.nature.com/articles/s41586-024-07487-w",
+      "section": "Abstract · biomolecular interactions",
       "note": {
         "zh": "蛋白质结构预测研究；预测仍需科学验证。",
         "en": "Protein structure prediction research; predictions still require scientific validation."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "2024-05-08",
+      "evidenceType": "study",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "fda",
@@ -98,7 +130,11 @@
         "zh": "监管设备清单仅说明应用存在，不代表统一的临床效果。",
         "en": "The regulatory list documents applications, not a uniform clinical benefit."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "not-confirmed",
+      "evidenceType": "case",
+      "verifiedAt": "2026-10-01",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "agri",
@@ -106,10 +142,14 @@
       "url": "https://airepository.worldbank.org/use-case/icrisat-microsoft-ai-sowing-app-weather-prediction",
       "section": "Use-case overview",
       "note": {
-        "zh": "播种决策支持案例；本页不引用未经核验的增产比例。",
-        "en": "Sowing decision-support case; no unverified yield increase is reported."
+        "zh": "2016–2017 年早期播种建议试点；只说明决策支持，不引用未经核验的增产比例。",
+        "en": "An early 2016–2017 sowing-advice pilot; decision support only, without unverified yield claims."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "not-confirmed",
+      "evidenceType": "case",
+      "verifiedAt": "2026-10-01",
+      "license": "See source terms; numerical facts transcribed with attribution."
     },
     {
       "id": "concept",
@@ -120,7 +160,161 @@
         "zh": "高科技、高效能、高质量；关注生产要素及其组合的变化。",
         "en": "Focuses on technology, efficiency, quality, and the configuration of productive factors."
       },
-      "retrieved": "2026-10-01"
+      "retrieved": "2026-10-01",
+      "publishedAt": "2024-05-31",
+      "evidenceType": "case",
+      "verifiedAt": "2026-10-01",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "eurostat",
+      "title": "Eurostat · AI technologies in the EU (2026)",
+      "url": "https://ec.europa.eu/eurostat/documents/7870049/23260410/KS-01-26-009-EN-N.pdf/37d063cb-28cf-3b4e-91f3-c3784c970842?version=1.1",
+      "section": "Table 1, p.19 · isoc_eb_ai",
+      "note": {
+        "zh": "欧盟所覆盖行业中 10 人及以上企业；不同于 Stanford 组织调查样本。",
+        "en": "EU enterprises with at least 10 persons in covered sectors; a different population from the Stanford organizational survey."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2026",
+      "evidenceType": "statistics",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "ifr",
+      "title": "IFR · World Robotics 2026",
+      "url": "https://ifr.org/ifr-press-releases/news/five-million-robots-now-operate-in-factories-globally",
+      "section": "2025 installations · Asia / Americas",
+      "note": {
+        "zh": "工业机器人是自动化背景，不一定使用 AI；新增与存量分开。",
+        "en": "Industrial robots provide automation context and do not necessarily use AI. Installations and stock are distinct."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2026-09-24",
+      "evidenceType": "statistics",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "praim",
+      "title": "Eisemann et al. · PRAIM (Nature Medicine, 2025)",
+      "url": "https://www.nature.com/articles/s41591-024-03408-6",
+      "section": "Abstract · German multicentre observational study",
+      "note": {
+        "zh": "观察性研究；2021-07 至 2023-02 筛查。检出率不是治愈率，进一步检查率差异未达统计显著。",
+        "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2025-01-07",
+      "evidenceType": "study",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "developers",
+      "title": "Cui et al. · Software developer field experiments (2026)",
+      "url": "https://pubsonline.informs.org/doi/10.1287/mnsc.2025.00535",
+      "section": "Abstract · Management Science · three randomized trials",
+      "note": {
+        "zh": "4,867 名开发者；完成任务数 +26.08%，标准误 10.3 个百分点，非耗时减少百分比。",
+        "en": "4,867 developers; completed tasks +26.08%, SE 10.3 percentage points, not a percentage reduction in time."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2026-02-27",
+      "evidenceType": "study",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "metr",
+      "title": "METR · Experienced open-source developers (2025)",
+      "url": "https://metr.org/Early_2025_AI_Experienced_OS_Devs_Study-paper.pdf",
+      "section": "Abstract · February–June 2025 tools",
+      "note": {
+        "zh": "16 名开发者、246 个任务；特定熟悉项目，耗时 +19%（95% CI +2% 至 +39%）。",
+        "en": "16 developers, 246 tasks on familiar projects; time +19% (95% CI +2% to +39%)."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2025-07-10",
+      "evidenceType": "study",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "metr26",
+      "title": "METR · Follow-up experiment update (2026)",
+      "url": "https://metr.org/blog/2026-02-24-uplift-update/",
+      "section": "Selection effects and measurement limitations",
+      "note": {
+        "zh": "后续原始估计出现加速方向，但选择偏差与计时问题使当前效应难以可靠估计。",
+        "en": "Later raw estimates suggest acceleration, but selection and timing problems prevent a reliable estimate of current effects."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2026-02-24",
+      "evidenceType": "study",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "ilo",
+      "title": "ILO · GenAI occupational exposure (2025)",
+      "url": "https://www.ilo.org/publications/generative-ai-and-jobs-refined-global-index-occupational-exposure",
+      "section": "Working Paper 140 · global index",
+      "note": {
+        "zh": "职业潜在暴露，不是实际采用或失业预测；最高暴露类别包含于总体暴露。",
+        "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2025-05-20",
+      "evidenceType": "statistics",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "science26",
+      "title": "Stanford AI Index 2026 · Science",
+      "url": "https://hai.stanford.edu/ai-index/2026-ai-index-report/science",
+      "section": "Highlight 1 · AI-related natural-science publications",
+      "note": {
+        "zh": "论文数量反映研究活动，不直接衡量创新质量或生产率。",
+        "en": "Publication counts indicate research activity, not innovation quality or productivity directly."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2026",
+      "evidenceType": "statistics",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "weather",
+      "title": "Allen et al. · Aardvark Weather (Nature, 2025)",
+      "url": "https://www.nature.com/articles/s41586-025-08897-0",
+      "section": "Figure 1 · Abstract · supplement updated 2025-06-17",
+      "note": {
+        "zh": "端到端气象预测研究；输入量与预测误差不同，不能据此推断农业增产。",
+        "en": "End-to-end weather research. Observation volume is not forecast error and does not establish crop-yield gains."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2025-03-20",
+      "evidenceType": "study",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
+    },
+    {
+      "id": "china",
+      "title": "National Data Administration · Digital China 2025",
+      "url": "https://www.nda.gov.cn/sjj/zhuanti/sjzgzxd/szzgbg/0429/20260429162826395159001_pc.html",
+      "section": "Report release · AI core industry",
+      "note": {
+        "zh": "2025 年核心产业规模超过 1.2 万亿元；不是增加值、GDP 贡献或私人投资。",
+        "en": "2025 core-industry scale exceeds CNY 1.2 trillion; not value added, GDP contribution, or private investment."
+      },
+      "retrieved": "2026-10-02",
+      "publishedAt": "2026-04-29",
+      "evidenceType": "statistics",
+      "verifiedAt": "2026-10-02",
+      "license": "See source terms; numerical facts transcribed with attribution."
     }
   ],
   "records": [
@@ -138,7 +332,18 @@
         "en": "Surveyed organizations worldwide"
       },
       "source": "hai25",
-      "kind": "observed"
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2023",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "全球受访组织",
+        "en": "Surveyed organizations worldwide"
+      },
+      "limitation": {
+        "zh": "组织采用率为调查结果；私人投资不含全部公共投资。",
+        "en": "Adoption is survey-based; private investment excludes some public funding."
+      }
     },
     {
       "id": "adoption-2024",
@@ -154,7 +359,18 @@
         "en": "Surveyed organizations worldwide"
       },
       "source": "hai25",
-      "kind": "observed"
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2024",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "全球受访组织",
+        "en": "Surveyed organizations worldwide"
+      },
+      "limitation": {
+        "zh": "组织采用率为调查结果；私人投资不含全部公共投资。",
+        "en": "Adoption is survey-based; private investment excludes some public funding."
+      }
     },
     {
       "id": "adoption-2025",
@@ -170,7 +386,18 @@
         "en": "Surveyed organizations worldwide"
       },
       "source": "hai26",
-      "kind": "observed"
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "全球受访组织",
+        "en": "Surveyed organizations worldwide"
+      },
+      "limitation": {
+        "zh": "2025 年受访组织采用率；跨年样本可能变化。",
+        "en": "2025 adoption among surveyed organizations; samples may change across years."
+      }
     },
     {
       "id": "investment-us",
@@ -178,15 +405,26 @@
         "zh": "美国",
         "en": "United States"
       },
-      "value": 109.1,
+      "value": 285.9,
       "unit": "USD billion",
-      "period": 2024,
+      "period": 2025,
       "scope": {
         "zh": "AI 私人投资（所选三国）",
         "en": "Private AI investment (three selected countries)"
       },
-      "source": "hai25",
-      "kind": "observed"
+      "source": "hai26",
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "AI 私人投资（所选三国）",
+        "en": "Private AI investment (three selected countries)"
+      },
+      "limitation": {
+        "zh": "2025 年受访组织采用率；跨年样本可能变化。",
+        "en": "2025 adoption among surveyed organizations; samples may change across years."
+      }
     },
     {
       "id": "investment-cn",
@@ -194,15 +432,26 @@
         "zh": "中国",
         "en": "China"
       },
-      "value": 9.3,
+      "value": 12.4,
       "unit": "USD billion",
-      "period": 2024,
+      "period": 2025,
       "scope": {
         "zh": "AI 私人投资（所选三国）",
         "en": "Private AI investment (three selected countries)"
       },
-      "source": "hai25",
-      "kind": "observed"
+      "source": "hai26",
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "AI 私人投资（所选三国）",
+        "en": "Private AI investment (three selected countries)"
+      },
+      "limitation": {
+        "zh": "2025 年受访组织采用率；跨年样本可能变化。",
+        "en": "2025 adoption among surveyed organizations; samples may change across years."
+      }
     },
     {
       "id": "investment-uk",
@@ -210,15 +459,26 @@
         "zh": "英国",
         "en": "United Kingdom"
       },
-      "value": 4.5,
+      "value": 5.9,
       "unit": "USD billion",
-      "period": 2024,
+      "period": 2025,
       "scope": {
         "zh": "AI 私人投资（所选三国）",
         "en": "Private AI investment (three selected countries)"
       },
-      "source": "hai25",
-      "kind": "observed"
+      "source": "hai26",
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "AI 私人投资（所选三国）",
+        "en": "Private AI investment (three selected countries)"
+      },
+      "limitation": {
+        "zh": "2025 年受访组织采用率；跨年样本可能变化。",
+        "en": "2025 adoption among surveyed organizations; samples may change across years."
+      }
     },
     {
       "id": "support",
@@ -226,31 +486,26 @@
         "zh": "客服：每小时解决问题",
         "en": "Support: issues resolved/hour"
       },
-      "value": 14,
+      "value": 15,
       "unit": "%",
-      "period": 2023,
+      "period": "not-confirmed",
       "scope": {
-        "zh": "特定研究样本，相对基准变化",
-        "en": "Study-specific sample; relative to baseline"
+        "zh": "5,172 名客服人员；每小时解决问题数相对变化",
+        "en": "5,172 customer-support agents; change in issues resolved per hour"
       },
       "source": "nber",
-      "kind": "observed"
-    },
-    {
-      "id": "novice",
-      "label": {
-        "zh": "新手与低技能组",
-        "en": "Novice / low-skilled group"
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "not-confirmed",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "5,172 名客服人员；每小时解决问题数相对变化",
+        "en": "5,172 customer-support agents; change in issues resolved per hour"
       },
-      "value": 34,
-      "unit": "%",
-      "period": 2023,
-      "scope": {
-        "zh": "特定研究样本，相对基准变化",
-        "en": "Study-specific sample; relative to baseline"
-      },
-      "source": "nber",
-      "kind": "observed"
+      "limitation": {
+        "zh": "正式发表版：平均 +15%；特定客服样本，不是全行业平均。旧版子组数值未混用。",
+        "en": "Published version: +15% overall in a specific support sample, not an economy-wide effect. Earlier subgroup estimates are not mixed in."
+      }
     },
     {
       "id": "time",
@@ -260,13 +515,24 @@
       },
       "value": -40,
       "unit": "%",
-      "period": 2023,
+      "period": "not-confirmed",
       "scope": {
         "zh": "特定研究样本，相对基准变化",
         "en": "Study-specific sample; relative to baseline"
       },
       "source": "writing",
-      "kind": "observed"
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "not-confirmed",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "特定研究样本，相对基准变化",
+        "en": "Study-specific sample; relative to baseline"
+      },
+      "limitation": {
+        "zh": "职业写作实验：完成时间 −40%，质量评分 +18%；两者不是同一种指标。",
+        "en": "Professional writing experiment: time −40%, quality score +18%; these are different outcomes."
+      }
     },
     {
       "id": "quality",
@@ -276,37 +542,59 @@
       },
       "value": 18,
       "unit": "%",
-      "period": 2023,
+      "period": "not-confirmed",
       "scope": {
         "zh": "特定研究样本，相对基准变化",
         "en": "Study-specific sample; relative to baseline"
       },
       "source": "writing",
-      "kind": "observed"
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "not-confirmed",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "特定研究样本，相对基准变化",
+        "en": "Study-specific sample; relative to baseline"
+      },
+      "limitation": {
+        "zh": "职业写作实验：完成时间 −40%，质量评分 +18%；两者不是同一种指标。",
+        "en": "Professional writing experiment: time −40%, quality score +18%; these are different outcomes."
+      }
     },
     {
-      "id": "energy-2024",
+      "id": "energy-2025",
       "label": {
         "zh": "历史估计",
         "en": "Historical estimate"
       },
-      "value": 415,
+      "value": 485,
       "unit": "TWh",
-      "period": 2024,
+      "period": 2025,
       "scope": {
         "zh": "全球全部数据中心",
         "en": "All data centres worldwide"
       },
       "source": "iea",
-      "kind": "estimate"
+      "kind": "estimate",
+      "precision": "approximate",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "全球全部数据中心",
+        "en": "All data centres worldwide"
+      },
+      "limitation": {
+        "zh": "2026 版：2025 年历史估计与 2030 年中央预测；全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
+        "en": "2026 edition: 2025 historical estimate and 2030 central projection; all data centres, not AI alone. CC BY 4.0."
+      }
     },
     {
       "id": "energy-2030",
       "label": {
-        "zh": "基准情景预测",
-        "en": "Base Case projection"
+        "zh": "中央情景预测",
+        "en": "Central projection"
       },
-      "value": 945,
+      "value": 950,
       "unit": "TWh",
       "period": 2030,
       "scope": {
@@ -314,7 +602,539 @@
         "en": "All data centres worldwide"
       },
       "source": "iea",
-      "kind": "projection"
+      "kind": "projection",
+      "precision": "approximate",
+      "samplePeriod": "2030",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "全球全部数据中心",
+        "en": "All data centres worldwide"
+      },
+      "limitation": {
+        "zh": "2026 版：2025 年历史估计与 2030 年中央预测；全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
+        "en": "2026 edition: 2025 historical estimate and 2030 central projection; all data centres, not AI alone. CC BY 4.0."
+      }
+    },
+    {
+      "id": "eu-small",
+      "label": {
+        "zh": "小型企业",
+        "en": "Small enterprises"
+      },
+      "value": 17,
+      "unit": "%",
+      "period": 2025,
+      "source": "eurostat",
+      "scope": {
+        "zh": "欧盟覆盖行业；10–49 人企业",
+        "en": "EU covered sectors; 10–49 persons employed"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "欧盟覆盖行业；10–49 人企业",
+        "en": "EU covered sectors; 10–49 persons employed"
+      },
+      "limitation": {
+        "zh": "欧盟所覆盖行业中 10 人及以上企业；不同于 Stanford 组织调查样本。",
+        "en": "EU enterprises with at least 10 persons in covered sectors; a different population from the Stanford organizational survey."
+      }
+    },
+    {
+      "id": "eu-medium",
+      "label": {
+        "zh": "中型企业",
+        "en": "Medium enterprises"
+      },
+      "value": 30.4,
+      "unit": "%",
+      "period": 2025,
+      "source": "eurostat",
+      "scope": {
+        "zh": "欧盟覆盖行业；50–249 人企业",
+        "en": "EU covered sectors; 50–249 persons employed"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "欧盟覆盖行业；50–249 人企业",
+        "en": "EU covered sectors; 50–249 persons employed"
+      },
+      "limitation": {
+        "zh": "欧盟所覆盖行业中 10 人及以上企业；不同于 Stanford 组织调查样本。",
+        "en": "EU enterprises with at least 10 persons in covered sectors; a different population from the Stanford organizational survey."
+      }
+    },
+    {
+      "id": "eu-large",
+      "label": {
+        "zh": "大型企业",
+        "en": "Large enterprises"
+      },
+      "value": 55,
+      "unit": "%",
+      "period": 2025,
+      "source": "eurostat",
+      "scope": {
+        "zh": "欧盟覆盖行业；250+ 人企业",
+        "en": "EU covered sectors; 250+ persons employed"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "欧盟覆盖行业；250+ 人企业",
+        "en": "EU covered sectors; 250+ persons employed"
+      },
+      "limitation": {
+        "zh": "欧盟所覆盖行业中 10 人及以上企业；不同于 Stanford 组织调查样本。",
+        "en": "EU enterprises with at least 10 persons in covered sectors; a different population from the Stanford organizational survey."
+      }
+    },
+    {
+      "id": "robots-cn",
+      "label": {
+        "zh": "中国",
+        "en": "China"
+      },
+      "value": 354000,
+      "unit": "units",
+      "period": 2025,
+      "source": "ifr",
+      "scope": {
+        "zh": "年度新增工业机器人",
+        "en": "Annual industrial robot installations"
+      },
+      "kind": "observed",
+      "precision": "approximate",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "年度新增工业机器人",
+        "en": "Annual industrial robot installations"
+      },
+      "limitation": {
+        "zh": "工业机器人是自动化背景，不一定使用 AI；新增与存量分开。",
+        "en": "Industrial robots provide automation context and do not necessarily use AI. Installations and stock are distinct."
+      }
+    },
+    {
+      "id": "robots-us",
+      "label": {
+        "zh": "美国",
+        "en": "United States"
+      },
+      "value": 38500,
+      "unit": "units",
+      "period": 2025,
+      "source": "ifr",
+      "scope": {
+        "zh": "年度新增工业机器人",
+        "en": "Annual industrial robot installations"
+      },
+      "kind": "observed",
+      "precision": "approximate",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "年度新增工业机器人",
+        "en": "Annual industrial robot installations"
+      },
+      "limitation": {
+        "zh": "工业机器人是自动化背景，不一定使用 AI；新增与存量分开。",
+        "en": "Industrial robots provide automation context and do not necessarily use AI. Installations and stock are distinct."
+      }
+    },
+    {
+      "id": "robots-jp",
+      "label": {
+        "zh": "日本",
+        "en": "Japan"
+      },
+      "value": 36219,
+      "unit": "units",
+      "period": 2025,
+      "source": "ifr",
+      "scope": {
+        "zh": "年度新增工业机器人",
+        "en": "Annual industrial robot installations"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "年度新增工业机器人",
+        "en": "Annual industrial robot installations"
+      },
+      "limitation": {
+        "zh": "工业机器人是自动化背景，不一定使用 AI；新增与存量分开。",
+        "en": "Industrial robots provide automation context and do not necessarily use AI. Installations and stock are distinct."
+      }
+    },
+    {
+      "id": "robots-cn-share",
+      "label": {
+        "zh": "中国占全球新增",
+        "en": "China share of installations"
+      },
+      "value": 59,
+      "unit": "%",
+      "period": 2025,
+      "source": "ifr",
+      "scope": {
+        "zh": "全球新增工业机器人",
+        "en": "Global industrial robot installations"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "全球新增工业机器人",
+        "en": "Global industrial robot installations"
+      },
+      "limitation": {
+        "zh": "工业机器人是自动化背景，不一定使用 AI；新增与存量分开。",
+        "en": "Industrial robots provide automation context and do not necessarily use AI. Installations and stock are distinct."
+      }
+    },
+    {
+      "id": "medical-detection-base",
+      "label": {
+        "zh": "常规检出率",
+        "en": "Standard detection"
+      },
+      "value": 5.7,
+      "unit": "per 1,000",
+      "period": "2021-07–2023-02",
+      "source": "praim",
+      "scope": {
+        "zh": "德国 12 个筛查地点，50–69 岁女性",
+        "en": "12 German screening sites; women aged 50–69"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2021-07–2023-02",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "德国 12 个筛查地点，50–69 岁女性",
+        "en": "12 German screening sites; women aged 50–69"
+      },
+      "limitation": {
+        "zh": "观察性研究；2021-07 至 2023-02 筛查。检出率不是治愈率，进一步检查率差异未达统计显著。",
+        "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
+      }
+    },
+    {
+      "id": "medical-detection-ai",
+      "label": {
+        "zh": "AI 辅助检出率",
+        "en": "AI-assisted detection"
+      },
+      "value": 6.7,
+      "unit": "per 1,000",
+      "period": "2021-07–2023-02",
+      "source": "praim",
+      "scope": {
+        "zh": "德国 12 个筛查地点，50–69 岁女性",
+        "en": "12 German screening sites; women aged 50–69"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2021-07–2023-02",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "德国 12 个筛查地点，50–69 岁女性",
+        "en": "12 German screening sites; women aged 50–69"
+      },
+      "limitation": {
+        "zh": "观察性研究；2021-07 至 2023-02 筛查。检出率不是治愈率，进一步检查率差异未达统计显著。",
+        "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
+      }
+    },
+    {
+      "id": "medical-recall-base",
+      "label": {
+        "zh": "常规进一步检查率",
+        "en": "Standard recall"
+      },
+      "value": 38.3,
+      "unit": "per 1,000",
+      "period": "2021-07–2023-02",
+      "source": "praim",
+      "scope": {
+        "zh": "德国 12 个筛查地点，50–69 岁女性",
+        "en": "12 German screening sites; women aged 50–69"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2021-07–2023-02",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "德国 12 个筛查地点，50–69 岁女性",
+        "en": "12 German screening sites; women aged 50–69"
+      },
+      "limitation": {
+        "zh": "观察性研究；2021-07 至 2023-02 筛查。检出率不是治愈率，进一步检查率差异未达统计显著。",
+        "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
+      }
+    },
+    {
+      "id": "medical-recall-ai",
+      "label": {
+        "zh": "AI 辅助进一步检查率",
+        "en": "AI-assisted recall"
+      },
+      "value": 37.4,
+      "unit": "per 1,000",
+      "period": "2021-07–2023-02",
+      "source": "praim",
+      "scope": {
+        "zh": "德国 12 个筛查地点，50–69 岁女性",
+        "en": "12 German screening sites; women aged 50–69"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2021-07–2023-02",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "德国 12 个筛查地点，50–69 岁女性",
+        "en": "12 German screening sites; women aged 50–69"
+      },
+      "limitation": {
+        "zh": "观察性研究；2021-07 至 2023-02 筛查。检出率不是治愈率，进一步检查率差异未达统计显著。",
+        "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
+      }
+    },
+    {
+      "id": "dev-tasks",
+      "label": {
+        "zh": "完成任务数变化",
+        "en": "Change in completed tasks"
+      },
+      "value": 26.08,
+      "unit": "%",
+      "period": "not-confirmed",
+      "source": "developers",
+      "scope": {
+        "zh": "三项随机实验，4,867 名开发者",
+        "en": "Three randomized trials; 4,867 developers"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "not-confirmed",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "三项随机实验，4,867 名开发者",
+        "en": "Three randomized trials; 4,867 developers"
+      },
+      "limitation": {
+        "zh": "4,867 名开发者；完成任务数 +26.08%，标准误 10.3 个百分点，非耗时减少百分比。",
+        "en": "4,867 developers; completed tasks +26.08%, SE 10.3 percentage points, not a percentage reduction in time."
+      },
+      "standardError": 10.3,
+      "direction": "higher-better"
+    },
+    {
+      "id": "dev-time",
+      "label": {
+        "zh": "任务耗时变化",
+        "en": "Change in completion time"
+      },
+      "value": 19,
+      "unit": "%",
+      "period": "2025-02–2025-06",
+      "source": "metr",
+      "scope": {
+        "zh": "16 名开发者，246 个熟悉项目任务",
+        "en": "16 developers; 246 tasks on familiar repositories"
+      },
+      "kind": "observed",
+      "precision": "reported",
+      "samplePeriod": "2025-02–2025-06",
+      "evidenceType": "study",
+      "denominator": {
+        "zh": "16 名开发者，246 个熟悉项目任务",
+        "en": "16 developers; 246 tasks on familiar repositories"
+      },
+      "limitation": {
+        "zh": "16 名开发者、246 个任务；特定熟悉项目，耗时 +19%（95% CI +2% 至 +39%）。",
+        "en": "16 developers, 246 tasks on familiar projects; time +19% (95% CI +2% to +39%)."
+      },
+      "confidenceInterval": [
+        2,
+        39
+      ],
+      "confidenceLevel": 0.95,
+      "direction": "lower-better"
+    },
+    {
+      "id": "exposure-global",
+      "label": {
+        "zh": "全球",
+        "en": "Global"
+      },
+      "value": 25,
+      "unit": "%",
+      "period": 2025,
+      "source": "ilo",
+      "scope": {
+        "zh": "对应收入组的总就业；全球值覆盖全球就业",
+        "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
+      },
+      "kind": "estimate",
+      "precision": "approximate",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "对应收入组的总就业；全球值覆盖全球就业",
+        "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
+      },
+      "limitation": {
+        "zh": "职业潜在暴露，不是实际采用或失业预测；最高暴露类别包含于总体暴露。",
+        "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
+      }
+    },
+    {
+      "id": "exposure-low",
+      "label": {
+        "zh": "低收入国家",
+        "en": "Low-income countries"
+      },
+      "value": 11,
+      "unit": "%",
+      "period": 2025,
+      "source": "ilo",
+      "scope": {
+        "zh": "对应收入组的总就业；全球值覆盖全球就业",
+        "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
+      },
+      "kind": "estimate",
+      "precision": "approximate",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "对应收入组的总就业；全球值覆盖全球就业",
+        "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
+      },
+      "limitation": {
+        "zh": "职业潜在暴露，不是实际采用或失业预测；最高暴露类别包含于总体暴露。",
+        "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
+      }
+    },
+    {
+      "id": "exposure-high",
+      "label": {
+        "zh": "高收入国家",
+        "en": "High-income countries"
+      },
+      "value": 34,
+      "unit": "%",
+      "period": 2025,
+      "source": "ilo",
+      "scope": {
+        "zh": "对应收入组的总就业；全球值覆盖全球就业",
+        "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
+      },
+      "kind": "estimate",
+      "precision": "approximate",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "对应收入组的总就业；全球值覆盖全球就业",
+        "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
+      },
+      "limitation": {
+        "zh": "职业潜在暴露，不是实际采用或失业预测；最高暴露类别包含于总体暴露。",
+        "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
+      }
+    },
+    {
+      "id": "exposure-highest",
+      "label": {
+        "zh": "最高暴露类别（子集）",
+        "en": "Highest exposure (subset)"
+      },
+      "value": 3.3,
+      "unit": "%",
+      "period": 2025,
+      "source": "ilo",
+      "scope": {
+        "zh": "对应收入组的总就业；全球值覆盖全球就业",
+        "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
+      },
+      "kind": "estimate",
+      "precision": "reported",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "对应收入组的总就业；全球值覆盖全球就业",
+        "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
+      },
+      "limitation": {
+        "zh": "职业潜在暴露，不是实际采用或失业预测；最高暴露类别包含于总体暴露。",
+        "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
+      }
+    },
+    {
+      "id": "science-papers",
+      "label": {
+        "zh": "自然科学 AI 相关论文",
+        "en": "AI-related natural-science papers"
+      },
+      "value": 80150,
+      "unit": "papers",
+      "period": 2025,
+      "source": "science26",
+      "scope": {
+        "zh": "自然科学领域 AI 相关论文",
+        "en": "AI-related publications in natural sciences"
+      },
+      "kind": "observed",
+      "precision": "approximate",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "自然科学领域 AI 相关论文",
+        "en": "AI-related publications in natural sciences"
+      },
+      "limitation": {
+        "zh": "论文数量反映研究活动，不直接衡量创新质量或生产率。",
+        "en": "Publication counts indicate research activity, not innovation quality or productivity directly."
+      }
+    },
+    {
+      "id": "china-scale",
+      "label": {
+        "zh": "中国 AI 核心产业规模",
+        "en": "China AI core-industry scale"
+      },
+      "value": 1.2,
+      "unit": "CNY trillion",
+      "period": 2025,
+      "source": "china",
+      "scope": {
+        "zh": "中国 AI 核心产业规模",
+        "en": "China AI core-industry scale"
+      },
+      "kind": "estimate",
+      "precision": "greater-than",
+      "samplePeriod": "2025",
+      "evidenceType": "statistics",
+      "denominator": {
+        "zh": "中国 AI 核心产业规模",
+        "en": "China AI core-industry scale"
+      },
+      "limitation": {
+        "zh": "2025 年核心产业规模超过 1.2 万亿元；不是增加值、GDP 贡献或私人投资。",
+        "en": "2025 core-industry scale exceeds CNY 1.2 trillion; not value added, GDP contribution, or private investment."
+      }
     }
   ],
   "cases": [
@@ -408,8 +1228,8 @@
         "en": "Turn data into timing advice for decisions under uncertainty."
       },
       "limit": {
-        "zh": "建议依赖当地数据质量和适用性，不保证增产。",
-        "en": "Advice depends on local data and suitability; yield gains are not guaranteed."
+        "zh": "2016–2017 年早期案例。建议依赖当地数据与适用性，不保证增产。",
+        "en": "Early 2016–2017 case. Advice depends on local data and suitability, without guaranteed yield gains."
       },
       "source": "agri"
     },
@@ -471,8 +1291,8 @@
         "prediction"
       ],
       "task": {
-        "zh": "预测结构，缩小探索空间",
-        "en": "Predict structure, focus exploration"
+        "zh": "预测分子相互作用，指导验证",
+        "en": "Predict interactions, guide validation"
       },
       "before": {
         "zh": [
@@ -488,13 +1308,13 @@
       },
       "after": {
         "zh": [
-          "获取序列",
-          "预测结构与置信度",
+          "整理分子输入",
+          "预测结构与相互作用",
           "实验验证与发现"
         ],
         "en": [
-          "Obtain sequence",
-          "Predict structure",
+          "Prepare molecules",
+          "Predict interactions",
           "Validate experimentally"
         ]
       },
@@ -547,8 +1367,8 @@
         ]
       },
       "meaning": {
-        "zh": "NBER 2023 工作论文在客服样本中观察到每小时解决问题数平均提升 14%。",
-        "en": "The NBER 2023 working paper reports 14% more issues resolved per hour in its support sample."
+        "zh": "2025 年正式发表的客服研究观察到每小时解决问题数平均提升约 15%。",
+        "en": "The customer-support study published in 2025 reports about 15% more issues resolved per hour."
       },
       "limit": {
         "zh": "效果依赖任务和经验水平，不能外推至所有职业。",
@@ -586,5 +1406,6 @@
         "en": "Generation"
       }
     }
-  ]
+  ],
+  "verifiedAt": "2026-10-02"
 }

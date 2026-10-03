@@ -43,6 +43,8 @@ async function switchLanguage(target: URL, traverse = false) {
 
     // Capture at swap time, so scrolling/interaction during the request is respected.
     const position = { left: scrollX, top: scrollY, behavior: 'instant' as ScrollBehavior };
+    const storyStep = all<HTMLElement>('.story-step').filter(step => step.getBoundingClientRect().top <= innerHeight * .5).at(-1);
+    const storyPosition = storyStep && { id: storyStep.id, offset: storyStep.getBoundingClientRect().top };
     const tabs = all('.homework-tabs').map(group => all('[role="tab"]', group).findIndex(tab => tab.getAttribute('aria-selected') === 'true'));
     const controls = all<HTMLInputElement | HTMLSelectElement>('#main input:not([data-hw02-control]), #main select:not([data-hw02-control])').map(control => control.value);
     const details = all<HTMLDetailsElement>('details').map(element => element.open);
@@ -85,7 +87,12 @@ async function switchLanguage(target: URL, traverse = false) {
     // Suppress both hash navigation and the site's smooth scrolling during the swap.
     document.documentElement.style.setProperty('--site-header-height', `${document.querySelector('.site-header')!.getBoundingClientRect().height}px`);
     window.scrollTo(position);
-    requestAnimationFrame(() => { document.documentElement.style.overflowAnchor = previousAnchoring; });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const step = storyPosition && document.getElementById(storyPosition.id);
+      if (step && storyPosition) window.scrollTo({ top: scrollY + step.getBoundingClientRect().top - storyPosition.offset, behavior: 'instant' });
+      document.documentElement.style.overflowAnchor = previousAnchoring;
+      window.dispatchEvent(new Event('scroll'));
+    }));
     window.dispatchEvent(new Event('scroll'));
   } catch (error) {
     if (controller.signal.aborted) return;

@@ -1,0 +1,28 @@
+---
+import Chart from './Chart.astro';
+import Source from './Source.astro';
+import {localeFromUrl,localizedHref} from '../../../i18n';
+import {formatRecord,type Lang} from '../content';
+interface Props {lang:Lang;}
+const {lang}=Astro.props;
+const t=(z:string,e:string)=>lang==='en'?e:z;
+---
+<section class="industry-evidence" aria-label={t('产业证据','Industry evidence')}>
+ <div data-evidence="manufacturing" class="evidence-pair">
+  <Chart kind="robots" title={t('从算法，到车间里的设备','From algorithms to factory equipment')} description={t('2025 年工业机器人新增安装 · 台 · 所选三国','2025 industrial robot installations · units · three countries')} ids={['ifr']} records={['robots-cn','robots-us','robots-jp']} note={t('工业机器人不一定使用 AI；部署量不代表 AI 导致的生产率增幅。','Industrial robots do not necessarily use AI; installations are not AI-caused productivity gains.')}/>
+  <article class="editorial-card"><p class="hw-kicker">SENSING → ACTION</p><h2>{t('让识别结果进入生产流程','Connect recognition to production')}</h2><ol class="evidence-flow">{[t('相机采集产品图像','Cameras capture products'),t('模型标记异常与置信度','Models flag anomalies and confidence'),t('人员复核，设备执行处置','People review; equipment acts')].map(s=><li>{s}</li>)}</ol><p>{t('算法、设备与人的判断共同构成工作流程。部署只是基础，真正的收益还需要良率、停机时间与成本等产线数据验证。','Algorithms, equipment and human judgment form a workflow. Yield, downtime and cost data are needed to establish actual gains.')}</p><Source ids={['mvtec']}/></article>
+ </div>
+ <div data-evidence="health" class="evidence-pair" hidden>
+  <Chart kind="medical" title={t('质量改善，需要两个指标一起看','Read quality through two measures')} description={t('PRAIM · 德国筛查 · 采集期 2021-07—2023-02 · 2025 年发表','PRAIM · German screening · July 2021–February 2023 · published 2025')} ids={['praim']} records={['medical-detection-base','medical-detection-ai','medical-recall-base','medical-recall-ai']} note={t('观察性研究，非随机分组；检出率不是治愈率。','Observational study, not randomized; detection is not cure.')}/>
+  <article class="editorial-card"><p class="hw-kicker">QUALITY / HUMAN REVIEW</p><h2>{t('AI 提示之后，仍由医生判断','AI flags; clinicians decide')}</h2><ol class="evidence-flow">{[t('影像进入常规阅片','Images enter routine reading'),t('AI 提示可疑区域','AI highlights suspicious findings'),t('医生复核并决定进一步检查','Clinicians review and decide on assessment')].map(s=><li>{s}</li>)}</ol><p>{t('研究覆盖 463,094 名女性。更高的检出率与未显著增加的进一步检查率共同支持这一场景的价值；不能推广为所有医疗 AI 的效果。','The study covered 463,094 women. Higher detection and no significant increase in recall support this particular workflow, not every medical AI system.')}</p><Source ids={['praim']}/></article>
+ </div>
+ <div data-evidence="agriculture" class="evidence-pair" hidden>
+  <Chart kind="weather" title={t('从观测数据，到生产决策','From observations to production decisions')} description={t('Aardvark Weather · Nature 2025 · 点击环节查看解释','Aardvark Weather · Nature 2025 · select a stage')} ids={['weather']} note={t('机制图；连线不表示数据量、准确率或经济收益。','Mechanism diagram; links do not encode data volume, accuracy or economic benefit.')}/>
+  <article class="editorial-card"><p class="hw-kicker">WEATHER / AGRICULTURE</p><h2>{t('更早获取信息，仍需因地决策','Earlier information, local decisions')}</h2><p>{t('端到端模型将观测映射为全球与地方预报，为农业、运输和能源提供信息基础。不同变量、分辨率与提前量需要分别检验。','End-to-end models map observations to global and local forecasts, informing agriculture, transport and energy. Variables, resolution and lead times require separate validation.')}</p><div class="quote-note">{t('气象研究没有直接测量农田增产，不能从预报表现推算增产百分比。','Forecast research does not directly measure crop yields; forecast performance cannot establish a yield percentage.')}</div><p>{t('上方播种案例保留为 2016–2017 年早期实践，与这里的 2025 年研究分开阅读。','Read the earlier 2016–2017 sowing pilot separately from this research published in 2025.')}</p><Source ids={['weather','agri']}/></article>
+ </div>
+ <div data-evidence="science" class="evidence-pair" hidden>
+  <Chart kind="discovery" title={t('预测拓展空间，实验确认发现','Prediction explores; experiments confirm')} description={t('AlphaFold 3 · Nature 2024 · 点击环节查看解释','AlphaFold 3 · Nature 2024 · select a stage')} ids={['alpha']} note={t('机制示意；预测不是实验事实。','Mechanism diagram; predictions are not experimental facts.')}/>
+  <article class="editorial-card"><p class="hw-kicker">SCIENCE / NEW QUESTIONS</p><h2>{t('AI 正在进入更多研究','AI enters more research')}</h2><strong class="evidence-number">{formatRecord('science-papers',lang)}</strong><p>{t('2025 年自然科学领域 AI 相关论文','AI-related natural-science papers in 2025')}</p><p>{t('论文规模反映研究活动。结构预测帮助设计实验，而真正的创新仍需要可重复的验证。','Publication volume reflects research activity. Structure prediction helps design experiments; innovation still requires reproducible validation.')}</p><Source ids={['science26']}/></article>
+ </div>
+ <div data-evidence="service" class="editorial-card" hidden><p class="hw-kicker">KNOWLEDGE / PEOPLE</p><h2>{t('把知识送到工作现场','Bring knowledge into the workflow')}</h2><p>{t('正式发表的客服研究观察到平均每小时解决问题数提升约 15%。经验与任务不同，效果也不同；人机协作页进一步比较客服、写作与开发者证据。','The published support study reports about 15% more issues resolved per hour on average. Effects vary with experience and tasks; the next chapter compares support, writing and developer evidence.')}</p><a class="hw-text-link" href={localizedHref('hw02/work/',localeFromUrl(Astro.url))}>{t('比较人机协作研究 →','Compare human–AI studies →')}</a><Source ids={['nber']}/></div>
+</section>

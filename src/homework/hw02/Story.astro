@@ -1,0 +1,24 @@
+---
+import StoryChapter from './components/StoryChapter.astro';
+import Source from './components/Source.astro';
+import {storyChapters} from './story-content';
+import {formatRecord,type Lang} from './content';
+import {localizedHref,localeFromUrl} from '../../i18n';
+import {href} from '../../config/homework';
+import {ArrowDown,ArrowUpRight,FlaskConical,Network,BookOpen} from '@lucide/astro';
+import './story.css';
+interface Props {lang:Lang;}
+const {lang}=Astro.props,t=(z:string,e:string)=>lang==='en'?e:z;
+const link=(path:string)=>localizedHref(`hw02/${path}`,localeFromUrl(Astro.url));
+---
+<story-experience class="story-page" data-kind="story">
+ <div class="story-scroll-progress" aria-hidden="true"><span></span></div>
+ <header class="story-cover"><img src={href('images/hw02/intelligence.webp')} alt="" width="1600" height="1000" fetchpriority="high"/><div class="story-cover-orbits" aria-hidden="true"><i></i><i></i><i></i><b>AI</b></div><div class="story-cover-copy"><span class="story-overline">AI / NEW PRODUCTIVE FORCES</span><h1>{t('智变','The intelligence shift')}<span>{t('人工智能，怎样成为新质生产力？','How does AI become a productive force?')}</span></h1><p>{t('从一个工作现场出发，沿着任务、产业和证据，寻找效率、质量与创新的变化。','Start with a working day. Follow tasks, industries and evidence to understand changes in efficiency, quality and innovation.')}</p><a class="story-start" href="#workplace">{t('开始探索','Start the story')}<ArrowDown size={18} aria-hidden="true"/></a><small>{t('六幕 · 18个步骤 · 向下滚动阅读','Six chapters · 18 steps · scroll to explore')}</small></div><div class="story-cover-thread" aria-hidden="true"><span>{t('一项任务','A task')}</span><i></i><span>{t('一种能力','A capability')}</span><i></i><span>{t('新的价值','New value')}</span></div></header>
+ {storyChapters.map((chapter,i)=><StoryChapter chapter={chapter} lang={lang} number={i+1}>{chapter.id==='diffusion'&&<aside class="story-context"><div><span class="story-overline">INVESTMENT / CHINA</span><h3>{t('投入与部署，是应用的背景','Investment and deployment provide context')}</h3><p>{t(`2025年美国、中国、英国AI私人投资分别为${formatRecord('investment-us',lang)}、${formatRecord('investment-cn',lang)}、${formatRecord('investment-uk',lang)}十亿美元。投资不是生产率排名；中国两项背景指标也衡量不同内容。`,`US, China and UK private AI investment in 2025 was USD ${formatRecord('investment-us',lang)}, ${formatRecord('investment-cn',lang)} and ${formatRecord('investment-uk',lang)} billion. Investment is not a productivity ranking; the two China indicators describe different dimensions.`)}</p></div><div class="story-context-metrics"><a href={link('industries/')}><strong>{formatRecord('china-scale',lang)}</strong><span>{t('万亿元 · 2025 AI核心产业规模','CNY trillion · AI core industry, 2025')}</span></a><a href={link('industries/?industry=manufacturing')}><strong>{formatRecord('robots-cn-share',lang)}%</strong><span>{t('2025全球机器人新增安装中的中国份额','China share of global robot installations, 2025')}</span></a></div><Source ids={['hai26','china','ifr']} note={t('背景指标不能相加或直接归因为AI收益。','Context measures cannot be added or attributed directly to AI gains.')}/><a class="story-more" href={link('trends/')}>{t('查看投资图与完整口径','Explore investment and definitions')}<ArrowUpRight size={16}/></a></aside>}</StoryChapter>)}
+ <section class="story-ending" id="conclusions"><span class="story-overline">EFFICIENCY / QUALITY / INNOVATION</span><h2>{t('价值，在于更好的生产与创造','Value comes from better production and creation')}</h2><div class="story-conclusions">{[
+ [t('效率','Efficiency'),t('减少寻找与生产的耗时，把复核成本一并计入。','Reduce searching and production time while accounting for review costs.')],
+ [t('质量','Quality'),t('用具体任务的结果验证改善，保留人的判断与责任。','Validate improvements on specific tasks, retaining human judgment and responsibility.')],
+ [t('创新','Innovation'),t('让新的工作对象与研究问题变得可探索，再用实验确认。','Make new objects of work and questions explorable, then confirm them through experiments.')]
+ ].map(([title,body])=><article><h3>{title}</h3><p>{body}</p></article>)}</div><nav class="story-explore" aria-label={t('深入探索','Explore further')}>{[[Network,'industries/',t('自由探索产业','Explore industries')],[FlaskConical,'lab/',t('亲手调节实验','Run your experiment')],[BookOpen,'sources/',t('检查数据与来源','Inspect data and sources')]].map(([Icon,path,label])=><a href={link(String(path))}><Icon size={22}/><span>{String(label)}</span><ArrowUpRight size={16}/></a>)}</nav><p class="story-art-credit">{t('艺术配图','Artwork')} · Google DeepMind / Visualising AI · <a href={link('sources/#artwork')}>{t('素材与署名','Image credits')}</a></p></section>
+</story-experience>
+<script>import './story'; import './story-motion';</script>

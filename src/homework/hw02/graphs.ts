@@ -4,6 +4,7 @@ import type {Lang} from './content';
 type Svg = d3.Selection<SVGSVGElement,null,HTMLElement,unknown>;
 type Scene = 'data'|'compute'|'factory'|'person'|'energy'|'service';
 type Item = {title:[string,string]; detail:[string,string]; scene:Scene};
+let graphInstance=0;
 const graphs:Record<string,{nodes:Item[];edges:[number,number][]}>={
  pathway:{nodes:[
   {title:['数据与投入','Data & investment'],scene:'data',detail:['投入支持数据准备、算力与人才，但投入规模本身不能证明生产率提高。','Investment supports data, compute, and people. Its size alone does not establish productivity gains.']},
@@ -57,14 +58,15 @@ function scene(g:d3.Selection<SVGGElement,unknown,null,undefined>,kind:Scene){
  }
 }
 
-export function drawExplanation(svg:Svg,w:number,kind:string,lang:Lang,status:(value:string)=>void){
+export function drawExplanation(svg:Svg,w:number,kind:string,lang:Lang,status:(value:string)=>void,options:{focus?:number;interactive?:boolean}={}){
  const {nodes,edges}=graphs[kind],en=lang==='en',mobile=w<600;
  const colors=['var(--hw-blue)','var(--hw-purple)','var(--hw-mint)','var(--hw-orange)'];
  const cardW=mobile?Math.min(190,(w-32)/2):Math.min(205,(w-72)/4),cardH=120;
  const positions=nodes.map((_,i)=>mobile?{x:(i%2?3:1)*w/4,y:i<2?70:240}:{x:w*(i+.5)/4,y:115});
  svg.attr('role','group');
  const defs=svg.append('defs');
- const markerId=`hw02-arrow-${kind}`;
+ const instance=svg.attr('data-graph-instance')||String(++graphInstance);svg.attr('data-graph-instance',instance);
+ const markerId=`hw02-arrow-${kind}-${instance}`;
  defs.append('marker').attr('id',markerId).attr('viewBox','0 -5 10 10').attr('refX',9).attr('refY',0).attr('markerWidth',6).attr('markerHeight',6).attr('orient','auto').append('path').attr('d','M0,-4 L9,0 L0,4').attr('fill','none').attr('stroke','var(--hw-blue)').attr('stroke-width',1.5);
  const edge=svg.append('g').selectAll('path').data(edges).join('path').attr('fill','none').attr('stroke','var(--hw-blue)').attr('stroke-width',2).attr('marker-end',`url(#${markerId})`).attr('d',([a,b])=>{
   const p=positions[a],q=positions[b];
@@ -91,5 +93,6 @@ export function drawExplanation(svg:Svg,w:number,kind:string,lang:Lang,status:(v
   status(nodes[index].detail[en?1:0]);
  };
  node.on('click',(_,d)=>select(nodes.indexOf(d))).on('keydown',(e,d)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(nodes.indexOf(d));}});
- select(Number(svg.attr('data-focus')||0));
+ select(options.focus??Number(svg.attr('data-focus')||0));
+ if(options.interactive===false){svg.attr('role','img');node.on('click',null).on('keydown',null).attr('tabindex',null).attr('role',null).attr('aria-pressed',null);}
 }

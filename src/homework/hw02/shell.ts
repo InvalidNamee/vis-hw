@@ -12,9 +12,11 @@ class HwShell extends HTMLElement {
    if(mq.matches){close();mobile.focus();return;}
    const collapsed=this.toggleAttribute('data-collapsed');collapse.setAttribute('aria-expanded',String(!collapsed));
    collapse.setAttribute('aria-label',this.dataset.lang==='en'?(collapsed?'Expand sidebar':'Collapse sidebar'):(collapsed?'展开侧栏':'折叠侧栏'));
-   try{sessionStorage.setItem('hw02-sidebar',String(collapsed));}catch{}
+   try{sessionStorage.setItem(this.hasAttribute('data-story')?'hw02-story-sidebar':'hw02-sidebar',String(collapsed));}catch{}
   },opts);
-  try{if(sessionStorage.getItem('hw02-sidebar')==='true'){this.setAttribute('data-collapsed','');collapse.setAttribute('aria-expanded','false');collapse.setAttribute('aria-label',this.dataset.lang==='en'?'Expand sidebar':'展开侧栏');}}catch{}
+  try{const saved=sessionStorage.getItem(this.hasAttribute('data-story')?'hw02-story-sidebar':'hw02-sidebar');if(saved==='false')this.removeAttribute('data-collapsed');if(this.hasAttribute('data-collapsed')||saved==='true'){this.setAttribute('data-collapsed','');collapse.setAttribute('aria-expanded','false');collapse.setAttribute('aria-label',this.dataset.lang==='en'?'Expand sidebar':'展开侧栏');}}catch{}
+  collapse.setAttribute('aria-expanded',String(!this.hasAttribute('data-collapsed')));
+  collapse.setAttribute('aria-label',this.dataset.lang==='en'?(this.hasAttribute('data-collapsed')?'Expand sidebar':'Collapse sidebar'):(this.hasAttribute('data-collapsed')?'展开侧栏':'折叠侧栏'));
   this.addEventListener('keydown',(e)=>{
    if(!this.hasAttribute('data-open')||!mq.matches)return;
    if(e.key==='Escape'){close();mobile.focus();}
@@ -24,6 +26,7 @@ class HwShell extends HTMLElement {
     else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
    }
   },opts);
+  side.addEventListener('click',e=>{if(mq.matches&&(e.target as Element).closest('a[href]')){close();mobile.focus({preventScroll:true});}},opts);
   this.addEventListener('click',e=>{if(this.hasAttribute('data-open')&&!side.contains(e.target as Node)&&!mobile.contains(e.target as Node))close();},opts);
   mq.addEventListener('change',close,opts);
  }

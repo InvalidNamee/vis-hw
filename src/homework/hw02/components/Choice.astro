@@ -1,0 +1,10 @@
+---
+interface Props {control:string; label:string; options:{value:string;label:string}[]; responsive?:boolean;}
+const {control,label,options,responsive=false}=Astro.props;
+---
+<div class:list={['choice-control',{'choice-responsive':responsive}]}>
+ <fieldset class="choice-options"><legend>{label}</legend><div class="choice-segments">
+  {options.map((option,i)=><label><input type="radio" name={`hw02-${control}`} value={option.value} checked={i===0} data-choice={control} data-hw02-control/><span>{option.label}</span></label>)}
+ </div></fieldset>
+ <label class="choice-select">{label}<select data-control={control} data-hw02-control>{options.map(option=><option value={option.value}>{option.label}</option>)}</select></label>
+</div>
