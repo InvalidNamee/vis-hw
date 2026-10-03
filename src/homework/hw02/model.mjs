@@ -21,5 +21,11 @@ export function calculate(input = {}) {
   const assisted=[10,30*(1-a+a/p.speed),10+p.review,5].map(v=>v*p.tasks);
   const total=values=>values.reduce((a,b)=>a+b,0);
   const baseTotal=total(baseline), aiTotal=total(assisted);
-  return {params:p,baseline,assisted,baseTotal,aiTotal,saved:100*(baseTotal-aiTotal)/baseTotal};
+  const rawSaved=100*(baseTotal-aiTotal)/baseTotal;
+  return {params:p,baseline,assisted,baseTotal,aiTotal,saved:Math.abs(rawSaved)<1e-10?0:rawSaved};
+}
+/** Extra minutes per task that exactly cancel the modeled production saving. */
+export function reviewBreakEven(input = {}) {
+ const p=normalize(input);
+ return 30*p.adoption/100*(1-1/p.speed);
 }

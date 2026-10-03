@@ -20,8 +20,10 @@ class StoryChapter extends HTMLElement {
  private sceneSizeKey='';
  private expandedScene='';
  private sceneOpen=new Map<string,boolean>();
+ private focusedControl?:{scene:string;selector:string};
+ private focusTimer=0;
  connectedCallback(){this.frame=requestAnimationFrame(()=>this.mount());}
- disconnectedCallback(){cancelAnimationFrame(this.frame);this.abort?.abort();this.near?.disconnect();this.stepsObserver?.disconnect();this.resize?.disconnect();this.theme?.disconnect();d3.select(this).selectAll('*').interrupt();}
+ disconnectedCallback(){cancelAnimationFrame(this.frame);clearTimeout(this.focusTimer);this.abort?.abort();this.near?.disconnect();this.stepsObserver?.disconnect();this.resize?.disconnect();this.theme?.disconnect();d3.select(this).selectAll('*').interrupt();}
  private mount(){
   if(!this.isConnected)return;
   this.locale=this.dataset.lang as Lang;this.abort=new AbortController();const opts={signal:this.abort.signal};
@@ -34,8 +36,22 @@ class StoryChapter extends HTMLElement {
   this.resize=new ResizeObserver(()=>{const w=Math.round(this.clientWidth);if(w!==this.width){this.width=w;this.invalidate();schedule();}});this.resize.observe(this);
   this.theme=new MutationObserver(()=>{this.invalidate();schedule();});this.theme.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
   window.addEventListener('scroll',()=>{if(this.nearby)schedule();}, {...opts,passive:true});
-  window.addEventListener('resize',schedule,opts);
+  window.addEventListener('resize',()=>{
+   const saved=this.focusedControl;
+   schedule();
+   if(saved){
+    clearTimeout(this.focusTimer);
+    // All chapters change height on resize; restore after their observers settle.
+    this.focusTimer=window.setTimeout(()=>{if(this.isConnected)this.handoffFocus(saved);},320);
+   }
+  },opts);
+  for(const event of ['wheel','touchstart','keydown'])window.addEventListener(event,()=>clearTimeout(this.focusTimer),{...opts,passive:true});
   window.addEventListener('hashchange',schedule,opts);
+  document.addEventListener('focusin',event=>{
+   const target=event.target as HTMLElement,scene=target.closest<HTMLElement>('.story-scene');
+   const selector=this.controlSelector(target);
+   this.focusedControl=this.contains(target)&&scene&&selector?{scene:scene.dataset.scene!,selector}:undefined;
+  },opts);
   matchMedia('(prefers-reduced-motion:reduce)').addEventListener('change',()=>{d3.select(this).selectAll('*').interrupt();this.invalidate();schedule();},opts);
   this.addEventListener('toggle',event=>{
    const details=event.target as HTMLDetailsElement;
@@ -53,6 +69,8 @@ class StoryChapter extends HTMLElement {
  private header(){return document.querySelector('.site-header')?.getBoundingClientRect().height??65;}
  private update(){
   if(!this.isConnected)return;
+  const wasFixed=this.fixed;
+  const pendingFocus=this.focusedControl;
   const viewportKey=`${innerWidth}-${innerHeight}-${document.documentElement.dataset.theme}`;
   const viewportFits=innerWidth>=1100&&innerHeight>=740&&this.rejectedViewport!==viewportKey;
   this.fixed=viewportFits;this.toggleAttribute('data-fixed',this.fixed);
@@ -82,10 +100,36 @@ class StoryChapter extends HTMLElement {
   }
   if(!this.fixed)this.reserveSnapshots();
   if(!this.fixed)steps.forEach(step=>{const r=step.getBoundingClientRect();if(r.bottom>-250&&r.top<innerHeight+250)this.draw(step.querySelector<HTMLElement>('.story-scene')!);});
+  if(wasFixed!==this.fixed&&pendingFocus&&(document.activeElement===document.body||this.contains(document.activeElement)))this.handoffFocus(pendingFocus);
   this.updateReadingProgress();
+ }
+ private controlSelector(active:HTMLElement){
+  if(active.dataset.sceneControl)return `[data-scene-control="${active.dataset.sceneControl}"]`;
+  if(active.dataset.sceneToggle)return `[data-scene-toggle="${active.dataset.sceneToggle}"]`;
+  if(active.dataset.sceneChoice)return `[data-scene-choice="${active.dataset.sceneChoice}"][data-value="${active.dataset.value}"]`;
+  if(active.matches('.story-threshold-button'))return '.story-threshold-button';
+  if(active.matches('.story-data summary'))return '.story-data summary';
+  return '';
+ }
+ private handoffFocus(saved:{scene:string;selector:string}){
+  const step=this.querySelector<HTMLElement>(`#${saved.scene}`),snapshot=step?.querySelector<HTMLElement>('.story-scene');
+  if(!step||!snapshot)return;
+  let scene=snapshot;
+  if(this.fixed){
+   // Align the narrative to the focused step before restoring the sticky control.
+   // Otherwise its sticky position can activate the chapter's first step again.
+   step.scrollIntoView({behavior:'instant',block:'start'});
+   scene=this.querySelector<HTMLElement>('.story-master-scenes .story-scene')!;
+   if(scene.dataset.scene!==saved.scene)this.syncScene(scene,snapshot);
+  }
+  this.draw(scene,false);
+  const target=scene.querySelector<HTMLElement>(saved.selector);
+  target?.focus({preventScroll:true});
+  if(target&&!this.fixed){const r=target.getBoundingClientRect();if(r.top<this.header()||r.bottom>innerHeight)target.scrollIntoView({behavior:'instant',block:'center'});}
  }
  private reserveSnapshots(){
   this.querySelectorAll<HTMLElement>('.story-snapshot .story-scene').forEach(scene=>{
+   renderSceneControls(scene.querySelector<HTMLElement>('.story-interaction')!,findStoryStep(scene.dataset.scene!)!,this.locale);
    const style=getComputedStyle(scene),w=scene.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);
    if(w>0)scene.style.setProperty('--story-plot-height',`${explorableHeight(findStoryStep(scene.dataset.scene!)!,Math.max(240,w))}px`);
   });

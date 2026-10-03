@@ -2,6 +2,9 @@ import {gsap} from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+// The story controller restores reading/focus after responsive layout changes.
+// Refresh decorative triggers separately without restoring their old scroll.
+ScrollTrigger.config({autoRefreshEvents:'visibilitychange,DOMContentLoaded,load'});
 
 /** Decorative motion only: native anchors and the D3 scene controller own reading. */
 class StoryExperience extends HTMLElement {
@@ -43,10 +46,16 @@ class StoryExperience extends HTMLElement {
    window.scrollTo(position);ScrollTrigger.refresh();window.scrollTo(position);
   },{signal:this.abort.signal});
   // Lazy D3 drawing and an opened data table can alter document height.
-  this.resize=new ResizeObserver(()=>{
+  const refresh=()=>{
    clearTimeout(this.refreshTimer);
-   this.refreshTimer=window.setTimeout(()=>{if(this.isConnected)ScrollTrigger.refresh();},180);
-  });this.resize.observe(this);
+   this.refreshTimer=window.setTimeout(()=>{
+    if(!this.isConnected)return;
+    const position={left:scrollX,top:scrollY,behavior:'instant' as ScrollBehavior};
+    ScrollTrigger.refresh();window.scrollTo(position);
+   },180);
+  };
+  this.resize=new ResizeObserver(refresh);this.resize.observe(this);
+  window.addEventListener('resize',refresh,{signal:this.abort.signal});
  }
 }
 if(!customElements.get('story-experience'))customElements.define('story-experience',StoryExperience);

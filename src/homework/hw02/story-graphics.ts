@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import {dataset,recordById,formatRecord,type Lang} from './content';
-import {calculate} from './model.mjs';
+import {calculate,reviewBreakEven} from './model.mjs';
 import {drawEvidence} from './evidence-charts';
 import type {Plot} from './quantitative-charts';
 import type {StoryStep} from './story-content';
@@ -10,7 +10,7 @@ type G=d3.Selection<SVGGElement,string,SVGSVGElement,unknown>;
 const blue='var(--hw-blue)',mint='var(--hw-mint)',orange='var(--hw-orange)',purple='var(--hw-purple)';
 export function explorableHeight(step:StoryStep,w:number){
  const family=sceneFamily(step);
- return family==='collaboration'?w<500?360:290:family==='industry'?380:family==='effects'?280:family==='mosaic'?330:family==='lab'?350:family==='infrastructure'?300:family==='energy'?290:family==='exposure'?330:step.scene==='medical'?310:340;
+ return family==='collaboration'?w<500?360:290:family==='industry'?380:family==='effects'?280:family==='mosaic'?w>=600?330:370:family==='lab'?350:family==='infrastructure'?300:family==='energy'?290:family==='exposure'?330:step.scene==='medical'?310:340;
 }
 function text(g:G,key:string,x:number,y:number,value:string,size=12,color='var(--text-secondary)',anchor='start'){
  return g.selectAll<SVGTextElement,string>(`text[data-text="${key}"]`).data([key]).join('text').attr('data-text',key).attr('x',x).attr('y',y).attr('font-size',size).attr('fill',color).attr('text-anchor',anchor).text(value);
@@ -26,9 +26,9 @@ export function drawExplorable(svg:Plot,w:number,step:StoryStep,lang:Lang,state:
  else if(family==='effects')effects(g,w,state,lang,ms);
  else if(family==='mosaic')mosaic(g,w,step,state,lang,ms);
  else if(family==='lab')lab(g,w,state,lang,ms);
- else if(family==='infrastructure')foundation(g,w,lang,ms);
- else if(family==='energy')energy(g,w,lang,ms);
- else if(family==='exposure')exposure(g,w,lang,ms);
+ else if(family==='infrastructure')foundation(g,w,state,lang,ms);
+ else if(family==='energy')energy(g,w,state,lang,ms);
+ else if(family==='exposure')exposure(g,w,state,lang,ms);
  else{
   // Different studies keep their independent scales. Rebuild only this isolated layer.
   const key=`${w}-${lang}-${family}`;
@@ -71,8 +71,12 @@ function industry(g:G,w:number,s:SceneState,lang:Lang,ms:number){
  const n=g.selectAll<SVGGElement,typeof nodes[number]>('g.industry-node').data(nodes,d=>d.id).join(enter=>{const n=enter.append('g').attr('class','industry-node');n.append('rect');n.append('text');return n;}).attr('transform',d=>`translate(${d.x},${d.y})`);
  n.select('rect').attr('width',nw).attr('height',40).attr('rx',9).attr('stroke',d=>d.group?mint:blue).transition().duration(ms).attr('fill',d=>d.id===s.industry?blue:'var(--surface)').attr('opacity',d=>d.id===s.industry||related.includes(d.id)?1:.5);
  n.select('text').attr('x',nw/2).attr('y',25).attr('text-anchor','middle').attr('font-size',w<450?10:12).attr('fill',d=>d.id===s.industry?'var(--hw-on-blue)':d.group?mint:blue).text(d=>d.label);
- const phrase=s.industry==='science'?(lang==='en'?'Candidate → prediction → experiment':'候选 → 预测 → 实验确认'):s.industry==='health'?(lang==='en'?'Image → flag → clinical review':'影像 → 标记可疑 → 医生复核'):(lang==='en'?'Product → anomaly → production action':'产品 → 识别异常 → 产线处置');
- text(g,'route',w/2,351,phrase,w<400?11:14,blue,'middle');
+ const roles=s.industry==='science'?(lang==='en'?['Candidate','Predict','Validate']:['候选对象','结构预测','实验确认']):s.industry==='health'?(lang==='en'?['Image','Flag','Review']:['影像输入','识别可疑','医生复核']):(lang==='en'?['Product','Flag','Act']:['产品图像','识别异常','产线处置']);
+ const fw=(w-60)/3;
+ g.selectAll<SVGLineElement,number>('line.task-link').data([0,1]).join('line').attr('class','task-link').attr('x1',i=>18+i*(fw+12)+fw).attr('x2',i=>18+(i+1)*(fw+12)).attr('y1',339).attr('y2',339).attr('stroke',mint).attr('stroke-width',2);
+ const task=g.selectAll<SVGGElement,number>('g.task-path').data([0,1,2],d=>d).join(enter=>{const n=enter.append('g').attr('class','task-path');n.append('rect');n.append('text');return n;}).attr('transform',i=>`translate(${18+i*(fw+12)},320)`);
+ task.select('rect').attr('width',fw).attr('height',38).attr('rx',7).attr('stroke',mint).transition().duration(ms).attr('fill',(_,i)=>i===2?'var(--accent-soft)':'var(--surface)');
+ task.select('text').attr('x',fw/2).attr('y',24).attr('text-anchor','middle').attr('fill','var(--text-primary)').attr('font-size',w<400?10:12).text(i=>roles[i]);
  text(g,'scale',w/2,373,lang==='en'?'Connections show applications, not measured gains.':'连线表示应用关系，不编码实测收益。',10,'var(--text-secondary)','middle');
 }
 function effects(g:G,w:number,s:SceneState,lang:Lang,ms:number){
@@ -86,14 +90,14 @@ function effects(g:G,w:number,s:SceneState,lang:Lang,ms:number){
  text(g,'reference',18,260,en?'Grey: baseline 100 · Color: AI-assisted':'灰色：原基准100 · 彩色：AI辅助',11);
 }
 function mosaic(g:G,w:number,step:StoryStep,s:SceneState,lang:Lang,ms:number){
- const en=lang==='en',record=recordById(step.scene==='adoption'?`adoption-${s.year}`:s.firm),size=Math.min(21,(w-36)/10-5),gap=5,span=10*(size+gap)-gap,left=(w-span)/2,top=79;
+ const en=lang==='en',record=recordById(step.scene==='adoption'?`adoption-${s.year}`:s.firm),columns=w>=600?20:10,size=Math.min(columns===20?32:21,(w-36)/columns-5),gap=5,span=columns*(size+gap)-gap,left=(w-span)/2,top=79;
  const cells=d3.range(100).map(i=>({id:i,fraction:Math.max(0,Math.min(1,record.value-i))}));
- const nodes=g.selectAll<SVGGElement,typeof cells[number]>('g.mosaic-cell').data(cells,d=>d.id).join(enter=>{const n=enter.append('g').attr('class','mosaic-cell');n.append('rect').attr('class','empty');n.append('rect').attr('class','filled');return n;}).attr('transform',d=>`translate(${left+d.id%10*(size+gap)},${top+Math.floor(d.id/10)*(size+gap)})`);
+ const nodes=g.selectAll<SVGGElement,typeof cells[number]>('g.mosaic-cell').data(cells,d=>d.id).join(enter=>{const n=enter.append('g').attr('class','mosaic-cell');n.append('rect').attr('class','empty');n.append('rect').attr('class','filled');return n;}).attr('transform',d=>`translate(${left+d.id%columns*(size+gap)},${top+Math.floor(d.id/columns)*(size+gap)})`);
  nodes.select('rect.empty').attr('width',size).attr('height',size).attr('rx',3).attr('fill','var(--surface-muted)').attr('stroke','var(--border-soft)');
  nodes.select('rect.filled').attr('height',size).attr('rx',3).attr('fill',step.scene==='adoption'?blue:mint).transition().duration(ms).delay(d=>ms?d.id*3:0).attr('width',d=>size*d.fraction);
  text(g,'population',w/2,22,step.scene==='adoption'?`${s.year} · ${en?'SURVEYED ORGANIZATIONS':'受访组织'}`:`2025 · ${record.label[lang]}`,w<400?11:13,'var(--text-secondary)','middle');
  text(g,'percentage',w/2,59,`${formatRecord(record.id,lang)}%`,30,step.scene==='adoption'?blue:mint,'middle');
- text(g,'units',w/2,327,en?'100 cells = 100%; a partial cell preserves decimals.':'100格代表100%；不足1%的部分按比例填充。',10,'var(--text-secondary)','middle');
+ text(g,'units',w/2,columns===20?319:359,en?'100 cells = 100%; a partial cell preserves decimals.':'100格代表100%；不足1%的部分按比例填充。',10,'var(--text-secondary)','middle');
 }
 function lab(g:G,w:number,s:SceneState,lang:Lang,ms:number){
  const en=lang==='en',result=calculate({tasks:20,adoption:s.adoption,speed:s.speed,review:s.review}),colors=[blue,mint,purple,orange],names=en?['Brief','Produce','Review','Deliver']:['需求','生产','复核','交付'],x=d3.scaleLinear().domain([0,85*20]).range([18,w-20]);
@@ -107,37 +111,38 @@ function lab(g:G,w:number,s:SceneState,lang:Lang,ms:number){
  const axis=g.selectAll<SVGGElement,string>('g.effort-axis').data(['axis']).join('g').attr('class','effort-axis').attr('transform','translate(0,235)');axis.call(d3.axisBottom(x).ticks(w<400?3:5).tickFormat(v=>`${(Number(v)/60).toFixed(0)}h`));
  text(g,'saving',18,285,`${result.saved.toFixed(1)}%`,32,result.saved<0?orange:mint);
  text(g,'saving-label',w-20,281,en?'EFFORT SAVED':'节省总工时',11,'var(--text-secondary)','end');
- const boundary=30*s.adoption/100*(1-1/s.speed);
+ const boundary=reviewBreakEven(s);
  text(g,'boundary',18,311,`${en?'Break-even review':'复核临界点'} ${boundary.toFixed(1)} ${en?'min/task':'分钟/任务'}`,11);
  const legend=g.selectAll<SVGGElement,string>('g.segment-legend').data(names).join(enter=>{const n=enter.append('g').attr('class','segment-legend');n.append('circle');n.append('text');return n;}).attr('transform',(_,i)=>`translate(${18+i*(w-36)/4},338)`);
  legend.select('circle').attr('r',4).attr('fill',(_,i)=>colors[i]);legend.select('text').attr('x',9).attr('y',4).attr('font-size',w<400?9:11).attr('fill','var(--text-secondary)').text(d=>d);
 }
-function foundation(g:G,w:number,lang:Lang,ms:number){
+function foundation(g:G,w:number,s:SceneState,lang:Lang,ms:number){
+ const available=[s.power,s.compute,s.data],ready=available.every(Boolean);
  const labels=lang==='en'?['Power','Compute','Data','Applications']:['电力','算力','数据','产业应用'],nx=[w*.18,w*.5,w*.82],ny=[68,68,68];
  const lines=nx.map((x,i)=>({id:i,x}));
- g.selectAll<SVGPathElement,typeof lines[number]>('path.resource-link').data(lines,d=>d.id).join('path').attr('class','resource-link').attr('d',d=>`M${d.x},103 Q${d.x},167 ${w/2},202`).attr('fill','none').attr('stroke',[blue,mint,purple][0]).attr('stroke-width',2).attr('stroke-dasharray','5 5');
+ g.selectAll<SVGPathElement,typeof lines[number]>('path.resource-link').data(lines,d=>d.id).join('path').attr('class','resource-link').attr('d',d=>`M${d.x},103 Q${d.x},167 ${w/2},202`).attr('fill','none').attr('stroke',d=>[blue,mint,purple][d.id]).attr('stroke-width',2).attr('stroke-dasharray','5 5').transition().duration(ms).attr('opacity',d=>available[d.id]?1:.15);
  const nodes=[...nx.map((x,i)=>({id:i,x,y:ny[i],label:labels[i],r:32})),{id:3,x:w/2,y:227,label:labels[3],r:45}];
  const n=g.selectAll<SVGGElement,typeof nodes[number]>('g.resource-node').data(nodes,d=>d.id).join(enter=>{const n=enter.append('g').attr('class','resource-node');n.append('circle');n.append('text');return n;}).attr('transform',d=>`translate(${d.x},${d.y})`);
- n.select('circle').attr('fill','var(--surface)').attr('stroke',(_,i)=>[blue,mint,purple,orange][i]).transition().duration(ms).attr('r',d=>d.r);
- n.select('text').attr('text-anchor','middle').attr('y',4).attr('font-size',12).attr('fill','var(--text-primary)').text(d=>d.label);
+ n.select('circle').attr('stroke',(_,i)=>[blue,mint,purple,orange][i]).transition().duration(ms).attr('fill',d=>d.id===3&&ready?'var(--accent-soft)':'var(--surface)').attr('r',d=>d.r).attr('opacity',d=>d.id===3||available[d.id]?1:.3);
+ n.select('text').attr('text-anchor','middle').attr('y',4).attr('font-size',12).attr('fill','var(--text-primary)').text(d=>d.id===3&&!ready?(lang==='en'?'Blocked':'等待条件'):d.label);
  text(g,'foundation',w/2,294,lang==='en'?'Skills and workflows connect resources to value.':'人才与流程，把资源连接到价值。',11,'var(--text-secondary)','middle');
 }
-function energy(g:G,w:number,lang:Lang,ms:number){
+function energy(g:G,w:number,s:SceneState,lang:Lang,ms:number){
  const en=lang==='en',rows=['energy-2025','energy-2030'].map(recordById),max=1000,barw=Math.min(130,w*.28),top=59,bottom=239;
  const n=g.selectAll<SVGGElement,typeof rows[number]>('g.energy-column').data(rows,d=>d.id).join(enter=>{const n=enter.append('g').attr('class','energy-column');n.append('rect').attr('class','capacity');n.append('rect').attr('class','level');n.append('text').attr('class','value');n.append('text').attr('class','year');n.append('text').attr('class','kind');return n;}).attr('transform',(_,i)=>`translate(${w*(i?.7:.3)-barw/2},0)`);
  n.select('rect.capacity').attr('x',0).attr('y',top).attr('width',barw).attr('height',bottom-top).attr('fill','var(--surface-muted)').attr('rx',10);
- n.select('rect.level').attr('width',barw).attr('rx',8).attr('stroke',(_,i)=>i?orange:blue).attr('stroke-dasharray',(_,i)=>i?'5 4':null).attr('fill',(_,i)=>i?'var(--surface)':blue).transition().duration(ms).attr('y',d=>bottom-d.value/max*(bottom-top)).attr('height',d=>d.value/max*(bottom-top));
- n.select('text.value').attr('x',barw/2).attr('y',37).attr('text-anchor','middle').attr('fill',(_,i)=>i?orange:blue).attr('font-size',22).text(d=>`${formatRecord(d.id,lang)}`);
+ n.select('rect.level').attr('width',barw).attr('rx',8).attr('stroke',(_,i)=>i?orange:blue).attr('stroke-dasharray',(_,i)=>i?'5 4':null).attr('fill',(_,i)=>i?'var(--surface)':blue).transition().duration(ms).attr('y',(d,i)=>bottom-(!i||s.forecast?d.value:0)/max*(bottom-top)).attr('height',(d,i)=>(!i||s.forecast?d.value:0)/max*(bottom-top));
+ n.select('text.value').attr('x',barw/2).attr('y',37).attr('text-anchor','middle').attr('fill',(_,i)=>i?orange:blue).attr('font-size',22).text((d,i)=>i&&!s.forecast?'?':formatRecord(d.id,lang));
  n.select('text.year').attr('x',barw/2).attr('y',262).attr('text-anchor','middle').attr('fill','var(--text-primary)').attr('font-size',12).text((_,i)=>i?'2030':'2025');
  n.select('text.kind').attr('x',barw/2).attr('y',282).attr('text-anchor','middle').attr('fill','var(--text-secondary)').attr('font-size',10).text((_,i)=>i?(en?'Central projection':'中央情景预测'):(en?'Historical estimate':'历史估计'));
  text(g,'energy-unit',w/2,16,en?'ALL DATA CENTRES · TWh':'全部数据中心 · TWh',11,'var(--text-secondary)','middle');
 }
-function exposure(g:G,w:number,lang:Lang,ms:number){
- const en=lang==='en',overall=recordById('exposure-global').value,highest=recordById('exposure-highest').value,size=Math.min(20,(w-36)/10-5),gap=5,left=(w-(size+gap)*10+gap)/2;
+function exposure(g:G,w:number,s:SceneState,lang:Lang,ms:number){
+ const en=lang==='en',overall=recordById(s.exposure).value,highest=s.exposure==='exposure-global'?recordById('exposure-highest').value:0,size=Math.min(20,(w-36)/10-5),gap=5,left=(w-(size+gap)*10+gap)/2;
  const cells=d3.range(100).map(i=>({id:i,part:Math.max(0,Math.min(1,overall-i)),high:Math.max(0,Math.min(1,highest-i))}));
  const n=g.selectAll<SVGGElement,typeof cells[number]>('g.exposure-cell').data(cells,d=>d.id).join(enter=>{const n=enter.append('g').attr('class','exposure-cell');n.append('rect').attr('class','empty');n.append('rect').attr('class','part');n.append('rect').attr('class','high');return n;}).attr('transform',d=>`translate(${left+d.id%10*(size+gap)},${55+Math.floor(d.id/10)*(size+gap)})`);
  n.select('rect.empty').attr('width',size).attr('height',size).attr('rx',3).attr('fill','var(--surface-muted)').attr('stroke','var(--border-soft)');
  for(const key of ['part','high'] as const)n.select(`rect.${key}`).attr('height',size).attr('rx',3).attr('fill',key==='high'?orange:blue).transition().duration(ms).attr('width',d=>size*d[key]);
- text(g,'exposure-title',w/2,28,en?`${overall}% potentially exposed · ${highest}% highest exposure`:`${overall}% 潜在暴露，其中 ${highest}% 为最高暴露`,w<450?11:13,'var(--text-primary)','middle');
- text(g,'exposure-note',w/2,326,en?'Orange is within blue. Exposure is not job loss.':'橙色包含在蓝色中；暴露不等于失业。',11,'var(--text-secondary)','middle');
+ text(g,'exposure-title',w/2,28,highest?(en?`${overall}% potentially exposed · ${highest}% highest exposure`:`${overall}% 潜在暴露，其中 ${highest}% 为最高暴露`):`${recordById(s.exposure).label[lang]} · ${overall}%`,w<450?11:13,'var(--text-primary)','middle');
+ text(g,'exposure-note',w/2,326,highest?(en?'Orange is within blue. Exposure is not job loss.':'橙色包含在蓝色中；暴露不等于失业。'):(en?'Potential task overlap is not a job-loss probability.':'潜在任务重叠，不是岗位消失概率。'),11,'var(--text-secondary)','middle');
 }

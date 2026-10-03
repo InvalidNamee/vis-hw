@@ -1,6 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculate,normalize,presets } from '../src/homework/hw02/model.mjs';
+import { calculate,normalize,presets,reviewBreakEven } from '../src/homework/hw02/model.mjs';
+
+test('the explorable break-even point cancels gains across supported speeds and participation',()=>{
+ for(let adoption=0;adoption<=100;adoption+=5)for(let speed=1;speed<=8;speed+=.5)for(const tasks of [1,20,100]){
+  const review=reviewBreakEven({adoption,speed}),result=calculate({tasks,adoption,speed,review});
+  assert.equal(result.saved,0,`${tasks} tasks / ${adoption}% / ${speed}x`);
+  assert.ok(Math.abs(result.baseTotal-result.aiTotal)<1e-8);
+  if(review>.1)assert.ok(calculate({tasks,adoption,speed,review:review-.1}).saved>0);
+  assert.ok(calculate({tasks,adoption,speed,review:review+.1}).saved<0);
+ }
+});
 
 test('no AI and no extra review preserves the baseline exactly',()=>{
  const r=calculate({tasks:20,adoption:0,speed:8,review:0});
