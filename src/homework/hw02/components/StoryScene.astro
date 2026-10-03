@@ -17,6 +17,7 @@ const mechanismEn=step.scene==='collaboration'?['Knowledge','AI assistance','Hum
  <div class="story-fallback">
   {result?<div class="story-model-fallback"><span>{t('原流程','Baseline')} <strong>{(result.baseTotal/60).toFixed(1)} {t('小时','h')}</strong></span><span>{t('当前情景','Scenario')} <strong>{(result.aiTotal/60).toFixed(1)} {t('小时','h')}</strong></span><span>{t('节省工时','Effort saved')} <strong>{result.saved.toFixed(1)}%</strong></span></div>:records.length?<dl class="story-records">{records.map(r=><div><dt>{r.label[lang]}</dt><dd>{formatRecord(r.id,lang)} <small>{r.unit}</small></dd></div>)}</dl>:<ol class="story-mechanism">{mechanism.map((name,i)=><li class:list={{active:step.focus===i}}><span>{String(i+1).padStart(2,'0')}</span>{lang==='en'?mechanismEn[i]:name}</li>)}</ol>}
  </div>
+ <div class="story-interaction" hidden></div>
  {step.scene==='collaboration'&&records.length>0&&<p class="story-result"><strong>+{formatRecord('support',lang)}%</strong><span>{t('该客服研究的总体生产率提升，非所有任务的收益。','Overall productivity gain in this customer-support study; not a gain for every task.')}</span></p>}
  <p class="story-scene-note">{step.note[lang]}</p>
  {step.sources.length>0&&<Source ids={step.sources}/>}

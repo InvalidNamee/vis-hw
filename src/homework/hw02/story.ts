@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import {findStoryStep,storyChapters} from './story-content';
-import {drawStoryPlot,storyPlotHeight} from './story-plots';
+import {drawExplorable,explorableHeight} from './story-graphics';
+import {sceneState} from './story-state';
+import {renderSceneControls} from './story-interactions';
 import type {Lang} from './content';
 
 class StoryChapter extends HTMLElement {
@@ -17,6 +19,7 @@ class StoryChapter extends HTMLElement {
  private rejectedViewport='';
  private sceneSizeKey='';
  private expandedScene='';
+ private sceneOpen=new Map<string,boolean>();
  connectedCallback(){this.frame=requestAnimationFrame(()=>this.mount());}
  disconnectedCallback(){cancelAnimationFrame(this.frame);this.abort?.abort();this.near?.disconnect();this.stepsObserver?.disconnect();this.resize?.disconnect();this.theme?.disconnect();d3.select(this).selectAll('*').interrupt();}
  private mount(){
@@ -43,6 +46,7 @@ class StoryChapter extends HTMLElement {
    }
    schedule();
   },{...opts,capture:true});
+  this.addEventListener('story:change',()=>{this.sceneSizeKey='';schedule();},opts);
   this.update();
  }
  private invalidate(){this.sceneSizeKey='';this.rejectedViewport='';this.querySelectorAll<HTMLElement>('[data-story-canvas]').forEach(canvas=>delete canvas.dataset.renderKey);}
@@ -57,14 +61,14 @@ class StoryChapter extends HTMLElement {
   const steps=Array.from(this.querySelectorAll<HTMLElement>('.story-step'));
   const threshold=this.header()+(innerHeight-this.header())*.42;
   let index=0;steps.forEach((step,i)=>{if(step.getBoundingClientRect().top<=threshold)index=i;});
-  const id=steps[index].dataset.storyStep!,changed=this.dataset.activeStep!==id;this.dataset.activeStep=id;
+  const id=steps[index].dataset.storyStep!;this.dataset.activeStep=id;
   steps.forEach(step=>step.toggleAttribute('data-active',step.dataset.storyStep===id));
   this.querySelectorAll<HTMLElement>('[data-progress-step]').forEach(dot=>dot.toggleAttribute('data-active',dot.dataset.progressStep===id));
-  const panels=this.querySelectorAll<HTMLElement>('[data-master-step]');panels.forEach(panel=>panel.hidden=panel.dataset.masterStep!==id);
   if(this.nearby&&this.fixed){
    this.sizeScenes(viewportKey);
-   const scene=this.querySelector<HTMLElement>(`[data-master-step="${id}"] .story-scene`)!;this.draw(scene);
-   if(changed)this.revealScene(d3.select(scene.querySelector<HTMLElement>('[data-story-canvas]')!).select<SVGSVGElement>('svg'));
+   const scene=this.querySelector<HTMLElement>('.story-master-scenes .story-scene')!;
+   if(scene.dataset.scene!==id)this.syncScene(scene,steps[index].querySelector<HTMLElement>('.story-scene')!);
+   this.draw(scene);
    if(sticky.getBoundingClientRect().height>innerHeight-this.header()-40){
     const top=scene.getBoundingClientRect().top,focused=sticky.contains(document.activeElement);
     this.rejectedViewport=viewportKey;this.fixed=false;this.removeAttribute('data-fixed');sticky.setAttribute('aria-hidden','true');
@@ -83,41 +87,51 @@ class StoryChapter extends HTMLElement {
  private reserveSnapshots(){
   this.querySelectorAll<HTMLElement>('.story-snapshot .story-scene').forEach(scene=>{
    const style=getComputedStyle(scene),w=scene.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);
-   if(w>0)scene.style.setProperty('--story-plot-height',`${storyPlotHeight(findStoryStep(scene.dataset.scene!)!,Math.max(240,w))}px`);
+   if(w>0)scene.style.setProperty('--story-plot-height',`${explorableHeight(findStoryStep(scene.dataset.scene!)!,Math.max(240,w))}px`);
   });
+ }
+ private syncScene(master:HTMLElement,snapshot:HTMLElement){
+  const previous=master.querySelector<HTMLDetailsElement>('.story-data');
+  if(previous)this.sceneOpen.set(master.dataset.scene!,previous.open);
+  const canvas=master.querySelector<HTMLElement>('[data-story-canvas]')!,controls=master.querySelector<HTMLElement>('.story-interaction')!;
+  const restoreFocus=master.contains(document.activeElement);
+  master.replaceChildren(...Array.from(snapshot.children).filter(child=>!child.matches('[data-story-canvas],.story-interaction')).map(child=>child.cloneNode(true)));
+  master.querySelector('figcaption')!.after(canvas);
+  master.querySelector('.story-fallback')!.after(controls);
+  master.dataset.scene=snapshot.dataset.scene;
+  const details=master.querySelector<HTMLDetailsElement>('.story-data');
+  if(details)details.open=this.sceneOpen.get(master.dataset.scene!)??false;
+  if(restoreFocus){controls.tabIndex=-1;controls.focus({preventScroll:true});}
  }
  private sizeScenes(key:string){
   if(this.sceneSizeKey===key)return;
-  this.sceneSizeKey=key;
-  this.style.removeProperty('--story-scene-height');
+  this.sceneSizeKey=key;this.style.removeProperty('--story-scene-height');
   const master=this.querySelector<HTMLElement>('.story-master-scenes')!,width=master.clientWidth;
   let height=0;
-  this.querySelectorAll<HTMLElement>('[data-master-step]').forEach(panel=>{
-   const wasHidden=panel.hidden;panel.hidden=false;
-   panel.style.cssText=`display:block;visibility:hidden;position:absolute;width:${width}px;pointer-events:none;`;
-   const scene=panel.querySelector<HTMLElement>('.story-scene')!;
-   this.draw(scene);height=Math.max(height,scene.getBoundingClientRect().height);
-   panel.removeAttribute('style');panel.hidden=wasHidden;
+  // Measure lightweight copies, not alternate live SVGs. The real graph never resets.
+  this.querySelectorAll<HTMLElement>('.story-snapshot .story-scene').forEach(snapshot=>{
+   const scene=snapshot.cloneNode(true) as HTMLElement;
+   scene.style.cssText=`visibility:hidden;position:absolute;width:${width}px;pointer-events:none;`;
+   master.append(scene);
+   const step=findStoryStep(scene.dataset.scene!)!,style=getComputedStyle(scene),w=Math.max(240,width-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight));
+   const canvas=scene.querySelector<HTMLElement>('[data-story-canvas]')!;canvas.dataset.drawn='';
+   canvas.replaceChildren();canvas.style.height=`${explorableHeight(step,w)}px`;canvas.style.flex='none';
+   renderSceneControls(scene.querySelector<HTMLElement>('.story-interaction')!,step,this.locale);
+   height=Math.max(height,scene.getBoundingClientRect().height);scene.remove();
   });
   this.style.setProperty('--story-scene-height',`${Math.ceil(height)}px`);
  }
- private draw(scene:HTMLElement){
+ private draw(scene:HTMLElement,animate=true){
   if(!scene||!scene.getBoundingClientRect().width)return;
   const step=findStoryStep(scene.dataset.scene!)!,canvas=scene.querySelector<HTMLElement>('[data-story-canvas]')!;
   const style=getComputedStyle(scene),w=Math.max(240,scene.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight));
-  const theme=document.documentElement.dataset.theme||'light',key=`${Math.round(w)}-${theme}-${step.id}`;
+  const state=sceneState(step),theme=document.documentElement.dataset.theme||'light',key=`${Math.round(w)}-${theme}-${step.id}-${JSON.stringify(state)}`;
+  renderSceneControls(scene.querySelector<HTMLElement>('.story-interaction')!,step,this.locale);
   if(canvas.dataset.renderKey===key)return;
-  d3.select(canvas).selectAll('*').interrupt();
-  const svg=d3.select(canvas).selectAll<SVGSVGElement,null>('svg').data([null]).join('svg').attr('id',`plot-${scene.dataset.instance}`).attr('aria-label',step.label[this.locale]);svg.selectAll('*').remove();
-  drawStoryPlot(svg,w,step,this.locale);
+  const svg=d3.select(canvas).selectAll<SVGSVGElement,null>('svg').data([null]).join('svg').attr('id',`plot-${scene.dataset.instance}`).attr('aria-label',step.label[this.locale]);
+  svg.selectAll('*').interrupt();
+  drawExplorable(svg,w,step,this.locale,state,animate);
   canvas.dataset.drawn='';canvas.dataset.renderKey=key;
-  this.revealScene(svg);
- }
- private revealScene<T,P extends d3.BaseType,PD>(svg:d3.Selection<SVGSVGElement,T,P,PD>){
-  const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  svg.interrupt();
-  svg.attr('opacity',reduced?1:.4);
-  if(!reduced){svg.transition().duration(320).attr('opacity',1);if(svg.select('g.adoption-point').size())svg.selectAll('g.adoption-point').attr('opacity',0).transition().delay((_,i)=>i*140).duration(280).attr('opacity',1);}
  }
  private updateReadingProgress(){
   const chapters=Array.from(document.querySelectorAll<HTMLElement>('story-chapter'));

@@ -62,7 +62,8 @@ test('both story languages publish six chapters, eighteen stable steps and uniqu
   const ids=[...html.matchAll(/\sid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(new Set(ids).size,ids.length,'duplicate IDs break anchors and aria associations');
   const instances=[...html.matchAll(/data-instance="([^"]+)"/g)].map(m=>m[1]);
-  assert.equal(instances.length,36);assert.equal(new Set(instances).size,36);
+  assert.equal(instances.length,24);assert.equal(new Set(instances).size,24);
+  assert.equal((html.match(/class="story-master-scenes"/g)||[]).length,6);
   for(const chapter of chapters)assert.ok(html.includes(`href="#${chapter}"`));
   for(const [,anchor] of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(anchor),anchor);
   assert.equal((html.match(/class="site-footer"/g)||[]).length,1);
