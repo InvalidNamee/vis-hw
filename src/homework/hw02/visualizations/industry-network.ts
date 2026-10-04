@@ -1,4 +1,4 @@
-import { dataset, type Lang } from "../content";
+import { dataset, type Lang } from "../data";
 import type { Plot } from "./quantitative-charts";
 export function drawIndustryNetwork(
   svg: Plot,
@@ -7,7 +7,10 @@ export function drawIndustryNetwork(
   activeIndustry: string,
   capability = "",
   select?: (id: string, group: number) => void,
+  height = 420,
 ) {
+  const compact = height < 400;
+  const rowGap = compact ? 43 : 74;
   const nodeWidth = Math.min(180, w * 0.39),
     left = nodeWidth / 2 + 4,
     right = w - nodeWidth / 2 - 4;
@@ -17,14 +20,14 @@ export function drawIndustryNetwork(
       label: c.name[lang],
       group: 0,
       x: left,
-      y: 65 + i * 74,
+      y: (compact ? 43 : 65) + i * rowGap,
     })),
     ...dataset.capabilities.map((c, i) => ({
       id: c.id,
       label: c.name[lang],
       group: 1,
       x: right,
-      y: 102 + i * 74,
+      y: (compact ? 64 : 102) + i * rowGap,
     })),
   ];
   const related = capability
@@ -42,7 +45,7 @@ export function drawIndustryNetwork(
       .attr("y", y)
       .attr("text-anchor", "middle")
       .attr("fill", "var(--text-secondary)")
-      .attr("font-size", 11)
+      .attr("font-size", compact ? 14 : 11)
       .text(value);
   label(left, 22, lang === "en" ? "INDUSTRIES" : "产业场景");
   label(right, 22, lang === "en" ? "CAPABILITIES" : "智能能力");
@@ -64,6 +67,8 @@ export function drawIndustryNetwork(
       (d) =>
         `M${d.source.x + nodeWidth / 2},${d.source.y} C${w / 2},${d.source.y} ${w / 2},${d.target.y} ${d.target.x - nodeWidth / 2},${d.target.y}`,
     )
+    .attr("data-key", (d) => `${d.industry}:${d.cap}`)
+    .attr("data-order", (_, i) => i)
     .attr("fill", "none")
     .attr("stroke", "var(--hw-blue)")
     .attr("stroke-width", (d) => (isActive(d.industry, d.cap) ? 3 : 1.5))
@@ -74,6 +79,7 @@ export function drawIndustryNetwork(
     .data(nodes)
     .join("g")
     .attr("class", "node")
+    .attr("data-key", (d) => d.id)
     .attr("transform", (d) => `translate(${d.x},${d.y})`)
     .attr("role", select ? "button" : null)
     .attr("tabindex", select ? 0 : null)
@@ -84,9 +90,9 @@ export function drawIndustryNetwork(
     );
   g.append("rect")
     .attr("x", -nodeWidth / 2)
-    .attr("y", -25)
+    .attr("y", compact ? -18 : -25)
     .attr("width", nodeWidth)
-    .attr("height", 50)
+    .attr("height", compact ? 36 : 50)
     .attr("rx", 12)
     .attr("fill", (d) =>
       d.id === active ? "var(--hw-blue)" : "var(--surface)",
@@ -96,7 +102,7 @@ export function drawIndustryNetwork(
   g.append("text")
     .attr("text-anchor", "middle")
     .attr("dy", 4)
-    .attr("font-size", w < 400 ? 10 : 12)
+    .attr("font-size", compact ? 14 : w < 400 ? 10 : 12)
     .attr("fill", (d) =>
       d.id === active
         ? "var(--hw-on-blue)"

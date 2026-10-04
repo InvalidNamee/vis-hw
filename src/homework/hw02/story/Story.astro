@@ -1,195 +1,129 @@
 ---
-import StoryChapter from "../components/StoryChapter.astro";
-import Source from "../components/Source.astro";
-import { storyChapters } from "./content";
-import { formatRecord, type Lang } from "../content";
-import { localizedHref, localeFromUrl } from "../../../i18n";
 import { href } from "../../../config/homework";
-import {
-  ArrowDown,
-  ArrowUpRight,
-  FlaskConical,
-  Network,
-  BookOpen,
-} from "@lucide/astro";
-import "../styles/story.css";
-interface Props {
-  lang: Lang;
-}
-const { lang } = Astro.props,
-  t = (z: string, e: string) => (lang === "en" ? e : z);
-const link = (path: string) =>
-  localizedHref(`hw02/${path}`, localeFromUrl(Astro.url));
+import { localizedHref, localeFromUrl } from "../../../i18n";
+import { type Lang } from "../data";
+import { storyChapters } from "./content";
+import Source from "../components/Source.astro";
+import Industries from "../pages/Industries.astro";
+import Benefits from "../components/sections/Benefits.astro";
+import Momentum from "../components/sections/Momentum.astro";
+import Boundaries from "../components/sections/Boundaries.astro";
+import Lab from "../pages/Lab.astro";
+import { ArrowDown, ArrowUpRight } from "@lucide/astro";
+const { lang } = Astro.props as { lang: Lang };
+const t = (zh: string, en: string) => (lang === "en" ? en : zh);
+const explorers = [null, Industries, Benefits, Momentum, Boundaries, Lab];
+const values = [
+  [t("效率", "Efficiency"), t("计入生产、学习与复核的总成本。", "Account for production, learning and review costs.")],
+  [t("质量", "Quality"), t("用具体任务验证结果，保留人的判断。", "Evaluate specific tasks and retain human judgment.")],
+  [t("创新", "Innovation"), t("拓展探索空间，再用实验确认发现。", "Expand the search space, then validate discoveries.")],
+];
 ---
 
-<story-experience class="story-page" data-kind="story">
-  <div class="story-scroll-progress" aria-hidden="true">
-    <span></span>
+<header class="story-cover" id="opening">
+  <img src={href("images/hw02/intelligence.webp")} width="1600" height="1000" alt="" fetchpriority="high" />
+  <div class="story-cover-copy">
+    <p class="hw-kicker">AI / NEW PRODUCTIVE FORCES</p>
+    <h1>
+      {t("智变", "The intelligence shift")}
+      <span>{t("人工智能，怎样成为新质生产力？", "How does AI become a productive force?")}</span>
+    </h1>
+    <p>{t(
+      "从一个工作现场出发，走进五个产业，用证据检验变化，再亲手调节一次效率实验。",
+      "Begin with a working day. Explore five industries, examine the evidence, and run your own productivity experiment.",
+    )}</p>
+    <a class="hw-primary" href="#workplace">
+      {t("向下，开始探索", "Scroll to explore")}<ArrowDown size={18} aria-hidden="true" />
+    </a>
+    <span class="story-reading">{t(
+      "六章 · 主线约 8–12 分钟 · 可随时探索",
+      "Six chapters · about 8–12 minutes · explore at your own pace",
+    )}</span>
   </div>
-  <header class="story-cover">
-    <img
-      src={href("images/hw02/intelligence.webp")}
-      alt=""
-      width="1600"
-      height="1000"
-      fetchpriority="high"
-    />
-    <div class="story-cover-copy">
-      <span class="story-overline">AI / NEW PRODUCTIVE FORCES</span>
-      <h1>
-        {t("智变", "The intelligence shift")}
-        <span>
-          {t(
-            "人工智能，怎样成为新质生产力？",
-            "How does AI become a productive force?",
-          )}
-        </span>
-      </h1>
-      <p>
-        {t(
-          "从一个工作现场出发，沿着任务、产业和证据，寻找效率、质量与创新的变化。",
-          "Start with a working day. Follow tasks, industries and evidence to understand changes in efficiency, quality and innovation.",
-        )}
-      </p>
-      <a class="story-start" href="#workplace">
-        {t("开始探索", "Start the story")}
-        <ArrowDown size={18} aria-hidden="true" />
-      </a>
-      <small>
-        {t(
-          "六幕 · 18个步骤 · 向下滚动阅读",
-          "Six chapters · 18 steps · scroll to explore",
-        )}
-      </small>
-    </div>
-    <div class="story-cover-thread" aria-hidden="true">
-      <span>{t("一项任务", "A task")}</span>
-      <i></i>
-      <span>{t("一种能力", "A capability")}</span>
-      <i></i>
-      <span>{t("新的价值", "New value")}</span>
-    </div>
-  </header>
-  <nav class="story-contents" aria-label={t("故事章节", "Story chapters")}>
-    {storyChapters.map((c, i) => (
-      <a href={`#${c.id}`} data-story-nav={c.id}>
-        <span>{String(i + 1).padStart(2, "0")}</span>
-        {c.name[lang]}
+  <div class="cover-index">
+    {storyChapters.map((chapter, index) => (
+      <a href={`#${chapter.id}`}>
+        <span>0{index + 1}</span>{chapter.title[lang]}<ArrowUpRight size={15} aria-hidden="true" />
       </a>
     ))}
-  </nav>
-  {storyChapters.map((chapter, i) => (
-    <StoryChapter chapter={chapter} lang={lang} number={i + 1}>
-      {chapter.id === "diffusion" && (
-        <aside class="story-context">
+  </div>
+</header>
+
+{storyChapters.map((chapter, index) => {
+  const Explore = explorers[index];
+  return (
+    <section class="story-chapter" id={chapter.id} data-story-chapter>
+      <header class="story-chapter-heading">
+        <p class="hw-kicker">{chapter.eyebrow}</p>
+        <h2>{chapter.title[lang]}</h2>
+        <p>{chapter.intro[lang]}</p>
+      </header>
+      <story-scene data-chapter={chapter.id} data-lang={lang}>
+        <div class="story-stage" aria-hidden="true">
+          <div class="story-stage-heading">
+            <span data-scene-number></span><p data-scene-title></p>
+          </div>
+          <div class="story-plot"></div>
+          <p class="story-stage-caption" data-scene-caption></p>
+          <div class="scene-progress"><i></i></div>
+        </div>
+        <div class="story-steps">
+          {chapter.steps.map((step, stepIndex) => (
+            <article class="story-step" id={step.id} data-step={stepIndex}>
+              <div class="story-step-copy">
+                <span class="step-number">0{index + 1} / {String(stepIndex + 1).padStart(2, "0")}</span>
+                <h3>{step.title[lang]}</h3>
+                <p>{step.body[lang]}</p>
+                {step.sources.length > 0 && <Source ids={step.sources} />}
+                <div class="step-static" data-static-scene={step.scene}></div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </story-scene>
+      <section class="story-explore" id={chapter.explore}>
+        <div class="explore-heading">
           <div>
-            <span class="story-overline">INVESTMENT / CHINA</span>
-            <h3>
-              {t(
-                "投入与部署，是应用的背景",
-                "Investment and deployment provide context",
-              )}
-            </h3>
-            <p>
-              {t(
-                `2025年美国、中国、英国AI私人投资分别为${formatRecord("investment-us", lang)}、${formatRecord("investment-cn", lang)}、${formatRecord("investment-uk", lang)}十亿美元。投资不是生产率排名；中国两项背景指标也衡量不同内容。`,
-                `US, China and UK private AI investment in 2025 was USD ${formatRecord("investment-us", lang)}, ${formatRecord("investment-cn", lang)} and ${formatRecord("investment-uk", lang)} billion. Investment is not a productivity ranking; the two China indicators describe different dimensions.`,
-              )}
-            </p>
+            <p class="hw-kicker">{t("现在，亲手探索", "NOW, EXPLORE")}</p>
+            <h3>{index === 0
+              ? t("效率、质量、创新", "Efficiency, quality, innovation")
+              : t("停下来，看得更深入", "Pause and look closer")}</h3>
           </div>
-          <div class="story-context-metrics">
-            <a href={link("industries/")}>
-              <strong>{formatRecord("china-scale", lang)}</strong>
-              <span>
-                {t(
-                  "万亿元 · 2025 AI核心产业规模",
-                  "CNY trillion · AI core industry, 2025",
-                )}
-              </span>
-            </a>
-            <a href={link("industries/?industry=manufacturing")}>
-              <strong>{formatRecord("robots-cn-share", lang)}%</strong>
-              <span>
-                {t(
-                  "2025全球机器人新增安装中的中国份额",
-                  "China share of global robot installations, 2025",
-                )}
-              </span>
-            </a>
-          </div>
-          <Source
-            ids={["hai26", "china", "ifr"]}
-            note={t(
-              "背景指标不能相加或直接归因为AI收益。",
-              "Context measures cannot be added or attributed directly to AI gains.",
-            )}
-          />
-          <a class="story-more" href={link("trends/")}>
-            {t("查看投资图与完整口径", "Explore investment and definitions")}
-            <ArrowUpRight size={16} />
+          <a href={`#${storyChapters[index + 1]?.id ?? "conclusions"}`} class="hw-text-link">
+            {t("继续向下", "Continue")}<ArrowDown size={16} aria-hidden="true" />
           </a>
-        </aside>
-      )}
-    </StoryChapter>
-  ))}
-  <section class="story-ending" id="conclusions">
-    <span class="story-overline">EFFICIENCY / QUALITY / INNOVATION</span>
-    <h2>
-      {t(
-        "价值，在于更好的生产与创造",
-        "Value comes from better production and creation",
-      )}
-    </h2>
-    <div class="story-conclusions">
-      {[
-        [
-          t("效率", "Efficiency"),
-          t(
-            "减少寻找与生产的耗时，把复核成本一并计入。",
-            "Reduce searching and production time while accounting for review costs.",
-          ),
-        ],
-        [
-          t("质量", "Quality"),
-          t(
-            "用具体任务的结果验证改善，保留人的判断与责任。",
-            "Validate improvements on specific tasks, retaining human judgment and responsibility.",
-          ),
-        ],
-        [
-          t("创新", "Innovation"),
-          t(
-            "让新的工作对象与研究问题变得可探索，再用实验确认。",
-            "Make new objects of work and questions explorable, then confirm them through experiments.",
-          ),
-        ],
-      ].map(([title, body]) => (
-        <article>
-          <h3>{title}</h3>
-          <p>{body}</p>
-        </article>
-      ))}
-    </div>
-    <nav class="story-explore" aria-label={t("深入探索", "Explore further")}>
-      {[
-        [Network, "industries/", t("自由探索产业", "Explore industries")],
-        [FlaskConical, "lab/", t("亲手调节实验", "Run your experiment")],
-        [BookOpen, "sources/", t("检查数据与来源", "Inspect data and sources")],
-      ].map(([Icon, path, label]) => (
-        <a href={link(String(path))}>
-          <Icon size={22} />
-          <span>{String(label)}</span>
-          <ArrowUpRight size={16} />
-        </a>
-      ))}
-    </nav>
-    <p class="story-art-credit">
-      {t("艺术配图", "Artwork")} · Google DeepMind / Visualising AI ·{" "}
-      <a href={link("sources/#artwork")}>{t("素材与署名", "Image credits")}</a>
-    </p>
-  </section>
-</story-experience>
+        </div>
+        {Explore ? (
+          <details class="explore-disclosure" open={index === 5}>
+            <summary>{index === 5
+              ? t("调节参数，运行你的实验", "Adjust parameters and run your experiment")
+              : t("展开完整图表与操作", "Open the full charts and controls")}</summary>
+            <div class="explore-content"><Explore lang={lang} /></div>
+          </details>
+        ) : (
+          <div class="overview-values">
+            {values.map(([title, body]) => <article><h3>{title}</h3><p>{body}</p></article>)}
+          </div>
+        )}
+      </section>
+    </section>
+  );
+})}
+
+<section class="story-conclusion" id="conclusions">
+  <p class="hw-kicker">THE NEXT QUESTION</p>
+  <h2>{t("从“能做什么”，到“怎样做好”。", "From what AI can do, to how we do it well.")}</h2>
+  <p>{t(
+    "效率来自完整流程的改善，质量来自持续验证，创新来自探索与实验。技术的潜力，需要数据、组织与人的责任共同实现。",
+    "Efficiency comes from improving the whole workflow, quality from evaluation, and innovation from exploration and experiments. Data, organizations and human responsibility help realize the potential.",
+  )}</p>
+  <div>
+    <a class="hw-primary" href={localizedHref("hw02/sources/", localeFromUrl(Astro.url))}>
+      {t("查看数据与方法", "Data & methods")}<ArrowUpRight size={18} aria-hidden="true" />
+    </a>
+    <a class="hw-text-link" href="#opening">{t("重新体验", "Start again")}</a>
+  </div>
+</section>
 <script>
   import "./controller";
-  import "./motion";
 </script>

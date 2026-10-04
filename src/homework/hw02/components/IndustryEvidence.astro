@@ -2,7 +2,7 @@
 import Chart from "./Chart.astro";
 import Source from "./Source.astro";
 import { localeFromUrl, localizedHref } from "../../../i18n";
-import { formatRecord, type Lang } from "../content";
+import { formatRecord, type Lang } from "../data";
 interface Props {
   lang: Lang;
 }
@@ -55,7 +55,7 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
       <Source ids={["mvtec"]} />
     </article>
   </div>
-  <div data-evidence="health" class="evidence-pair" hidden>
+  <div data-evidence="health" class="evidence-pair" data-initial-hidden>
     <Chart
       kind="medical"
       title={t(
@@ -102,7 +102,7 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
       <Source ids={["praim"]} />
     </article>
   </div>
-  <div data-evidence="agriculture" class="evidence-pair" hidden>
+  <div data-evidence="agriculture" class="evidence-pair" data-initial-hidden>
     <Chart
       kind="weather"
       title={t(
@@ -148,7 +148,7 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
       <Source ids={["weather", "agri"]} />
     </article>
   </div>
-  <div data-evidence="science" class="evidence-pair" hidden>
+  <div data-evidence="science" class="evidence-pair" data-initial-hidden>
     <Chart
       kind="discovery"
       title={t(
@@ -186,18 +186,18 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
       <Source ids={["science26"]} />
     </article>
   </div>
-  <div data-evidence="service" class="editorial-card" hidden>
+  <div data-evidence="service" class="editorial-card" data-initial-hidden>
     <p class="hw-kicker">KNOWLEDGE / PEOPLE</p>
     <h2>{t("把知识送到工作现场", "Bring knowledge into the workflow")}</h2>
     <p>
       {t(
-        "正式发表的客服研究观察到平均每小时解决问题数提升约 15%。经验与任务不同，效果也不同；人机协作页进一步比较客服、写作与开发者证据。",
-        "The published support study reports about 15% more issues resolved per hour on average. Effects vary with experience and tasks; the next chapter compares support, writing and developer evidence.",
+        "正式发表的客服研究观察到平均每小时解决问题数提升约 15%。经验与任务不同，效果也不同；本页下方进一步比较客服、写作与开发者证据。",
+        "The published support study reports about 15% more issues resolved per hour on average. Effects vary with experience and tasks; the section below compares support, writing and developer evidence.",
       )}
     </p>
     <a
       class="hw-text-link"
-      href={localizedHref("hw02/work/", localeFromUrl(Astro.url))}
+      href={localizedHref("hw02/#benefits", localeFromUrl(Astro.url))}
     >
       {t("比较人机协作研究 →", "Compare human–AI studies →")}
     </a>

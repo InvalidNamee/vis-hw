@@ -1,0 +1,15 @@
+---
+import Hw02Layout from "../Hw02Layout.astro";
+import { legacyRoutes, type LegacyPageId } from "../navigation";
+import { text, type Lang } from "../data";
+import { localizedHref, localeFromUrl } from "../../../i18n";
+const { chapter, lang } = Astro.props as { chapter: LegacyPageId; lang: Lang };
+const target = localizedHref(
+  `hw02/#${legacyRoutes[chapter]}`,
+  localeFromUrl(Astro.url),
+);
+---
+<Hw02Layout chapter=""><section class="story-conclusion" data-kind="compatibility"><h1>{text(lang,'内容已整理到完整滚动故事','This content is now in the complete story')}</h1><a data-legacy-target href={target}>{text(lang,'查看对应章节','Open the matching chapter')}</a></section>
+<script is:inline>
+(()=>{const link=document.querySelector('[data-legacy-target]');const url=new URL(link.href);url.search=location.search;const hash=location.hash.slice(1);if(['applications','benefits','adoption','boundaries','parameters'].includes(hash))url.hash=hash;location.replace(url.href);})();
+</script></Hw02Layout>

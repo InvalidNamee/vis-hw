@@ -3,15 +3,16 @@ import Chart from "../components/Chart.astro";
 import IndustryEvidence from "../components/IndustryEvidence.astro";
 import Choice from "../components/Choice.astro";
 import Source from "../components/Source.astro";
-import { dataset, text, type Lang } from "../content";
+import { dataset, text, type Lang } from "../data";
 import { MoveUpRight, Network, Grid2x2 } from "@lucide/astro";
+
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = (z: string, e: string) => text(lang, z, e);
 ---
-
+<div class="industry-explorer">
 <Chart
   kind="industry"
   title={t("连接能力与产业", "Connect capabilities to industries")}
@@ -19,7 +20,6 @@ const t = (z: string, e: string) => text(lang, z, e);
     "点击节点，查看关联能力与产业案例。",
     "Select a node to explore connected capabilities and industry cases.",
   )}
-  note={undefined}
 >
   <div class="chart-controls industry-toolbar">
     <Choice
@@ -41,6 +41,11 @@ const t = (z: string, e: string) => text(lang, z, e);
         </button>
       </div>
     </div>
+  </div>
+  <div class="chart-controls demo-controls">
+    <button data-action="demo" aria-pressed="false">{t("演示产业", "Demonstrate industries")}</button>
+    <button data-action="demo-replay">{t("重播", "Replay")}</button>
+    <span data-demo-status aria-live="polite"></span>
   </div>
   <div class="legend">
     <span>
@@ -71,7 +76,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     <div class="capability-cases" data-capability-cases></div>
   </article>
   {dataset.cases.map((c, i) => (
-    <article class="case-detail" data-case={c.id} hidden={i !== 0}>
+    <article class="case-detail" data-case={c.id} data-initial-hidden={i !== 0 ? "" : undefined}>
       <div class="case-heading">
         <span class="hw-kicker">
           {String(i + 1).padStart(2, "0")} / {c.name[lang]}
@@ -100,6 +105,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       <Source ids={[c.source]} note={c.limit[lang]} />
     </article>
   ))}
+</div>
 </div>
 <IndustryEvidence lang={lang} />
 <div class="insight-strip">

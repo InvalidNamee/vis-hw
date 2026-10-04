@@ -1,37 +1,15 @@
 ---
-import Chart from "../components/Chart.astro";
-import Choice from "../components/Choice.astro";
-import Source from "../components/Source.astro";
-import { text, type Lang } from "../content";
-import { localeFromUrl, localizedHref } from "../../../i18n";
-import { ArrowRight, Sparkles } from "@lucide/astro";
+import Chart from "../Chart.astro";
+import Choice from "../Choice.astro";
+import Source from "../Source.astro";
+import { text, type Lang } from "../../data";
 interface Props {
   lang: Lang;
 }
-const { lang } = Astro.props,
-  locale = localeFromUrl(Astro.url);
+const { lang } = Astro.props;
 const t = (z: string, e: string) => text(lang, z, e);
-const link = (id: string) =>
-  localizedHref(`hw02/${id ? `${id}/` : ""}`, locale);
 ---
 
-<Chart
-  kind="infrastructure"
-  class="explanation-graph"
-  title={t(
-    "一次智能服务，背后的资源网络",
-    "The resources behind an AI service",
-  )}
-  description={t(
-    "电力、算力与数据共同支撑应用。点击节点查看它的作用。",
-    "Power, compute, and data support applications. Select a node to explore its role.",
-  )}
-  ids={["iea", "worldbank"]}
-  note={t(
-    "基础设施关系示意；路径宽度不代表能源消耗比例。",
-    "Infrastructure schematic; path widths do not represent energy shares.",
-  )}
-/>
 <Chart
   kind="energy"
   title={t("智能背后，是物理基础设施", "Intelligence has a physical footprint")}
@@ -157,25 +135,4 @@ const link = (id: string) =>
     ))}
   </div>
   <Source ids={["worldbank", "iea"]} />
-</section>
-<section class="journey-banner">
-  <Sparkles size={26} />
-  <div>
-    <h2>
-      {t(
-        "意义，在于更好的生产与创造",
-        "The goal is better production and creation",
-      )}
-    </h2>
-    <p>
-      {t(
-        "用证据判断收益，用实验理解机制，用设计让更多人看懂变化。",
-        "Use evidence to assess gains, experiments to understand mechanisms, and design to make change legible.",
-      )}
-    </p>
-  </div>
-  <a class="hw-text-link" href={link("sources")}>
-    {t("检查所有来源", "Inspect the sources")}
-    <ArrowRight size={17} />
-  </a>
 </section>

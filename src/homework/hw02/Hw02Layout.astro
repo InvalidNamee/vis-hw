@@ -3,160 +3,31 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import { getHomework } from "../../config/homework";
 import { localeFromUrl, localizedHref, translate } from "../../i18n";
-import { chapters, text, type Lang } from "./content";
-import {
-  Orbit,
-  ChartNoAxesCombined,
-  Network,
-  Users,
-  FlaskConical,
-  Leaf,
-  BookOpen,
-  PanelLeftClose,
-  Menu,
-  ArrowLeft,
-  ArrowRight,
-} from "@lucide/astro";
+import { chapters, type PageId } from "./navigation";
+import { storyChapters } from "./story/content";
+import { List, ArrowUpRight } from "@lucide/astro";
 import "./styles/theme.css";
 import "./styles/layout.css";
 import "./styles/components.css";
-interface Props {
-  chapter: string;
-}
-const { chapter } = Astro.props;
-const lang: Lang = localeFromUrl(Astro.url) === "en" ? "en" : "zh";
+import "./styles/topics.css";
+import "./styles/story.css";
+const { chapter } = Astro.props as { chapter: PageId };
 const locale = localeFromUrl(Astro.url),
-  t = (z: string, e: string) => text(lang, z, e);
-const idx = chapters.findIndex((c) => c.id === chapter),
-  current = chapters[idx];
-const icons = [
-  Orbit,
-  ChartNoAxesCombined,
-  Network,
-  Users,
-  FlaskConical,
-  Leaf,
-  BookOpen,
-];
-const link = (id: string) =>
-  localizedHref(`hw02/${id ? `${id}/` : ""}`, locale);
-const hw = getHomework("hw02");
-const story = chapter === "";
+  lang = locale === "en" ? "en" : "zh";
+const current = chapters.find((c) => c.id === chapter)!;
+const t = (zh: string, en: string) => (lang === "en" ? en : zh);
+const home = localizedHref("hw02/", locale);
 ---
-
-<BaseLayout
-  title={`${current.name[lang]} · ${translate(locale, hw.title)}`}
-  description={current.desc[lang]}
-  current="hw02"
-  variant={story ? "exhibition" : "workspace"}
->
-  <hw02-shell
-    class="hw-shell"
-    data-lang={lang}
-    data-story={story ? "" : undefined}
-  >
-    {!story && (
-      <>
-        <button
-          class="hw-mobile-menu"
-          aria-expanded="false"
-          aria-controls="hw-sidebar"
-        >
-          <Menu size={18} />
-          {t("专题导航", "Explore chapters")}
-        </button>
-        <aside
-          class="hw-sidebar"
-          id="hw-sidebar"
-          aria-label={t("HW02 章节导航", "HW02 chapters")}
-        >
-          <a class="hw-brand" href={link("")}>
-            <span class="hw-brand-mark">
-              <Orbit size={25} />
-            </span>
-            <span class="nav-label">
-              {t("智变", "AI / SHIFT")}
-              <small>{t("AI 与新质生产力", "NEW PRODUCTIVE FORCES")}</small>
-            </span>
-          </a>
-          <div class="hw-side-heading">
-            <span class="nav-label">{t("探索专题", "EXPLORE")}</span>
-            <button
-              class="hw-collapse"
-              aria-label={t("折叠侧栏", "Collapse sidebar")}
-              aria-expanded="true"
-            >
-              <PanelLeftClose size={17} />
-            </button>
-          </div>
-          <nav>
-            {chapters.map((c, i) => {
-              const Icon = icons[i];
-              return (
-                <a
-                  href={link(c.id)}
-                  aria-current={c.id === chapter ? "page" : undefined}
-                  title={c.name[lang]}
-                >
-                  <Icon size={18} />
-                  <span class="nav-label">{c.name[lang]}</span>
-                  <span class="nav-index">{String(i).padStart(2, "0")}</span>
-                </a>
-              );
-            })}
-          </nav>
-          <div class="hw-side-bottom">
-            <span class="live-dot"></span>
-            <span class="nav-label">
-              {t("可视化导论 · HW02", "VISUALIZATION · HW02")}
-              <small>
-                {t("数据 · 机制 · 实验", "DATA · MECHANISMS · EXPERIMENTS")}
-              </small>
-            </span>
-          </div>
-        </aside>
-      </>
-    )}
-    <div class="hw-main">
-      <slot />
-      <SiteFooter>
-        {!story && (
-          <nav
-            class="hw-pagination"
-            aria-label={t("章节翻页", "Chapter navigation")}
-          >
-            {idx > 0 ? (
-              <a href={link(chapters[idx - 1].id)}>
-                <ArrowLeft size={17} />
-                <span>
-                  <small>{t("上一章", "PREVIOUS")}</small>
-                  {chapters[idx - 1].name[lang]}
-                </span>
-              </a>
-            ) : (
-              <span />
-            )}
-            {idx < chapters.length - 1 ? (
-              <a href={link(chapters[idx + 1].id)}>
-                <span>
-                  <small>{t("下一章", "NEXT")}</small>
-                  {chapters[idx + 1].name[lang]}
-                </span>
-                <ArrowRight size={17} />
-              </a>
-            ) : (
-              <a href={link("")}>
-                {t("回到总览", "Back to overview")}
-                <Orbit size={17} />
-              </a>
-            )}
-          </nav>
-        )}
-      </SiteFooter>
-    </div>
-  </hw02-shell>
-  <script>
-    import "./shell";
-    import "./visualizations/charts";
-  </script>
+<BaseLayout title={`${current.name[lang]} · ${translate(locale,getHomework('hw02').title)}`} description={current.desc[lang]} current="hw02" variant="workspace">
+ <hw02-shell class="hw-shell hw-story-shell" data-lang={lang}>
+  <nav class="story-nav" aria-label={t('HW02 章节导航','HW02 chapters')}>
+   <a href={home} class="story-wordmark">{t('智变','AI / SHIFT')}</a>
+   <span class="story-current" data-story-current>{t('人工智能与新质生产力','AI and productive forces')}</span>
+   <details class="story-menu"><summary><List size={16}/>{t('目录','Contents')}</summary><div>{storyChapters.map((c,i)=><a href={`${chapter===''?'':home}#${c.id}`} data-chapter-link={c.id}><span>0{i+1}</span>{c.title[lang]}</a>)}<a href={localizedHref('hw02/sources/',locale)}>{t('数据与方法','Data & methods')}</a></div></details>
+   <a class="story-source-link" href={localizedHref('hw02/sources/',locale)}>{t('资料','Sources')}<ArrowUpRight size={14}/></a>
+   <div class="story-total-progress" aria-hidden="true"><i data-story-progress></i></div>
+  </nav>
+  <div class:list={['hw-main',{'story-data-page':chapter==='sources'}]}><slot/><SiteFooter/></div>
+ </hw02-shell>
+ <script>import './interactions/lazy-charts'; import './story/navigation';</script>
 </BaseLayout>

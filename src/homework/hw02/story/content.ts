@@ -1,754 +1,260 @@
-import { recordById, type LocalText } from "../content";
-import { calculate } from "../model.mjs";
-const value = (id: string) => recordById(id).value;
-export const copy = (zh: string, en: string): LocalText => ({ zh, en });
+import { dataset, type LocalText } from "../data";
+const bi = (zh: string, en: string): LocalText => ({ zh, en });
 export interface StoryStep {
   id: string;
   title: LocalText;
-  summary: LocalText;
   body: LocalText;
-  takeaway: LocalText;
-  scene:
-    | "collaboration"
-    | "industry"
-    | "discovery"
-    | "effects"
-    | "medical"
-    | "developers"
-    | "adoption"
-    | "enterprise"
-    | "infrastructure"
-    | "energy"
-    | "exposure"
-    | "lab";
-  focus?: number;
-  industry?: string;
-  outcome?: string;
-  years?: number[];
-  lab?: "baseline" | "accelerate" | "review";
-  records: string[];
+  scene: string;
   sources: string[];
-  label: LocalText;
-  note: LocalText;
-  link: string;
-  linkLabel: LocalText;
 }
 export interface StoryChapter {
   id: string;
-  name: LocalText;
   title: LocalText;
+  eyebrow: string;
   intro: LocalText;
   steps: StoryStep[];
+  explore: string;
 }
-const more = copy("展开研究与口径", "Explore the study and definitions");
+const step = (
+  id: string,
+  zh: string,
+  en: string,
+  bodyZh: string,
+  bodyEn: string,
+  scene: string,
+  sources: string[],
+): StoryStep => ({
+  id,
+  title: bi(zh, en),
+  body: bi(bodyZh, bodyEn),
+  scene,
+  sources,
+});
 export const storyChapters: StoryChapter[] = [
   {
     id: "workplace",
-    name: copy("一个工作现场", "A working day"),
-    title: copy(
-      "先看一个人，怎样完成一项工作",
-      "Start with a person doing a task",
+    title: bi("从一个工作现场开始", "Begin with a working day"),
+    eyebrow: "01 / THE WORKFLOW",
+    intro: bi(
+      "技术进入流程，变化才开始。",
+      "Change begins when technology enters a workflow.",
     ),
-    intro: copy(
-      "生产力的变化，首先发生在查找、判断与交付之间。",
-      "Productivity starts to change between finding information, making a judgment and delivering a result.",
-    ),
+    explore: "workplace-explore",
     steps: [
-      {
-        id: "find-knowledge",
-        summary: copy(
-          "客户问：商品能直接换新吗？先补齐购买时间、保修范围和故障信息。",
-          "Can this product be replaced? First establish the purchase date, warranty and fault.",
-        ),
-        title: copy(
-          "面对问题，先找到知识",
-          "A question needs useful knowledge",
-        ),
-        body: copy(
-          "客户问：“商品能直接换新吗？”先试着补齐右侧例子中的条件：购买时间、保修范围和具体故障。客服的工作从找到适用知识开始；资料的准确性与相关性，会影响之后的判断。这个小例子是教学演示，不是研究数据。",
-          "A customer asks: “Can I get a replacement?” Add the missing purchase date, warranty and fault information in the example. A support agent first needs relevant knowledge. Its accuracy shapes the later judgment. This example is a teaching illustration, not research data.",
-        ),
-        takeaway: copy(
-          "知识是输入，现场任务是起点。",
-          "Knowledge is an input; a real task is the starting point.",
-        ),
-        scene: "collaboration",
-        focus: 0,
-        records: [],
-        sources: ["nber"],
-        label: copy(
-          "知识 → 辅助 → 判断 → 服务",
-          "Knowledge → assistance → judgment → service",
-        ),
-        note: copy(
-          "机制示意；连线不表示效率增幅。",
-          "Mechanism diagram; links do not encode measured efficiency gains.",
-        ),
-        link: "work/",
-        linkLabel: more,
-      },
-      {
-        id: "ai-assists",
-        summary: copy(
-          "AI 能整理一份草稿。缺失的条件，仍需要人补齐。",
-          "AI can organize a draft. A person still needs to supply the missing conditions.",
-        ),
-        title: copy(
-          "把寻找答案，变成获得建议",
-          "From searching to receiving a suggestion",
-        ),
-        body: copy(
-          "继续看同一条流程：AI 把资料组织成草稿，减少从零整理的工作。但“可以直接换新”缺少必要条件。点击“补上必要条件”，看建议怎样变得更可用。局部加速需要和人的情境判断配合，才可能进入实际服务。",
-          "Follow the same workflow: AI organizes information into a draft, reducing work from scratch. But “Replace it immediately” omits important conditions. Add the missing condition to improve the suggestion. A local speed-up needs human contextual judgment to become useful service.",
-        ),
-        takeaway: copy(
-          "能力进入流程，才可能产生价值。",
-          "A capability creates value when it enters a workflow.",
-        ),
-        scene: "collaboration",
-        focus: 1,
-        records: [],
-        sources: ["nber"],
-        label: copy(
-          "AI 辅助，把知识送到工作现场",
-          "AI assistance brings knowledge into the workflow",
-        ),
-        note: copy(
-          "流程解释来自客服辅助场景，不代表所有行业的工作方式。",
-          "A support-workflow explanation; other industries may work differently.",
-        ),
-        link: "work/",
-        linkLabel: more,
-      },
-      {
-        id: "human-delivers",
-        summary: copy(
-          "在一项客服研究中，AI 辅助提高了每小时解决问题数。这个结果有具体的任务和样本边界。",
-          "AI assistance increased issues resolved per hour in one support study. The result belongs to a specific task and sample.",
-        ),
-        title: copy(
-          "人的复核，把建议变成服务",
-          "Human review turns a suggestion into service",
-        ),
-        body: copy(
-          `人在具体情境中检查和修正建议，然后完成交付。正式发表的客服研究覆盖 5,172 名工作人员，观察到每小时解决问题数平均提升约${value("support")}%。这个结果属于该研究的任务和样本，效果也随经验而变化。`,
-          `A person checks and corrects the suggestion in context, then delivers the service. A published study of 5,172 support agents found about ${value("support")}% more issues resolved per hour on average. The result belongs to that setting and varies with experience.`,
-        ),
-        takeaway: copy(
-          "把效率、质量与人的责任一起看。",
-          "Read efficiency, quality and human responsibility together.",
-        ),
-        scene: "collaboration",
-        focus: 2,
-        records: ["support"],
-        sources: ["nber"],
-        label: copy(
-          "客服研究：每小时解决问题数",
-          "Support study: issues resolved per hour",
-        ),
-        note: copy(
-          `QJE 2025 正式版；采集期间未确认。约${value("support")}%为总体平均，不是所有岗位的预测。`,
-          `QJE 2025 published version; collection period unconfirmed. About ${value("support")}% is a sample average, not a prediction for every job.`,
-        ),
-        link: "work/?effect=support",
-        linkLabel: more,
-      },
+      step(
+        "find-knowledge",
+        "先找到解决问题的知识",
+        "First, find the knowledge",
+        "检索资料、理解问题、组织答案，再核对与交付。工作由不同任务组成，生产一份答案只是其中一段。图中展示的是流程关系，不是实测耗时。",
+        "Retrieve information, understand the problem, compose an answer, then review and deliver. Producing an answer is only one part of the job. This diagram shows a workflow, not measured time.",
+        "workflow-0",
+        ["nber"],
+      ),
+      step(
+        "ai-assists",
+        "让 AI 进入具体任务",
+        "Bring AI into a specific task",
+        "AI 可以帮助寻找知识、形成草稿和提出建议。观察辅助能力接入流程：信息更快到达工作现场，但建议仍需要结合情境判断。",
+        "AI can retrieve knowledge, draft text and suggest an answer. Watch assistance enter the workflow: information reaches the worker, while context still requires judgment.",
+        "workflow-1",
+        ["nber"],
+      ),
+      step(
+        "human-delivers",
+        "最后一步，仍需要人的判断",
+        "Human judgment completes the work",
+        "速度不是唯一目标。效率要计入复核成本，质量需要具体任务检验，创新也需要验证。接下来走进五个产业，看看这些条件如何改变。",
+        "Speed is not the only goal. Efficiency includes review costs, quality needs task-specific evaluation, and innovation requires validation. Explore how these conditions differ across five industries.",
+        "workflow-2",
+        ["nber", "worldbank"],
+      ),
     ],
   },
   {
     id: "capabilities",
-    name: copy("能力进入产业", "Capabilities at work"),
-    title: copy(
-      "同一种能力，可以改变不同的生产环节",
-      "One capability can enter many productive processes",
+    title: bi("能力，怎样进入产业？", "How do capabilities enter industry?"),
+    eyebrow: "02 / CAPABILITIES",
+    intro: bi(
+      "相同能力，不同流程与责任。",
+      "Shared capabilities. Different workflows and responsibilities.",
     ),
-    intro: copy(
-      "人工智能改变人、工具与工作对象之间的组合，形成效率、质量与创新的新空间。",
-      "AI changes how people, tools and objects of work fit together, opening possibilities for efficiency, quality and innovation.",
-    ),
-    steps: [
-      {
-        id: "factory-vision",
-        summary: copy(
-          "识别异常只是起点。复核和处置把能力接入产线。",
-          "Detecting an anomaly is a starting point. Review and action connect the capability to production.",
+    explore: "applications",
+    steps: ["manufacturing", "health", "agriculture", "science", "service"]
+      .map((id) => dataset.cases.find((c) => c.id === id)!)
+      .map((c) => ({
+        id: `case-${c.id}`,
+        title: c.task,
+        body: bi(
+          `${c.meaning.zh}从“${c.before.zh.join(" → ")}”，到“${c.after.zh.join(" → ")}”。${c.limit.zh}`,
+          `${c.meaning.en} From “${c.before.en.join(" → ")}” to “${c.after.en.join(" → ")}”. ${c.limit.en}`,
         ),
-        title: copy(
-          "制造：从看见异常，到处理异常",
-          "Manufacturing: from seeing to acting",
-        ),
-        body: copy(
-          "先沿高亮连线看制造：识别异常，然后交给人员复核或产线处置。再试着切换医疗与科研，观察同一能力进入了哪些任务。关系连线说明应用存在；良率、停机时间和复核负担，才能帮助判断制造场景有没有真正受益。",
-          "Follow the highlighted manufacturing links: flag an anomaly, review it, then act on the production line. Switch to healthcare or science to see other uses of shared capabilities. Links document applications. Yield, downtime and review costs establish whether production actually benefits.",
-        ),
-        takeaway: copy(
-          "识别结果要进入行动流程。",
-          "Recognition needs a path to action.",
-        ),
-        scene: "industry",
-        industry: "manufacturing",
-        records: [],
-        sources: ["mvtec", "fda", "alpha", "concept"],
-        label: copy(
-          "智能制造连接视觉识别与预测分析",
-          "Manufacturing connects to vision and prediction",
-        ),
-        note: copy(
-          "应用关系图；节点大小、距离和线宽均不表示经济规模。",
-          "Application network; size, distance and line width do not encode economic scale.",
-        ),
-        link: "industries/?industry=manufacturing",
-        linkLabel: copy("自由探索产业图谱", "Explore the industry atlas"),
-      },
-      {
-        id: "clinical-vision",
-        summary: copy(
-          "同样的视觉能力，进入医疗后需要不同的验证与责任安排。",
-          "The same visual capability needs different validation and responsibilities in healthcare.",
-        ),
-        title: copy(
-          "医疗：提示可疑信息，支持专业判断",
-          "Healthcare: flag information for expert judgment",
-        ),
-        body: copy(
-          "同样的识别能力进入影像筛查，需要和医生的复核流程配合。它面对的是另一类工作对象、质量要求和责任。下一幕会查看实际筛查研究；不能只凭系统获准使用，就推断诊疗效果。",
-          "The same recognition capability enters image screening alongside clinical review. The objects of work, quality requirements and responsibilities differ. The next chapter examines screening evidence; approval alone does not establish clinical benefit.",
-        ),
-        takeaway: copy(
-          "产业不同，验证条件也不同。",
-          "Different industries need different validation.",
-        ),
-        scene: "industry",
-        industry: "health",
-        records: [],
-        sources: ["mvtec", "fda", "alpha", "concept"],
-        label: copy(
-          "辅助医疗连接视觉识别与预测分析",
-          "Healthcare connects to vision and prediction",
-        ),
-        note: copy(
-          "FDA 清单说明应用存在；具体收益需临床研究确认。",
-          "The FDA list documents applications; clinical studies are needed to establish benefits.",
-        ),
-        link: "industries/?industry=health",
-        linkLabel: copy(
-          "查看医疗流程与证据",
-          "Explore the healthcare workflow",
-        ),
-      },
-      {
-        id: "scientific-discovery",
-        summary: copy(
-          "预测扩大可探索的范围。实验决定候选结果是否成立。",
-          "Prediction expands what can be explored. Experiments establish whether a candidate holds up.",
-        ),
-        title: copy(
-          "科研：提出候选，实验验证",
-          "Science: prediction explores, experiments confirm",
-        ),
-        body: copy(
-          "AlphaFold 3 预测生物分子的结构与相互作用，帮助研究者设计下一轮实验。预测让更多问题成为可探索的对象；可重复的实验仍是确认发现的关键。AI 在这里拓展的是创新空间，而不只是把已有任务做快。",
-          "AlphaFold 3 predicts biomolecular structures and interactions, helping researchers design experiments. Prediction makes more questions explorable. Reproducible experiments still confirm discoveries. Here AI expands the space of innovation as well as accelerating work.",
-        ),
-        takeaway: copy(
-          "劳动对象扩展，新的问题成为可能。",
-          "New objects of work make new questions possible.",
-        ),
-        scene: "discovery",
-        focus: 2,
-        records: [],
-        sources: ["mvtec", "fda", "alpha", "concept"],
-        label: copy(
-          "科研能力 → 任务 → 实验验证",
-          "Science capabilities → tasks → validation",
-        ),
-        note: copy(
-          "Nature 2024；机制示意，预测不是已证实的实验事实。",
-          "Nature 2024; a mechanism diagram. Predictions are not confirmed experimental facts.",
-        ),
-        link: "industries/?industry=science",
-        linkLabel: copy(
-          "查看科研与气象图解",
-          "Explore science and weather mechanisms",
-        ),
-      },
-    ],
+        scene: `industry-${c.id}`,
+        sources: [c.source],
+      })),
   },
   {
     id: "evidence",
-    name: copy("怎样验证收益", "Measure the gains"),
-    title: copy(
-      "生产力的意义，要落到可检验的变化",
-      "Value needs a measurable change",
+    title: bi("变化，要用证据来验证", "Measure the change"),
+    eyebrow: "03 / THE EVIDENCE",
+    intro: bi(
+      "看清测量了什么，再谈收益。",
+      "Understand the measure before interpreting the gain.",
     ),
-    intro: copy(
-      "时间、质量与完成数量分别回答不同问题。每项研究都有自己的基准、任务和适用范围。",
-      "Time, quality and task volume answer different questions. Each study has its own baseline, tasks and scope.",
-    ),
+    explore: "benefits",
     steps: [
-      {
-        id: "writing-time",
-        summary: copy(
-          "先看时间：这项写作实验中，AI 辅助减少了完成任务的耗时。",
-          "Start with time: AI assistance reduced completion time in this writing experiment.",
-        ),
-        title: copy(
-          "效率：完成同一项任务，用时变少",
-          "Efficiency: less time on a comparable task",
-        ),
-        body: copy(
-          `2023 年职业写作实验报告任务完成时间减少${Math.abs(value("time"))}%。把该研究的原基准设为100，辅助后的时间指数为60。这个换算帮助比较同一实验内的变化，不表示今天所有写作工具都能达到相同效果。`,
-          `A professional-writing experiment published in 2023 reported ${Math.abs(value("time"))}% less completion time. With that study’s baseline set to 100, the assisted time index is 60. This describes a within-study change; it is not a benchmark for every current writing tool.`,
-        ),
-        takeaway: copy(
-          "耗时下降，在这个指标上意味着改善。",
-          "For completion time, a lower value is an improvement.",
-        ),
-        scene: "effects",
-        outcome: "time",
-        records: ["time"],
-        sources: ["writing"],
-        label: copy(
-          "写作耗时 · 同一研究基准 = 100",
-          "Writing time · within-study baseline = 100",
-        ),
-        note: copy(
-          "Science 2023 发表；采集期间未确认；指数由报告的相对变化换算。",
-          "Published in Science 2023; collection period unconfirmed. Index derived from the reported relative change.",
-        ),
-        link: "work/?effect=time",
-        linkLabel: more,
-      },
-      {
-        id: "writing-quality",
-        summary: copy(
-          "再看质量。更快与更好，是两项需要分别验证的结果。",
-          "Then inspect quality. Faster and better are outcomes that need separate validation.",
-        ),
-        title: copy(
-          "质量：更快之外，还要检查结果",
-          "Quality: examine the output as well as speed",
-        ),
-        body: copy(
-          `同一写作实验还报告质量评分提高${value("quality")}%，对应指数118。时间与评分衡量不同结果，应分别阅读。工具只有在输出可用、复核成本可接受时，才有机会把局部加速转成真正的生产收益。`,
-          `The same experiment reported ${value("quality")}% higher quality scores, giving an index of 118. Time and scores measure different outcomes. Usable output and manageable review costs help turn a local speed-up into a productive gain.`,
-        ),
-        takeaway: copy(
-          "时间与质量同时改善，仍需要明确口径。",
-          "Time and quality gains still need clear definitions.",
-        ),
-        scene: "effects",
-        outcome: "quality",
-        records: ["quality"],
-        sources: ["writing"],
-        label: copy(
-          "写作质量评分 · 同一研究基准 = 100",
-          "Writing quality score · within-study baseline = 100",
-        ),
-        note: copy(
-          "这是实验中的质量评分，不是企业收入或全行业生产率。",
-          "An experimental quality score, not revenue or economy-wide productivity.",
-        ),
-        link: "work/?effect=quality",
-        linkLabel: more,
-      },
-      {
-        id: "screening-quality",
-        summary: copy(
-          "医疗结果不能只用一个效率数字概括。检出与进一步检查需要一起看。",
-          "A single efficiency number cannot describe clinical outcomes. Read detection and further checks together.",
-        ),
-        title: copy(
-          "医疗质量，需要两个指标一起看",
-          "Clinical quality needs two measures",
-        ),
-        body: copy(
-          `德国 PRAIM 筛查研究中，每千人癌症检出率由${value("medical-detection-base")}变为${value("medical-detection-ai")}；进一步检查率由${value("medical-recall-base")}变为${value("medical-recall-ai")}，后者差异未达统计显著。它是一项观察性研究：关联值得研究，检出率也不能解读成治愈率。`,
-          `In Germany’s PRAIM screening study, cancer detection changed from ${value("medical-detection-base")} to ${value("medical-detection-ai")} per 1,000 women. Recall changed from ${value("medical-recall-base")} to ${value("medical-recall-ai")}, without a statistically significant difference. This was observational evidence; detection is not a cure rate.`,
-        ),
-        takeaway: copy(
-          "收益和额外负担，应该共同验证。",
-          "Evaluate benefits and additional burdens together.",
-        ),
-        scene: "medical",
-        records: [
-          "medical-detection-base",
-          "medical-detection-ai",
-          "medical-recall-base",
-          "medical-recall-ai",
-        ],
-        sources: ["praim"],
-        label: copy(
-          "德国筛查 · 每千人 · 两组独立刻度",
-          "German screening · per 1,000 · separate scales",
-        ),
-        note: copy(
-          "采集期2021-07至2023-02，2025年发表；463,094名女性，非随机分组。",
-          "Collected July 2021–February 2023; published 2025. 463,094 women; not randomized.",
-        ),
-        link: "industries/?industry=health",
-        linkLabel: more,
-      },
-      {
-        id: "developer-conditions",
-        summary: copy(
-          "研究任务、工具和人员不同，结果也可能不同。加速不是默认结论。",
-          "Results can change with tasks, tools and participants. A speed-up is not the default conclusion.",
-        ),
-        title: copy(
-          "任务与经验不同，结果也会改变",
-          "Different tasks and experience change the result",
-        ),
-        body: copy(
-          "企业开发者实验报告完成任务数增加；METR 的早期熟悉项目实验则发现完成耗时增加。图把两种指标分别展示。工具时期、任务与人员不同，不能将百分比相加、平均或排名；后续研究也提示选择与计时问题。",
-          "Enterprise developer trials reported more completed tasks; METR’s early trial on familiar projects found longer completion times. These are separate measures. Tool periods, tasks and participants differ, so percentages cannot be combined or ranked. Follow-up work also flags selection and timing issues.",
-        ),
-        takeaway: copy(
-          "结果有条件；先理解条件，再判断收益。",
-          "Understand the conditions before interpreting the gains.",
-        ),
-        scene: "developers",
-        records: ["dev-tasks", "dev-time"],
-        sources: ["developers", "metr", "metr26"],
-        label: copy(
-          "开发者研究 · 任务数量与耗时分别比较",
-          "Developer studies · volume and time compared separately",
-        ),
-        note: copy(
-          "标准误和置信区间分别标注。2025早期耗时结果不能代表当前工具的平均水平。",
-          "Standard error and confidence interval are labelled separately. Early-2025 timing results do not describe average current tools.",
-        ),
-        link: "work/",
-        linkLabel: more,
-      },
+      step(
+        "support-gains",
+        "客服：同样时间解决更多问题",
+        "Support: more issues resolved per hour",
+        "客服研究观察到平均每小时解决问题数提升约 15%。这是特定工作场景的结果；经验、任务与组织环境会影响收益，不能外推为所有岗位的共同变化。",
+        "The support study reports about 15% more issues resolved per hour on average. This is a specific workplace result; experience, tasks and organizations affect gains. It does not predict every occupation.",
+        "effects-support",
+        ["nber"],
+      ),
+      step(
+        "writing-time",
+        "写作：先看耗时",
+        "Writing: examine the time",
+        "研究将参与者分组完成特定写作任务。这里以各组基准为 100，观察完成时间的相对变化；更低意味着更快，不等于质量也按同样比例提升。",
+        "Participants completed specific writing tasks in different groups. With the baseline indexed to 100, lower completion time means faster work. It does not imply an equal improvement in quality.",
+        "effects-time",
+        ["writing"],
+      ),
+      step(
+        "writing-quality",
+        "再看质量，保留独立指标",
+        "Then examine quality separately",
+        "质量评分与完成时间衡量不同内容。两者可以共同说明一个场景，但不能相加，也不能把不同研究的指数放在一起排名。",
+        "Quality scores and completion time measure different things. Together they illuminate a setting, but cannot be added or used to rank unrelated studies.",
+        "effects-quality",
+        ["writing"],
+      ),
+      step(
+        "developer-conditions",
+        "换一个现场，结果可能改变",
+        "A different workplace can change the result",
+        "开发者研究的任务数量与任务耗时分别比较。METR 后续研究存在选择偏差与计时问题，因此早期结果不能代表当前工具的普遍效果。",
+        "Developer studies compare task counts and time separately. METR’s follow-up faces selection and timing issues, so early findings cannot establish the general effect of current tools.",
+        "developers",
+        ["developers", "metr", "metr26"],
+      ),
     ],
   },
   {
     id: "diffusion",
-    name: copy("扩散与差距", "Diffusion and gaps"),
-    title: copy(
-      "更多组织采用，仍不等于每个企业都获益",
-      "More adoption does not guarantee gains for every firm",
+    title: bi("技术在扩散，机会有差异", "Adoption grows, unevenly"),
+    eyebrow: "04 / DIFFUSION",
+    intro: bi(
+      "投入、采用与收益，是三件不同的事。",
+      "Investment, adoption and gains are different measures.",
     ),
-    intro: copy(
-      "采用让技术进入实际工作，组织规模、投入和能力则影响谁能参与。",
-      "Adoption brings technology into work; organizational size, investment and capabilities affect who can participate.",
-    ),
+    explore: "adoption",
     steps: [
-      {
-        id: "adoption-spreads",
-        summary: copy(
-          "更多受访组织报告使用 AI。采用范围扩大，并不直接说明效率提高。",
-          "More surveyed organizations report using AI. Wider adoption does not directly establish higher productivity.",
-        ),
-        title: copy(
-          "采用在增长，验证也要跟上",
-          "Adoption grows; evaluation needs to keep up",
-        ),
-        body: copy(
-          `Stanford 汇集的年度调查中，报告使用AI的受访组织比例由2023年的${value("adoption-2023")}%，增至2024年的${value("adoption-2024")}%和2025年的${value("adoption-2025")}%。这说明受访组织中的采用扩散；跨年样本可能不同，采用也不能直接换算为效率收益。`,
-          `Annual surveys compiled by Stanford show reported AI use among surveyed organizations rising from ${value("adoption-2023")}% in 2023 to ${value("adoption-2024")}% in 2024 and ${value("adoption-2025")}% in 2025. Samples may change across years. Adoption measures use, not the size of a productivity gain.`,
-        ),
-        takeaway: copy(
-          "从“有没有用”，走向“用得怎样”。",
-          "Move from whether a tool is used to how well it works.",
-        ),
-        scene: "adoption",
-        years: [2023, 2024, 2025],
-        records: ["adoption-2023", "adoption-2024", "adoption-2025"],
-        sources: ["hai25", "hai26"],
-        label: copy(
-          "受访组织使用AI · % · 2023–2025",
-          "Surveyed organizations using AI · % · 2023–2025",
-        ),
-        note: copy(
-          "不是全球所有企业的普及率；可切换年份；每格代表1个百分点，点阵不是调查样本人数。",
-          "Not the share of all firms worldwide; switch years; each cell represents one percentage point, not one survey respondent.",
-        ),
-        link: "trends/",
-        linkLabel: copy(
-          "探索采用与投资数据",
-          "Explore adoption and investment",
-        ),
-      },
-      {
-        id: "size-gap",
-        summary: copy(
-          "企业规模与采用差距相关。试着比较同一统计口径下的三类企业。",
-          "Adoption differs by firm size. Compare three groups within the same statistical population.",
-        ),
-        title: copy(
-          "企业规模，让扩散呈现差距",
-          "Firm size reveals an adoption gap",
-        ),
-        body: copy(
-          `Eurostat 的2025年欧盟统计中，小、中、大型企业采用率分别为${value("eu-small")}%、${value("eu-medium")}%和${value("eu-large")}%。同年的规模分组差距清晰可见；它和上一组组织调查覆盖不同总体，不能用${value("adoption-2025")}%与这些数值直接解释地区差距。`,
-          `Eurostat’s 2025 EU figures show adoption of ${value("eu-small")}%, ${value("eu-medium")}% and ${value("eu-large")}% among small, medium and large firms. The size gap is visible within this population. It differs from the preceding organizational surveys, so ${value("adoption-2025")}% cannot be used for a direct regional comparison.`,
-        ),
-        takeaway: copy(
-          "投入、技能与组织能力影响参与机会。",
-          "Investment, skills and organization shape participation.",
-        ),
-        scene: "enterprise",
-        records: ["eu-small", "eu-medium", "eu-large"],
-        sources: ["eurostat"],
-        label: copy(
-          "欧盟企业 · % · 2025 · 按人数分组",
-          "EU enterprises · % · 2025 · size by persons employed",
-        ),
-        note: copy(
-          `覆盖行业的10人及以上企业。${value("eu-small")}%、${value("eu-medium")}%、${value("eu-large")}%分别对应10–49、50–249、250+人。`,
-          `Covered sectors, enterprises with 10+ people. Groups: 10–49, 50–249 and 250+ persons employed.`,
-        ),
-        link: "trends/",
-        linkLabel: copy(
-          "查看规模差距与口径",
-          "Explore the size gap and definitions",
-        ),
-      },
+      step(
+        "adoption-spreads",
+        "更多组织开始使用 AI",
+        "More organizations use AI",
+        "沿时间观察 2023 至 2025 年受访组织使用 AI 的比例。每年的调查样本可能变化，这条线描述调查结果，不代表全球全部企业。",
+        "Follow reported AI use among surveyed organizations from 2023 to 2025. Annual samples may differ; this line describes surveys, not every firm worldwide.",
+        "adoption",
+        ["hai25", "hai26"],
+      ),
+      step(
+        "size-gap",
+        "规模不同，采用条件也不同",
+        "Firm size changes adoption conditions",
+        "欧盟企业规模分组展示另一种差距。资金、技能、数据与组织能力影响应用条件；这一统计与前面的受访组织并非同一总体。",
+        "EU enterprise-size groups reveal another gap. Funding, skills, data and organization shape adoption conditions. This population differs from the survey shown before.",
+        "enterprise",
+        ["eurostat"],
+      ),
+      step(
+        "investment-context",
+        "投入与部署，构成应用背景",
+        "Investment and deployment provide context",
+        "私人投资、中国 AI 核心产业规模和机器人安装反映不同背景。它们帮助解释应用条件，但不直接测量 AI 造成的生产率收益。完整图表在本章探索区。",
+        "Private investment, China’s AI industry scale and robot installations describe different conditions. They do not directly measure AI-caused productivity gains. Explore the full charts below.",
+        "investment",
+        ["hai26", "china", "ifr"],
+      ),
     ],
   },
   {
     id: "conditions",
-    name: copy("实现条件", "Conditions for gains"),
-    title: copy(
-      "把资源、人才与流程一起补齐",
-      "Build resources, skills and workflows together",
+    title: bi("潜力，需要实现条件", "Potential needs foundations"),
+    eyebrow: "05 / THE BOUNDARIES",
+    intro: bi(
+      "从物理资源，到组织与人的责任。",
+      "From physical resources to organizations and human responsibility.",
     ),
-    intro: copy(
-      "新工具进入社会生产，既需要物理基础，也需要人的能力与组织安排。",
-      "New tools need physical infrastructure, human capabilities and organizational arrangements.",
-    ),
+    explore: "boundaries",
     steps: [
-      {
-        id: "physical-foundations",
-        summary: copy(
-          "应用依赖电力、算力和数据。关闭一个条件，看路径怎样受阻。",
-          "Applications depend on power, compute and data. Switch off one input to inspect the dependency.",
-        ),
-        title: copy(
-          "智能服务背后，有一个资源网络",
-          "An intelligent service has a physical foundation",
-        ),
-        body: copy(
-          "电力、服务器与数据连接共同支持AI服务。它们让识别、预测和生成能力能够进入设备与软件，但稳定运行还需要人才、运维和组织配合。图中的路径解释依赖关系，不衡量资源消耗比例。",
-          "Electricity, servers and data connectivity support AI services. They bring recognition, prediction and generation into equipment and software. Reliable operation also needs skills, maintenance and organization. Paths explain dependencies, not resource shares.",
-        ),
-        takeaway: copy(
-          "资源基础决定能力能否被稳定使用。",
-          "Resources make capabilities reliably usable.",
-        ),
-        scene: "infrastructure",
-        focus: 3,
-        records: [],
-        sources: ["iea", "worldbank"],
-        label: copy(
-          "电力、算力与数据支持产业应用",
-          "Power, compute and data support applications",
-        ),
-        note: copy(
-          "基础设施机制图；全部数据中心负载不能都归因于AI。",
-          "Infrastructure mechanism; data centres host workloads beyond AI.",
-        ),
-        link: "transition/",
-        linkLabel: copy("探索基础条件与边界", "Explore foundations and limits"),
-      },
-      {
-        id: "energy-boundary",
-        summary: copy(
-          "资源需求也会增长。历史估计与未来预测，需要明确区分。",
-          "Resource demand can grow too. Distinguish historical estimates from future projections.",
-        ),
-        title: copy(
-          "生产收益，也要考虑资源成本",
-          "Productive gains also have resource costs",
-        ),
-        body: copy(
-          `IEA 2026版报告估计，2025年全球全部数据中心用电为${value("energy-2025")}TWh，2030年中央情景预测约${value("energy-2030")}TWh。图中分别标记历史估计与未来预测。设备效率、负载与部署会影响需求，不能将全部用电算作AI单独消耗。`,
-          `IEA’s 2026 edition estimates global data-centre electricity use at ${value("energy-2025")} TWh in 2025 and projects about ${value("energy-2030")} TWh in its central 2030 case. Historical estimates and future projections are distinguished. Efficiency, workloads and deployment shape demand; this is not AI electricity alone.`,
-        ),
-        takeaway: copy(
-          "关注收益，也关注实现收益的代价。",
-          "Consider the gains and what it takes to achieve them.",
-        ),
-        scene: "energy",
-        records: ["energy-2025", "energy-2030"],
-        sources: ["iea"],
-        label: copy(
-          "全球全部数据中心用电 · TWh · IEA 2026版",
-          "Global data-centre electricity · TWh · IEA 2026 edition",
-        ),
-        note: copy(
-          "2025年是历史估计，2030年是中央情景预测；预测含不确定性。",
-          "2025 is a historical estimate; 2030 is a central projection with uncertainty.",
-        ),
-        link: "transition/?energy=absolute",
-        linkLabel: more,
-      },
-      {
-        id: "tasks-change",
-        summary: copy(
-          "任务可能改变，不等于岗位已经消失。比较不同收入群体的潜在暴露。",
-          "Tasks may change; that does not mean jobs have disappeared. Compare potential exposure across income groups.",
-        ),
-        title: copy(
-          "工作会改变，培训和复核随之改变",
-          "Changing tasks need skills and review",
-        ),
-        body: copy(
-          "ILO 2025指数估计全球约四分之一就业可能暴露于生成式AI，且收入组之间存在差异。暴露指任务与能力的潜在重叠，不是岗位消失概率。培训、任务重组和质量保障，决定这种变化怎样进入实际工作。",
-          "ILO’s 2025 index estimates that around a quarter of global employment is potentially exposed to generative AI, with differences by income group. Exposure describes potential task overlap, not a probability of losing a job. Training, redesigned tasks and review shape the transition.",
-        ),
-        takeaway: copy(
-          "调整任务组合，保留人的判断与责任。",
-          "Redesign task bundles while retaining human responsibility.",
-        ),
-        scene: "exposure",
-        records: [
-          "exposure-low",
-          "exposure-global",
-          "exposure-high",
-          "exposure-highest",
-        ],
-        sources: ["ilo"],
-        label: copy(
-          "潜在暴露占总就业比例 · % · 2025",
-          "Potential exposure as a share of employment · % · 2025",
-        ),
-        note: copy(
-          `全球最高暴露类别${value("exposure-highest")}%包含于总体约${value("exposure-global")}%；全球与收入组不可相加。`,
-          `The ${value("exposure-highest")}% highest-exposure group is within the roughly ${value("exposure-global")}% overall global figure; groups are not additive.`,
-        ),
-        link: "transition/",
-        linkLabel: more,
-      },
+      step(
+        "physical-foundations",
+        "智能也依赖物理世界",
+        "Intelligence needs a physical world",
+        "可用数据、连接、算力和能源支撑应用。图中的连接表示依赖关系，不表示资源消耗的大小；部署还需要人才、培训和明确的复核责任。",
+        "Data, connectivity, compute and energy support applications. Links show dependencies, not quantities of consumption. Deployment also needs skills, training and clear review responsibilities.",
+        "foundations",
+        ["worldbank", "iea"],
+      ),
+      step(
+        "energy-boundary",
+        "区分历史估计与未来预测",
+        "Separate estimates from projections",
+        "2025 年数据中心用电为历史估计，2030 年为中央情景预测。两者涉及全球全部数据中心，包含多种负载，不能把消耗全部归因于 AI。",
+        "Data-centre electricity use for 2025 is a historical estimate; 2030 is a central projection. Both cover all global data centres and multiple workloads, not AI alone.",
+        "energy",
+        ["iea"],
+      ),
+      step(
+        "tasks-change",
+        "任务暴露，不等于岗位消失",
+        "Exposure does not mean job loss",
+        "职业任务可能受到生成式 AI 影响，不意味着已经采用，也不是失业概率。理解变化需要拆解任务、保留判断和责任，并持续验证工作质量。",
+        "Occupational tasks may be affected by generative AI. Exposure is neither actual adoption nor a probability of job loss. Examine tasks, preserve judgment and responsibility, and keep evaluating quality.",
+        "exposure",
+        ["ilo"],
+      ),
     ],
   },
   {
     id: "experiment",
-    name: copy("亲手实验", "Try the experiment"),
-    title: copy(
-      "局部加速，为什么不一定节省总工时？",
-      "Why does a local speed-up not always save total effort?",
+    title: bi("把假设交给你", "Put the assumptions in your hands"),
+    eyebrow: "06 / YOUR EXPERIMENT",
+    intro: bi(
+      "加速了生产，是否就节省了总时间？",
+      "Does faster production always save total time?",
     ),
-    intro: copy(
-      "先观察每段的起始情景，再亲手调参数。把生产、复核与参与比例放进同一个流程。",
-      "Observe each starting scenario, then adjust the parameters yourself. Examine production, review and participation in one transparent teaching model.",
-    ),
+    explore: "parameters",
     steps: [
-      {
-        id: "baseline-workflow",
-        summary: copy(
-          "把一项工作拆开：需求、生产、复核与交付。先看它的时间结构。",
-          "Break a task into briefing, production, review and delivery. Start with its time structure.",
-        ),
-        title: copy(
-          "先给同一批任务建立基准",
-          "Start with the same batch of tasks",
-        ),
-        body: copy(
-          `假设20项任务，每项需求整理10分钟、生产30分钟、复核10分钟、交付5分钟，按串行总工时计算。基准共${(calculate({ tasks: 20, adoption: 0, speed: 3, review: 0 }).baseTotal / 60).toFixed(1)}小时。这些数值是教学设定，用来理解机制，而不是任何产业的实际平均时间。`,
-          `Assume 20 tasks, each with 10 minutes briefing, 30 producing, 10 reviewing and 5 delivering. Serial effort totals ${(calculate({ tasks: 20, adoption: 0, speed: 3, review: 0 }).baseTotal / 60).toFixed(1)} hours. These are teaching assumptions for understanding the mechanism, not observed averages for any industry.`,
-        ),
-        takeaway: copy(
-          "相同任务量，才能解释流程变化。",
-          "Hold workload constant to explain a workflow change.",
-        ),
-        scene: "lab",
-        lab: "baseline",
-        records: [],
-        sources: [],
-        label: copy(
-          "教学模型 · 分钟/任务 → 串行总工时",
-          "Teaching model · minutes per task → serial effort",
-        ),
-        note: copy(
-          "T = n × [10 + 30 × (1 − a + a / s) + 10 + r + 5]；不包含并行或质量变化。",
-          "T = n × [10 + 30 × (1 − a + a / s) + 10 + r + 5]; excludes parallelism and quality changes.",
-        ),
-        link: "lab/",
-        linkLabel: copy("查看模型假设", "Inspect the model assumptions"),
-      },
-      {
-        id: "accelerated-production",
-        summary: copy(
-          "缩短生产阶段，会留下多少净收益？调节参与率和速度，观察同一流程。",
-          "How much net gain does faster production leave? Adjust participation and speed within the same workflow.",
-        ),
-        title: copy(
-          "加速生产阶段，其他阶段仍然耗时",
-          "Accelerate production; other stages still take time",
-        ),
-        body: copy(
-          "起始情景让80%的任务在生产环节获得3倍加速，先不增加额外复核。需求整理、原有复核与交付仍保留。总工时下降，但整个流程不会获得3倍加速，因为工具只改变其中一个环节。",
-          "The starting scenario gives 80% of tasks a 3× production speed-up, with no extra review. Briefing, existing review and delivery remain. Total effort falls, but the whole workflow is not 3× faster because only one stage changes.",
-        ),
-        takeaway: copy(
-          "局部倍率与整体收益是两个不同量。",
-          "A local speed-up and total savings are different measures.",
-        ),
-        scene: "lab",
-        lab: "accelerate",
-        records: [],
-        sources: [],
-        label: copy(
-          "教学假设 · 20项 / 80%参与 / 3倍加速 / 0额外复核",
-          "Assumptions · 20 tasks / 80% adoption / 3× speed / no extra review",
-        ),
-        note: copy(
-          "只有生产环节加速；图形由实验室同一计算模型生成。",
-          "Only production accelerates; the same model powers the lab.",
-        ),
-        link: "lab/?tasks=20&adoption=80&speed=3&review=0",
-        linkLabel: copy(
-          "带着当前参数进入实验室",
-          "Open your scenario in the lab",
-        ),
-      },
-      {
-        id: "review-cost",
-        summary: copy(
-          "把额外复核计入，收益可能反转。找到刚好抵消加速的临界点。",
-          "Extra review can reverse the gain. Find the point where review exactly offsets faster production.",
-        ),
-        title: copy(
-          "加入复核成本，再判断净收益",
-          "Add review costs to understand the net gain",
-        ),
-        body: copy(
-          "同一流程里，每项再增加20分钟复核，总工时会超过原基准。现在拖动“额外复核”：紫色阶段逐渐增长，净收益从正变负。点击临界点按钮，找到刚好抵消生产加速的位置。人的工作不是消失，而是重新分配。",
-          "Add 20 minutes of review per task and total effort exceeds the baseline. Move the extra-review slider: the purple stage grows and savings turn negative. Find the break-even point where review offsets the production gain. Human work is redistributed rather than eliminated.",
-        ),
-        takeaway: copy(
-          "生产力收益需要条件，也需要持续验证。",
-          "Productive gains need conditions and continued evaluation.",
-        ),
-        scene: "lab",
-        lab: "review",
-        records: [],
-        sources: [],
-        label: copy(
-          "教学假设 · 20项 / 80%参与 / 3倍加速 / 20分钟额外复核",
-          "Assumptions · 20 tasks / 80% adoption / 3× speed / 20 min extra review",
-        ),
-        note: copy(
-          "额外复核对每项任务计入；不代表医疗、制造或其他行业的实测收益。",
-          "Extra review applies to every task; these are not measured industry effects.",
-        ),
-        link: "lab/?tasks=20&adoption=80&speed=3&review=20",
-        linkLabel: copy(
-          "带着当前参数进入实验室",
-          "Open your scenario in the lab",
-        ),
-      },
+      step(
+        "baseline-workflow",
+        "同一个任务，同一条时间轴",
+        "One task, one time scale",
+        "先看基准流程：需求、生产、复核和交付。这是明确假设的串行工时模型，不是某个行业的实测收益；两种流程始终使用同一时间比例。",
+        "Start with requirements, production, review and delivery. This is a serial-effort teaching model with explicit assumptions, not an industry measurement. Both workflows use the same time scale.",
+        "lab-0",
+        [],
+      ),
+      step(
+        "accelerated-production",
+        "生产加速，其他阶段仍然存在",
+        "Production speeds up; other stages remain",
+        "让 60% 的任务在生产阶段获得 3 倍加速。生产段缩短，而需求、复核与交付仍保留。总时间的变化由整条流程共同决定。",
+        "Give 60% of tasks a threefold production speedup. Production shrinks while requirements, review and delivery remain. The entire workflow determines total time.",
+        "lab-1",
+        [],
+      ),
+      step(
+        "review-cost",
+        "把复核成本加回来",
+        "Add the review cost back",
+        "每项任务增加 4 分钟复核后，收益会减小；复核足够高时也可能出现负收益。继续向下，调节四个参数，寻找你的情景与盈亏边界。",
+        "Add four minutes of review per task and the gain shrinks. Sufficient review can make gains negative. Continue below to adjust four parameters and find the break-even point.",
+        "lab-2",
+        [],
+      ),
     ],
   },
 ];
-export const findStoryStep = (id: string) =>
-  storyChapters.flatMap((c) => c.steps).find((s) => s.id === id);
-export const storyLabParams = (state: StoryStep["lab"]) =>
-  state === "baseline"
-    ? { tasks: 20, adoption: 0, speed: 3, review: 0 }
-    : state === "accelerate"
-      ? { tasks: 20, adoption: 80, speed: 3, review: 0 }
-      : { tasks: 20, adoption: 80, speed: 3, review: 20 };

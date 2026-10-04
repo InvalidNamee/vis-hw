@@ -1,7 +1,8 @@
 ---
-import Chart from "../components/Chart.astro";
-import Choice from "../components/Choice.astro";
-import { text, type Lang } from "../content";
+import Chart from "../Chart.astro";
+import Choice from "../Choice.astro";
+import Source from "../Source.astro";
+import { text, formatRecord, type Lang } from "../../data";
 interface Props {
   lang: Lang;
 }
@@ -9,16 +10,6 @@ const { lang } = Astro.props;
 const t = (z: string, e: string) => text(lang, z, e);
 ---
 
-<Chart
-  kind="pathway"
-  class="explanation-graph"
-  title={t("从技术投入，到实际产出", "From investment to useful output")}
-  description={t(
-    "选择环节查看机制。连线不表示资金流量。",
-    "Select a stage to inspect the mechanism. Links are not financial flows.",
-  )}
-  ids={["hai25", "concept"]}
-/>
 <Chart
   kind="adoption"
   title={t("AI 正在进入更多组织", "AI is reaching more organizations")}
@@ -74,3 +65,5 @@ const t = (z: string, e: string) => text(lang, z, e);
     )}
   />
 </div>
+
+<article class="editorial-card"><p class="hw-kicker">CHINA / CONTEXT</p><h2>{t("投入与部署，是应用的背景","Investment and deployment provide context")}</h2><p>{t(`2025 年中国 AI 核心产业规模约 ${formatRecord("china-scale",lang)} 万亿元，中国占全球工业机器人新增安装的 ${formatRecord("robots-cn-share",lang)}%。产业规模与机器人部署衡量不同内容，不能相加或直接归因为 AI 收益。`,`China's AI core industry was about CNY ${formatRecord("china-scale",lang)} trillion in 2025, and China accounted for ${formatRecord("robots-cn-share",lang)}% of global industrial robot installations. These measure different dimensions and cannot be added or attributed directly to AI gains.`)}</p><Source ids={["china","ifr"]}/></article>

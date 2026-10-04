@@ -27,6 +27,3 @@
     --hw-gutter: 16px;
   }
 }
-html:has(.hw-shell[data-story]) {
-  scroll-behavior: auto;
-}

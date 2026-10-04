@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { recordById, formatRecord, type Lang } from "../content";
+import { recordById, formatRecord, type Lang } from "../data";
 
 type Svg = d3.Selection<SVGSVGElement, null, HTMLElement, unknown>;
 const colors = [

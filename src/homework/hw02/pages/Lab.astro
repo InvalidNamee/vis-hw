@@ -1,30 +1,23 @@
 ---
 import Chart from "../components/Chart.astro";
 import Choice from "../components/Choice.astro";
-import { text, type Lang } from "../content";
-import { Sparkles } from "@lucide/astro";
+import { text, type Lang } from "../data";
+import { calculate, defaults } from "../model.mjs";
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
+const initial = calculate(defaults);
 const t = (z: string, e: string) => text(lang, z, e);
 ---
 
-<div class="insight-strip">
-  <Sparkles size={20} />
-  <p>
-    {t(
-      "情景模拟 · 不是现实预测。比较相同任务量，只有“内容生产”阶段接受 AI 加速。",
-      "SCENARIO SIMULATION · Not a forecast. Equal workloads; AI accelerates only the production stage.",
-    )}
-  </p>
-</div>
+
 <Chart
   kind="lab"
   title={t("一个流程，两种工作方式", "One workflow. Two ways to work.")}
   description={t(
-    "调整参数，比较串行任务的总工时。动画使用同一时间比例。",
-    "Adjust the parameters to compare serial task effort. Both animations use the same time scale.",
+    "教学模拟：仅生产阶段加速，计入额外复核。两条流程使用同一时间比例。",
+    "Teaching simulation: only production accelerates; extra review is included. Both workflows use the same time scale.",
   )}
 >
   <div class="chart-controls preset-controls">
@@ -89,21 +82,21 @@ const t = (z: string, e: string) => text(lang, z, e);
       </label>
     ))}
   </div>
-  <div class="lab-results" aria-live="polite">
+  <div class="lab-results">
     <div>
       <span>{t("原流程", "BASELINE")}</span>
-      <strong data-result="baseline">—</strong>
+      <strong data-result="baseline">{(initial.baseTotal/60).toFixed(1)} {t("小时","h")}</strong>
     </div>
     <div>
       <span>{t("AI 协作", "AI-ASSISTED")}</span>
-      <strong data-result="assisted">—</strong>
+      <strong data-result="assisted">{(initial.aiTotal/60).toFixed(1)} {t("小时","h")}</strong>
     </div>
     <div>
       <span>{t("节省工时比例", "EFFORT SAVED")}</span>
-      <strong data-result="saved">—</strong>
+      <strong data-result="saved">{initial.saved.toFixed(1)}%</strong>
     </div>
   </div>
-  <div class="chart-controls">
+  <div class="chart-controls" slot="after">
     <button data-action="play" class="hw-primary">
       {t("播放流程", "Play workflow")}
     </button>
@@ -111,6 +104,9 @@ const t = (z: string, e: string) => text(lang, z, e);
     <button data-action="share">
       {t("复制情景链接", "Copy scenario link")}
     </button>
+    <button data-action="demo" aria-pressed="false">{t("演示三个情景", "Demonstrate scenarios")}</button>
+    <button data-action="demo-replay">{t("重播情景", "Replay scenarios")}</button>
+    <span data-demo-status aria-live="polite"></span>
     <Choice
       control="playback"
       label={t("播放速度", "Playback speed")}

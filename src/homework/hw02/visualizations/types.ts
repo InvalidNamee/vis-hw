@@ -1,0 +1,15 @@
+export type ChartKind =
+  | "industry"
+  | "adoption"
+  | "investment"
+  | "effects"
+  | "enterprise"
+  | "robots"
+  | "medical"
+  | "developers"
+  | "exposure"
+  | "weather"
+  | "discovery"
+  | "lab"
+  | "sensitivity"
+  | "energy";

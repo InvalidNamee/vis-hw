@@ -1,8 +1,8 @@
 ---
 import Page from '../../homework/hw02/Page.astro';
-import { chapters } from '../../homework/hw02/content';
+import { routes } from '../../homework/hw02/navigation';
 export function getStaticPaths() {
- return chapters.map(chapter=>({params:{section:chapter.id || undefined},props:{chapter:chapter.id}}));
+ return routes.map(chapter=>({params:{section:chapter || undefined},props:{chapter}}));
 }
 ---
 <Page chapter={Astro.props.chapter} />

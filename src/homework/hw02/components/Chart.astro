@@ -6,10 +6,11 @@ import {
   periodText,
   sourceById,
   type Lang,
-} from "../content";
+} from "../data";
 import { localeFromUrl } from "../../../i18n";
+import type { ChartKind } from "../visualizations/types";
 interface Props {
-  kind: string;
+  kind: ChartKind;
   title: string;
   description?: string;
   ids?: string[];
@@ -63,6 +64,7 @@ const data = dataset.records.filter((r) => records.includes(r.id));
   </div>
   <slot />
   <div class="chart-stage" data-chart role="group" aria-label={title}></div>
+  <slot name="after" />
   <p class="chart-status" data-status aria-live="polite"></p>
   <noscript>
     <p>

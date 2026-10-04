@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import type { Lang } from "../content";
+import type { Lang } from "../data";
 type Svg = d3.Selection<SVGSVGElement, null, HTMLElement, unknown>;
 export function drawScience(
   svg: Svg,
@@ -7,7 +7,11 @@ export function drawScience(
   kind: string,
   lang: Lang,
   status: (s: string) => void,
-  options: { focus?: number; interactive?: boolean } = {},
+  options: {
+    focus?: number;
+    interactive?: boolean;
+    onSelect?: (i: number) => void;
+  } = {},
 ) {
   const en = lang === "en",
     weather = kind === "weather",
@@ -144,16 +148,26 @@ export function drawScience(
     status(nodes[i][en ? 3 : 2]);
   };
   buttons
-    .on("click", (_, d) => select(nodes.indexOf(d)))
+    .on("click", (_, d) =>
+      options.onSelect
+        ? options.onSelect(nodes.indexOf(d))
+        : select(nodes.indexOf(d)),
+    )
     .on("keydown", (e, d) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        select(nodes.indexOf(d));
+        if (options.onSelect) options.onSelect(nodes.indexOf(d));
+        else select(nodes.indexOf(d));
       }
     });
   select(
-    options.focus ??
-      Math.min(3, Math.max(0, Number(svg.attr("data-focus")) || 0)),
+    Math.min(
+      3,
+      Math.max(
+        0,
+        Math.round(options.focus ?? Number(svg.attr("data-focus"))) || 0,
+      ),
+    ),
   );
   if (options.interactive === false) {
     svg.attr("role", "img");

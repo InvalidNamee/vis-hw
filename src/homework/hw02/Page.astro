@@ -1,39 +1,14 @@
 ---
 import Hw02Layout from "./Hw02Layout.astro";
-import Story from "./story/Story.astro";
 import PosterHeading from "./components/PosterHeading.astro";
-import { localeFromUrl } from "../../i18n";
-import Trends from "./pages/Trends.astro";
-import Industries from "./pages/Industries.astro";
-import Work from "./pages/Work.astro";
-import Lab from "./pages/Lab.astro";
-import Transition from "./pages/Transition.astro";
+import Story from "./story/Story.astro";
 import Sources from "./pages/Sources.astro";
-interface Props {
-  chapter: string;
-}
-const { chapter } = Astro.props;
+import Legacy from "./pages/Legacy.astro";
+import { localeFromUrl } from "../../i18n";
+import { legacyRoutes, type RouteId } from "./navigation";
+const { chapter } = Astro.props as { chapter: RouteId };
 const lang = localeFromUrl(Astro.url) === "en" ? "en" : "zh";
-const pages = {
-  trends: Trends,
-  industries: Industries,
-  work: Work,
-  lab: Lab,
-  transition: Transition,
-  sources: Sources,
-};
-const Content = pages[chapter as keyof typeof pages];
 ---
-
-<Hw02Layout chapter={chapter}>
-  <div class="chapter-content" data-chapter={chapter}>
-    {chapter === "" ? (
-      <Story lang={lang} />
-    ) : (
-      <>
-        <PosterHeading chapter={chapter} lang={lang} />
-        <Content lang={lang} />
-      </>
-    )}
-  </div>
-</Hw02Layout>
+{chapter in legacyRoutes ? <Legacy chapter={chapter as keyof typeof legacyRoutes} lang={lang}/> : <Hw02Layout chapter={chapter==='sources'?'sources':''}>
+ {chapter==='sources'?<div class="chapter-content" data-chapter="sources"><PosterHeading chapter="sources" lang={lang}/><Sources lang={lang}/></div>:<Story lang={lang}/>}
+</Hw02Layout>}

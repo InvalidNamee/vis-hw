@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { dataset, recordById, energyBaseline, type Lang } from "../content";
+import { dataset, recordById, energyBaseline, type Lang } from "../data";
 export type Plot = d3.Selection<SVGSVGElement, null, HTMLElement, unknown>;
 const text = (
   svg: Plot,
@@ -16,13 +16,7 @@ const text = (
     .attr("font-size", 12)
     .attr("text-anchor", anchor)
     .text(value);
-export function drawOutcome(
-  svg: Plot,
-  w: number,
-  key: string,
-  lang: Lang,
-  duration = 0,
-) {
+export function drawOutcome(svg: Plot, w: number, key: string, lang: Lang) {
   const r = recordById(key),
     x = d3
       .scaleLinear()
@@ -58,13 +52,10 @@ export function drawOutcome(
     .attr("stroke-width", 2);
   svg
     .append("circle")
-    .attr("cx", duration ? x(100) : x(100 + r.value))
+    .attr("cx", x(100 + r.value))
     .attr("cy", 115)
     .attr("r", 7)
-    .attr("fill", "var(--hw-mint)")
-    .transition()
-    .duration(duration)
-    .attr("cx", x(100 + r.value));
+    .attr("fill", "var(--hw-mint)");
   text(
     svg,
     x(100),
@@ -166,13 +157,7 @@ export function drawAdoption(
     .map((r) => `${r.period}: ${r.value}%`)
     .join(" / ");
 }
-export function drawEnergy(
-  svg: Plot,
-  w: number,
-  lang: Lang,
-  indexed = false,
-  duration = 0,
-) {
+export function drawEnergy(svg: Plot, w: number, lang: Lang, indexed = false) {
   const rows = dataset.records
     .filter((r) => r.id.startsWith("energy-"))
     .map((r) => ({
@@ -205,17 +190,13 @@ export function drawEnergy(
       .append("rect")
       .attr("x", x(String(r.period))!)
       .attr("width", x.bandwidth())
-      .attr("y", duration ? 220 : y(r.plot))
-      .attr("height", duration ? 0 : 220 - y(r.plot))
+      .attr("y", y(r.plot))
+      .attr("height", 220 - y(r.plot))
       .attr("rx", 4)
       .attr("fill", i ? "var(--hw-orange)" : "var(--hw-blue)")
       .attr("fill-opacity", i ? 0.14 : 0.75)
       .attr("stroke", i ? "var(--hw-orange)" : "var(--hw-blue)")
-      .attr("stroke-dasharray", i ? "5 4" : null)
-      .transition()
-      .duration(duration)
-      .attr("y", y(r.plot))
-      .attr("height", 220 - y(r.plot));
+      .attr("stroke-dasharray", i ? "5 4" : null);
     text(
       svg,
       center,

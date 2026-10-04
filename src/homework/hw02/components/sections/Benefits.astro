@@ -1,8 +1,8 @@
 ---
-import Chart from "../components/Chart.astro";
-import Choice from "../components/Choice.astro";
-import Source from "../components/Source.astro";
-import { text, type Lang } from "../content";
+import Chart from "../Chart.astro";
+import Choice from "../Choice.astro";
+import Source from "../Source.astro";
+import { text, type Lang } from "../../data";
 interface Props {
   lang: Lang;
 }
@@ -10,20 +10,6 @@ const { lang } = Astro.props;
 const t = (z: string, e: string) => text(lang, z, e);
 ---
 
-<Chart
-  kind="collaboration"
-  class="explanation-graph"
-  title={t("知识如何到达一个工作现场", "How knowledge reaches the workplace")}
-  description={t(
-    "沿着关系图，观察知识、AI 与人的分工。点击节点展开说明。",
-    "Follow the connections between knowledge, AI, and human judgment. Select a node for details.",
-  )}
-  ids={["nber"]}
-  note={t(
-    "基于客服辅助场景的机制图；连线不表示研究测得的效应大小。",
-    "A mechanism diagram for AI-assisted support; links do not encode measured effect sizes.",
-  )}
-/>
 <Chart
   kind="effects"
   title={t("任务中的变化，可以被测量", "Measurable changes in specific tasks")}
