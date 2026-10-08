@@ -56,9 +56,11 @@ class StoryScene extends HTMLElement {
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) void this.mount();
       },
-      { rootMargin: "900px 0px" },
+      { rootMargin: `${Math.max(1400, innerHeight * 2)}px 0px` },
     );
     this.near.observe(this);
+    // Prepare the opening diagram while the cover is still being read.
+    if (this.dataset.chapter === "workplace") void this.mount();
   }
   async mount() {
     if (this.pending || this.scene || this.statics.length) return;
@@ -141,7 +143,12 @@ class StoryScene extends HTMLElement {
               header() +
               44 +
               stageHeight +
-              Math.max(60, (innerHeight - header() - 44 - stageHeight) * 0.36);
+              (context.conditions!.desktop
+                ? 0
+                : Math.max(
+                    60,
+                    (innerHeight - header() - 44 - stageHeight) * 0.36,
+                  ));
             this.positions = steps.map(
               (s) => scrollY + s.getBoundingClientRect().top - line,
             );

@@ -330,11 +330,17 @@ export function mountScene(
     if (changed) {
       draw(steps.length > 1);
     }
-    const phase = clamp(progress / 0.55),
+    const phase = d3.easeCubicInOut(clamp(progress / 0.42)),
       k = steps[index].scene;
-    paths.forEach(({ node, length }) => {
+    paths.forEach(({ node, length }, i) => {
+      // Case changes highlight one relationship in a complete network.
+      const reveal = k.startsWith("industry")
+        ? 1
+        : k === "foundations"
+          ? clamp(phase * 2 - (i % 4) * 0.25)
+          : phase;
       node.style.strokeDasharray = `${length} ${length}`;
-      node.style.strokeDashoffset = String(length * (1 - phase));
+      node.style.strokeDashoffset = String(length * (1 - reveal));
     });
     bars.forEach(({ node, width, height, y }) => {
       const reveal = 0.15 + 0.85 * phase;

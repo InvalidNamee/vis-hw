@@ -13,6 +13,14 @@ import { ArrowDown, ArrowUpRight } from "@lucide/astro";
 const { lang } = Astro.props as { lang: Lang };
 const t = (zh: string, en: string) => (lang === "en" ? en : zh);
 const explorers = [null, Industries, Benefits, Momentum, Boundaries, Lab];
+const presentations = [
+  { layout: "split", motion: "flow" },
+  { layout: "reverse", motion: "slide" },
+  { layout: "wide", motion: "focus" },
+  { layout: "reverse", motion: "trace" },
+  { layout: "split", motion: "reveal" },
+  { layout: "wide", motion: "assemble" },
+];
 const values = [
   [t("效率", "Efficiency"), t("计入生产、学习与复核的总成本。", "Account for production, learning and review costs.")],
   [t("质量", "Quality"), t("用具体任务验证结果，保留人的判断。", "Evaluate specific tasks and retain human judgment.")],
@@ -52,18 +60,19 @@ const values = [
 {storyChapters.map((chapter, index) => {
   const Explore = explorers[index];
   return (
-    <section class="story-chapter" id={chapter.id} data-story-chapter>
+    <section class="story-chapter" id={chapter.id} data-story-chapter data-layout={presentations[index].layout}>
       <header class="story-chapter-heading">
+        <span class="chapter-number" aria-hidden="true">0{index + 1}</span>
         <p class="hw-kicker">{chapter.eyebrow}</p>
         <h2>{chapter.title[lang]}</h2>
         <p>{chapter.intro[lang]}</p>
       </header>
-      <story-scene data-chapter={chapter.id} data-lang={lang}>
+      <story-scene data-chapter={chapter.id} data-lang={lang} data-layout={presentations[index].layout} data-motion={presentations[index].motion}>
         <div class="story-stage" aria-hidden="true">
           <div class="story-stage-heading">
-            <span data-scene-number></span><p data-scene-title></p>
+            <span data-scene-number>01 / {String(chapter.steps.length).padStart(2, "0")}</span><p data-scene-title>{chapter.steps[0].title[lang]}</p>
           </div>
-          <div class="story-plot"></div>
+          <div class="story-plot"><div class="scene-placeholder" aria-hidden="true"><i></i><i></i><i></i></div></div>
           <p class="story-stage-caption" data-scene-caption></p>
           <div class="scene-progress"><i></i></div>
         </div>
