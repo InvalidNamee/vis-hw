@@ -24,7 +24,7 @@ const home = localizedHref("hw02/", locale);
    <a href={home} class="story-wordmark">{t('智变','AI / SHIFT')}</a>
    <span class="story-current" data-story-current>{t('人工智能与新质生产力','AI and productive forces')}</span>
    <details class="story-menu"><summary><List size={16}/>{t('目录','Contents')}</summary><div>{storyChapters.map((c,i)=><a href={`${chapter===''?'':home}#${c.id}`} data-chapter-link={c.id}><span>0{i+1}</span>{c.title[lang]}</a>)}<a href={localizedHref('hw02/sources/',locale)}>{t('数据与方法','Data & methods')}</a></div></details>
-   <a class="story-source-link" href={localizedHref('hw02/sources/',locale)}>{t('资料','Sources')}<ArrowUpRight size={14}/></a>
+   <a class="story-source-link" href={localizedHref('hw02/sources/',locale)}>{t('来源','Sources')}<ArrowUpRight size={14}/></a>
    <div class="story-total-progress" aria-hidden="true"><i data-story-progress></i></div>
   </nav>
   <div class:list={['hw-main',{'story-data-page':chapter==='sources'}]}><slot/><SiteFooter/></div>

@@ -15,9 +15,9 @@ const t = (z: string, e: string) => text(lang, z, e);
 <div class="industry-explorer">
 <Chart
   kind="industry"
-  title={t("连接能力与产业", "Connect capabilities to industries")}
+  title={t("把能力与产业连起来", "Connect capabilities to industries")}
   description={t(
-    "点击节点，查看关联能力与产业案例。",
+    "点选节点，查看关联的能力与产业案例。",
     "Select a node to explore connected capabilities and industry cases.",
   )}
 >
@@ -43,7 +43,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     </div>
   </div>
   <div class="chart-controls demo-controls">
-    <button data-action="demo" aria-pressed="false">{t("演示产业", "Demonstrate industries")}</button>
+    <button data-action="demo" aria-pressed="false">{t("自动演示产业", "Demonstrate industries")}</button>
     <button data-action="demo-replay">{t("重播", "Replay")}</button>
     <span data-demo-status aria-live="polite"></span>
   </div>
@@ -58,7 +58,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     </span>
     <span>
       {t(
-        "连线表示应用关系，不表示强度",
+        "连线只表示应用关系，不表示强度",
         "Links show applications, not their strength",
       )}
     </span>
@@ -69,7 +69,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     <h2 data-capability-title></h2>
     <p>
       {t(
-        "该能力连接以下产业。选择一个产业查看具体案例。",
+        "这项能力连接了以下产业。选择其中一个，查看具体案例。",
         "This capability connects the industries below. Select an industry to explore its case.",
       )}
     </p>
@@ -112,7 +112,7 @@ const t = (z: string, e: string) => text(lang, z, e);
   <MoveUpRight size={20} />
   <p>
     {t(
-      "共同点：把感知、预测或生成能力放入具体流程。差异：每个行业的验证条件与人的责任都不同。",
+      "共同点是把感知、预测或生成能力放进具体流程；差别在于，每个行业的验证条件和人的责任都不一样。",
       "The common thread is a capability embedded in a workflow. Validation and human responsibility differ by industry.",
     )}
   </p>

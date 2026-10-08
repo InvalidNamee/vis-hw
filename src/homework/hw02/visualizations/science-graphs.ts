@@ -21,25 +21,25 @@ export function drawScience(
         [
           "观测输入",
           "Observations",
-          "卫星、地面站与探空气球提供观测。",
+          "卫星、地面站和探空气球提供观测。",
           "Satellites, stations and balloons supply observations.",
         ],
         [
           "AI 预报",
           "AI forecast",
-          "Aardvark 将观测映射为全球与地方预报；不同变量与提前量需分别验证。",
+          "Aardvark 把观测映射为全球与地方预报；不同变量、不同提前量都要分别验证。",
           "Aardvark maps observations to global and local forecasts; validation depends on variable and lead time.",
         ],
         [
           "生产决策",
           "Decisions",
-          "农业、交通、能源可以使用气象信息；预报研究本身没有测量这些行业的收益。",
+          "农业、交通和能源可以用上气象信息；但这项预报研究并没有测量这些行业的收益。",
           "Agriculture, transport and energy can use weather information; this study does not measure their economic gains.",
         ],
         [
           "人工校验",
           "Human checks",
-          "实际应用仍需检查当地条件、误差与风险。",
+          "真正应用时，还要检查当地条件、误差和风险。",
           "Local conditions, errors and risks still need checking.",
         ],
       ]
@@ -47,7 +47,7 @@ export function drawScience(
         [
           "分子输入",
           "Molecules",
-          "蛋白质、核酸及其他分子提供结构研究的输入。",
+          "蛋白质、核酸等分子是结构研究的输入。",
           "Proteins, nucleic acids and other molecules provide inputs for structural research.",
         ],
         [
@@ -59,13 +59,13 @@ export function drawScience(
         [
           "实验验证",
           "Validation",
-          "模型输出为实验设计提供线索，并不等于已证实的发现。",
+          "模型输出为实验设计提供线索，但不等于是已被证实的发现。",
           "Predictions guide experimental design; they are not confirmed discoveries.",
         ],
         [
           "新问题",
           "New questions",
-          "验证结果带来新的研究问题，回到下一轮预测与实验。",
+          "验证结果会带来新问题，再进入下一轮预测与实验。",
           "Validated results raise new questions for another round of prediction and experiments.",
         ],
       ];

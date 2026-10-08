@@ -91,16 +91,16 @@ export function drawEvidence(svg: Svg, w: number, kind: string, lang: Lang) {
       );
     return kind === "enterprise"
       ? t(
-          "大型与小型企业相差 38 个百分点。企业规模分组互不重叠。",
+          "大型企业与小型企业相差 38 个百分点。各规模分组互不重叠。",
           "Large and small firms differ by 38 percentage points. Size groups do not overlap.",
         )
       : kind === "robots"
         ? t(
-            "2025 年年度新增，约数保持原始精度；不代表 AI 直接造成的收益。",
+            "2025 年的年度新增安装量，约数沿用来源精度；不代表 AI 直接带来的收益。",
             "Annual installations in 2025; approximations retain source precision. Not a causal AI benefit.",
           )
         : t(
-            "全球最高暴露类别占 3.3%，属于总体暴露的子集，不能与 25% 相加。",
+            "全球最高暴露类别占 3.3%，是总体暴露的一部分，不能与 25% 相加。",
             "The global highest-exposure category is 3.3%, a subset of the 25% overall exposure, not an additional group.",
           );
   }
@@ -160,7 +160,7 @@ export function drawEvidence(svg: Svg, w: number, kind: string, lang: Lang) {
         .call(d3.axisBottom(x).ticks(4));
     });
     return t(
-      "研究关联：检出率提高；进一步检查率差异未达统计显著。两组图使用各自刻度，不表示治愈率。",
+      "研究显示的是关联：检出率提高，进一步检查率的差异未达统计显著。两组图各有刻度，也不表示治愈率。",
       "Study association: detection improved; the recall difference was not statistically significant. Separate scales; these are not cure rates.",
     );
   }
@@ -256,7 +256,7 @@ export function drawEvidence(svg: Svg, w: number, kind: string, lang: Lang) {
       );
     });
     return t(
-      "指标与场景不同，不能平均或排名。METR 后续实验存在选择偏差，旧结果不能代表当前工具。",
+      "指标和场景都不同，不能求平均，也不能排名。METR 的后续实验存在选择偏差，旧结果代表不了当前工具。",
       "Different measures and settings cannot be averaged or ranked. METR’s follow-up has selection bias; old results do not describe current tools.",
     );
   }

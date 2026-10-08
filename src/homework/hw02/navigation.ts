@@ -24,7 +24,7 @@ export const chapters: readonly Chapter[] = [
     name: { zh: "数据与方法", en: "Data & methods" },
     title: { zh: "每一个结论，都有来处", en: "Every claim has a source" },
     desc: {
-      zh: "查看数据口径、研究限制与可视化方法。",
+      zh: "查看数据口径、研究限制与可视化做法。",
       en: "Inspect definitions, research limitations and visualization methods.",
     },
   },

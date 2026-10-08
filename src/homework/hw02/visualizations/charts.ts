@@ -338,7 +338,7 @@ export class AiViz extends HTMLElement {
     } catch {
       this.status(
         this.t(
-          "请复制地址栏中的链接，参数已保存。",
+          "请手动复制地址栏链接，参数已经保存在其中。",
           "Copy the address bar URL; your parameters are saved.",
         ),
       );
@@ -533,7 +533,7 @@ export class AiViz extends HTMLElement {
       .attr("x", (d) => x(d.value) + 6);
     this.status(
       this.t(
-        "2025 年快照：比较投资规模，不推断国家生产率。",
+        "2025 年快照：只比较投资规模，不据此推断国家生产率。",
         "A 2025 snapshot of investment, not a productivity comparison.",
       ),
     );
@@ -594,7 +594,7 @@ export class AiViz extends HTMLElement {
           "All global data centres · index (2025 = 100)",
         )
       : this.t(
-          "全球全部数据中心用电 · TWh · IEA 2026版",
+          "全球全部数据中心用电 · TWh · IEA 2026 版",
           "Global electricity use of all data centres · TWh · IEA 2026 edition",
         );
     const { svg, w } = this.svg(280);

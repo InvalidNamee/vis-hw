@@ -20,7 +20,7 @@ const t = (z: string, e: string) => text(lang, z, e);
   ids={["hai25", "hai26"]}
   records={["adoption-2023", "adoption-2024", "adoption-2025"]}
   note={t(
-    "三次年度调查，样本可能变化；不是全球所有企业的普及率。选项仅聚焦已报告年份。",
+    "三次年度调查，样本可能不同；这不是全球所有企业的普及率。选项只筛选已报告的年份。",
     "Annual survey samples may differ; this is not the share of all firms worldwide. Selection focuses reported years only.",
   )}
 >
@@ -40,13 +40,13 @@ const t = (z: string, e: string) => text(lang, z, e);
     kind="investment"
     title={t("投入的地区差异", "Where private investment goes")}
     description={t(
-      "2025 年 AI 私人投资 · 十亿美元 · 所选三国",
+      "2025 年 AI 私人投资 · 十亿美元 · 所选三个国家",
       "2025 private AI investment · USD billion · three selected countries",
     )}
     ids={["hai26"]}
     records={["investment-us", "investment-cn", "investment-uk"]}
     note={t(
-      "不含所有公共投资，不构成完整的全球排名。",
+      "不含全部公共投资，也算不上完整的全球排名。",
       "Excludes some public funding; not a complete world ranking.",
     )}
   />
@@ -60,10 +60,10 @@ const t = (z: string, e: string) => text(lang, z, e);
     ids={["eurostat"]}
     records={["eu-small", "eu-medium", "eu-large"]}
     note={t(
-      "覆盖行业的 10 人及以上企业。与上方 Stanford 受访组织不属同一总体，不能直接比较。",
+      "覆盖行业中 10 人及以上的企业。与上方 Stanford 的受访组织不是同一个总体，不能直接比较。",
       "Enterprises with 10+ persons in covered sectors. A different population from the Stanford survey above; not directly comparable.",
     )}
   />
 </div>
 
-<article class="editorial-card"><p class="hw-kicker">CHINA / CONTEXT</p><h2>{t("投入与部署，是应用的背景","Investment and deployment provide context")}</h2><p>{t(`2025 年中国 AI 核心产业规模约 ${formatRecord("china-scale",lang)} 万亿元，中国占全球工业机器人新增安装的 ${formatRecord("robots-cn-share",lang)}%。产业规模与机器人部署衡量不同内容，不能相加或直接归因为 AI 收益。`,`China's AI core industry was about CNY ${formatRecord("china-scale",lang)} trillion in 2025, and China accounted for ${formatRecord("robots-cn-share",lang)}% of global industrial robot installations. These measure different dimensions and cannot be added or attributed directly to AI gains.`)}</p><Source ids={["china","ifr"]}/></article>
+<article class="editorial-card"><p class="hw-kicker">CHINA / CONTEXT</p><h2>{t("投入与部署，是应用的背景","Investment and deployment provide context")}</h2><p>{t(`2025 年中国 AI 核心产业规模约 ${formatRecord("china-scale",lang)} 万亿元，中国占全球工业机器人新增安装量的 ${formatRecord("robots-cn-share",lang)}%。产业规模与机器人安装量衡量的不是一回事，既不能相加，也不能直接算作 AI 带来的收益。`,`China's AI core industry was about CNY ${formatRecord("china-scale",lang)} trillion in 2025, and China accounted for ${formatRecord("robots-cn-share",lang)}% of global industrial robot installations. These measure different dimensions and cannot be added or attributed directly to AI gains.`)}</p><Source ids={["china","ifr"]}/></article>

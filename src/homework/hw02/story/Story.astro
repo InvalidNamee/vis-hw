@@ -22,9 +22,9 @@ const presentations = [
   { layout: "wide", motion: "assemble" },
 ];
 const values = [
-  [t("效率", "Efficiency"), t("计入生产、学习与复核的总成本。", "Account for production, learning and review costs.")],
-  [t("质量", "Quality"), t("用具体任务验证结果，保留人的判断。", "Evaluate specific tasks and retain human judgment.")],
-  [t("创新", "Innovation"), t("拓展探索空间，再用实验确认发现。", "Expand the search space, then validate discoveries.")],
+  [t("效率", "Efficiency"), t("把生产、学习与复核的成本一起算进去。", "Account for production, learning and review costs.")],
+  [t("质量", "Quality"), t("在具体任务上检验结果，判断仍由人来做。", "Evaluate specific tasks and retain human judgment.")],
+  [t("创新", "Innovation"), t("先拓展可探索的空间，再用实验确认发现。", "Expand the search space, then validate discoveries.")],
 ];
 ---
 
@@ -37,11 +37,11 @@ const values = [
       <span>{t("人工智能，怎样成为新质生产力？", "How does AI become a productive force?")}</span>
     </h1>
     <p>{t(
-      "从一个工作现场出发，走进五个产业，用证据检验变化，再亲手调节一次效率实验。",
+      "从一个工作现场出发，走进五个产业，用证据检验变化，最后亲手做一次效率实验。",
       "Begin with a working day. Explore five industries, examine the evidence, and run your own productivity experiment.",
     )}</p>
     <a class="hw-primary" href="#workplace">
-      {t("向下，开始探索", "Scroll to explore")}<ArrowDown size={18} aria-hidden="true" />
+      {t("向下滚动，开始探索", "Scroll to explore")}<ArrowDown size={18} aria-hidden="true" />
     </a>
     <span class="story-reading">{t(
       "六章 · 主线约 8–12 分钟 · 可随时探索",
@@ -93,20 +93,20 @@ const values = [
       <section class="story-explore" id={chapter.explore}>
         <div class="explore-heading">
           <div>
-            <p class="hw-kicker">{t("现在，亲手探索", "NOW, EXPLORE")}</p>
+            <p class="hw-kicker">{t("现在，自己动手", "NOW, EXPLORE")}</p>
             <h3>{index === 0
               ? t("效率、质量、创新", "Efficiency, quality, innovation")
-              : t("停下来，看得更深入", "Pause and look closer")}</h3>
+              : t("停下来，看得再深一些", "Pause and look closer")}</h3>
           </div>
           <a href={`#${storyChapters[index + 1]?.id ?? "conclusions"}`} class="hw-text-link">
-            {t("继续向下", "Continue")}<ArrowDown size={16} aria-hidden="true" />
+            {t("继续往下", "Continue")}<ArrowDown size={16} aria-hidden="true" />
           </a>
         </div>
         {Explore ? (
           <details class="explore-disclosure" open={index === 5}>
             <summary>{index === 5
-              ? t("调节参数，运行你的实验", "Adjust parameters and run your experiment")
-              : t("展开完整图表与操作", "Open the full charts and controls")}</summary>
+              ? t("调整参数，跑一次你的实验", "Adjust parameters and run your experiment")
+              : t("展开完整图表与控件", "Open the full charts and controls")}</summary>
             <div class="explore-content"><Explore lang={lang} /></div>
           </details>
         ) : (
@@ -121,16 +121,16 @@ const values = [
 
 <section class="story-conclusion" id="conclusions">
   <p class="hw-kicker">THE NEXT QUESTION</p>
-  <h2>{t("从“能做什么”，到“怎样做好”。", "From what AI can do, to how we do it well.")}</h2>
+  <h2>{t("问题不再是“能做什么”，而是“怎样做好”。", "From what AI can do, to how we do it well.")}</h2>
   <p>{t(
-    "效率来自完整流程的改善，质量来自持续验证，创新来自探索与实验。技术的潜力，需要数据、组织与人的责任共同实现。",
+    "效率来自整条流程的改善，质量来自持续验证，创新来自探索与实验。技术能否兑现潜力，取决于数据、组织，以及人是否担起责任。",
     "Efficiency comes from improving the whole workflow, quality from evaluation, and innovation from exploration and experiments. Data, organizations and human responsibility help realize the potential.",
   )}</p>
   <div>
     <a class="hw-primary" href={localizedHref("hw02/sources/", localeFromUrl(Astro.url))}>
       {t("查看数据与方法", "Data & methods")}<ArrowUpRight size={18} aria-hidden="true" />
     </a>
-    <a class="hw-text-link" href="#opening">{t("重新体验", "Start again")}</a>
+    <a class="hw-text-link" href="#opening">{t("从头再看", "Start again")}</a>
   </div>
 </section>
 <script>

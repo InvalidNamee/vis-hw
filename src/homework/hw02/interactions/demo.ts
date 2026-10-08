@@ -98,7 +98,7 @@ export class Demo {
         : this.complete
           ? this.en()
             ? "Replay demonstration"
-            : "重播演示"
+            : "重新演示"
           : this.index >= 0
             ? this.en()
               ? "Continue demonstration"
@@ -114,7 +114,7 @@ export class Demo {
       status.textContent = !canAnimate()
         ? this.en()
           ? "Reduced motion: select scenarios manually."
-          : "减少动态效果：可手动选择情景。"
+          : "已开启减少动态效果：可以手动选择情景。"
         : this.index < 0
           ? ""
           : `${this.index + 1}/${this.steps.length} · ${this.steps[this.index].label}${this.complete ? (this.en() ? " · Complete" : " · 演示完成") : ""}`;

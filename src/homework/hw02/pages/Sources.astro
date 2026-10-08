@@ -32,7 +32,7 @@ const t = (z: string, e: string) => text(lang, z, e);
 <source-browser class="viz-card" data-kind="sources" data-lang={lang}>
   <div class="chart-controls">
     <label class="search-label">
-      {t("检索来源", "Search sources")}
+      {t("搜索来源", "Search sources")}
       <input
         type="search"
         data-control="search"
@@ -113,7 +113,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       <dt>{t("观测与研究结果", "Observations & study results")}</dt>
       <dd>
         {t(
-          "对应特定样本、时期和任务，不表示普遍规律。",
+          "只对应特定样本、时期与任务，不代表普遍规律。",
           "Bound to a sample, period, and task; not a universal law.",
         )}
       </dd>
@@ -127,7 +127,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       <dt>{t("机制图与模拟", "Mechanisms & simulations")}</dt>
       <dd>
         {t(
-          "关系图为编辑整理；实验室的参数是假设，不混入观测数据。",
+          "关系图由编辑整理；实验参数属于假设，不与观测数据混在一起。",
           "Connections are editorial synthesis; lab parameters are assumptions, separate from observations.",
         )}
       </dd>
@@ -135,17 +135,17 @@ const t = (z: string, e: string) => text(lang, z, e);
   </article>
   <article class="editorial-card">
     <p class="hw-kicker">DATA / VISUALIZATION</p>
-    <h2>{t("数据，如何成为图形", "How data becomes a visual")}</h2>
+    <h2>{t("数据怎样变成图形", "How data becomes a visual")}</h2>
     <p>
       {t(
-        "比例尺把数值映射到坐标；轴给出参照；数据绑定让每个图形对应稳定的记录。",
+        "比例尺把数值映射到位置，轴提供参照，数据绑定让每个图形始终对应固定的记录。",
         "Scales map values to positions; axes provide reference; data joins keep records attached to their marks.",
       )}
     </p>
     <ul>
       <li>
         <code>selection.join</code> —{" "}
-        {t("数据与图形对应", "bind records to marks")}
+        {t("让数据与图形对应", "bind records to marks")}
       </li>
       <li>
         <code>scale / axis / shape</code> —{" "}
@@ -154,7 +154,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       <li>
         <code>selection.on / SVG path</code> —{" "}
         {t(
-          "固定关系图、图解与点击联动",
+          "固定关系图、图解与点选联动",
           "fixed relationship diagrams, illustrations, and linked selection",
         )}
       </li>
@@ -172,7 +172,7 @@ const t = (z: string, e: string) => text(lang, z, e);
 <details class="method-panel">
   <summary>
     {t(
-      "查看示意代码：稳定的数据绑定",
+      "看一段示意代码：稳定的数据绑定",
       "Illustrative code: stable data joins",
     )}
   </summary>
@@ -185,7 +185,7 @@ const t = (z: string, e: string) => text(lang, z, e);
   .attr('cy', d => y(d.value));`}</code></pre>
     <p>
       {t(
-        "采用率图使用记录 ID 作为键，筛选年份时保留同一条数据与图形的对应关系。",
+        "采用率图以记录 ID 为键，筛选年份时，同一条数据与图形的对应关系保持不变。",
         "The adoption chart uses record IDs as keys so filtering preserves the association between each record and its mark.",
       )}
     </p>
@@ -194,9 +194,9 @@ const t = (z: string, e: string) => text(lang, z, e);
 
 <section class="editorial-card" id="reading-method">
   <p class="hw-kicker">READ / EXPLORE</p>
-  <h2>{t("怎样阅读这份展示", "Reading this story")}</h2>
-  <p>{t("六章主线随滚动推进，向上滚动可以回看。章末展开完整图表后，产业选择和实验参数由你控制；继续阅读不会覆盖这些选择。", "Scroll through the six chapters and scroll back to revisit them. After opening a chapter’s full charts, you control industry selections and experiment parameters; reading onward preserves those choices.")}</p>
-  <p>{t("动画展示数据与假设的变化，不代表额外观测。减少动态效果时，关键图形按步骤排列；教学实验的假设和公式可在主文实验区查看。", "Animations illustrate changes in data and assumptions, not additional observations. With reduced motion, key graphics appear beside their steps. The experiment’s assumptions and formula are available in the story’s experiment section.")}</p>
+  <h2>{t("这份展示怎么读", "Reading this story")}</h2>
+  <p>{t("六章主线随滚动推进，往上滚就能回看。在章末展开完整图表后，选哪个产业、参数怎么调都由你决定；继续往下读，不会覆盖这些选择。", "Scroll through the six chapters and scroll back to revisit them. After opening a chapter’s full charts, you control industry selections and experiment parameters; reading onward preserves those choices.")}</p>
+  <p>{t("动画展示的是数据与假设的变化，不是额外观测。系统开启减少动态效果时，关键图形按步骤依次排开；教学实验的假设与公式，可在主文实验区查看。", "Animations illustrate changes in data and assumptions, not additional observations. With reduced motion, key graphics appear beside their steps. The experiment’s assumptions and formula are available in the story’s experiment section.")}</p>
   <a class="hw-text-link" href={href(`${lang === "en" ? "en/" : ""}hw02/#parameters`)}>{t("查看实验假设与公式", "Experiment assumptions and formula")}</a>
 </section>
 

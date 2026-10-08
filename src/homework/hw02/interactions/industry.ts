@@ -29,7 +29,7 @@ export function renderIndustry(this: AiViz) {
       placeholder.value = "";
       placeholder.disabled = true;
       placeholder.dataset.capabilityPlaceholder = "";
-      placeholder.textContent = this.t("选择关联产业", "Choose an industry");
+      placeholder.textContent = this.t("请选择关联产业", "Choose an industry");
       select.prepend(placeholder);
     }
     select.value = "";
@@ -192,12 +192,12 @@ export function renderIndustry(this: AiViz) {
   containers.forEach((el, i) => resizePanel(el, heights[i]));
   if (capability) {
     this.status(
-      `${dataset.capabilities.find((c) => c.id === capability)!.name[this.locale]} · ${relatedCases.map((c) => c.name[this.locale]).join(" / ")} — ${this.t("选择关联产业查看案例。", "Choose a connected industry to view its case.")}`,
+      `${dataset.capabilities.find((c) => c.id === capability)!.name[this.locale]} · ${relatedCases.map((c) => c.name[this.locale]).join(" / ")} — ${this.t("选择关联产业，查看对应案例。", "Choose a connected industry to view its case.")}`,
     );
     return;
   }
   const c = dataset.cases.find((c) => c.id === selected)!;
   this.status(
-    `${c.name[this.locale]} · ${c.task[this.locale]} — ${this.t("案例与来源已联动更新。布局距离不代表相似度。", "Linked case and source updated. Layout distance is not a similarity metric.")}`,
+    `${c.name[this.locale]} · ${c.task[this.locale]} — ${this.t("案例与来源已同步更新。图中位置远近不代表相似程度。", "Linked case and source updated. Layout distance is not a similarity metric.")}`,
   );
 }

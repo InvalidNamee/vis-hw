@@ -18,24 +18,24 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
     <Chart
       kind="robots"
       title={t(
-        "从算法，到车间里的设备",
+        "算法，怎样变成车间设备",
         "From algorithms to factory equipment",
       )}
       description={t(
-        "2025 年工业机器人新增安装 · 台 · 所选三国",
+        "2025 年工业机器人新增安装 · 台 · 所选三个国家",
         "2025 industrial robot installations · units · three countries",
       )}
       ids={["ifr"]}
       records={["robots-cn", "robots-us", "robots-jp"]}
       note={t(
-        "工业机器人不一定使用 AI；部署量不代表 AI 导致的生产率增幅。",
+        "工业机器人不一定用到 AI；安装量说明不了 AI 带来的生产率提升。",
         "Industrial robots do not necessarily use AI; installations are not AI-caused productivity gains.",
       )}
     />
     <article class="editorial-card">
       <p class="hw-kicker">SENSING → ACTION</p>
       <h2>
-        {t("让识别结果进入生产流程", "Connect recognition to production")}
+        {t("让识别结果走进生产流程", "Connect recognition to production")}
       </h2>
       <ol class="evidence-flow">
         {[
@@ -48,7 +48,7 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
       </ol>
       <p>
         {t(
-          "算法、设备与人的判断共同构成工作流程。部署只是基础，真正的收益还需要良率、停机时间与成本等产线数据验证。",
+          "算法、设备和人的判断一起构成工作流程。部署只是起点；要谈收益，还得靠良率、停机时间与成本这些产线数据来验证。",
           "Algorithms, equipment and human judgment form a workflow. Yield, downtime and cost data are needed to establish actual gains.",
         )}
       </p>
@@ -59,11 +59,11 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
     <Chart
       kind="medical"
       title={t(
-        "质量改善，需要两个指标一起看",
+        "看质量改善，要两个指标一起看",
         "Read quality through two measures",
       )}
       description={t(
-        "PRAIM · 德国筛查 · 采集期 2021-07—2023-02 · 2025 年发表",
+        "PRAIM · 德国筛查 · 采集期 2021-07 至 2023-02 · 2025 年发表",
         "PRAIM · German screening · July 2021–February 2023 · published 2025",
       )}
       ids={["praim"]}
@@ -74,13 +74,13 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
         "medical-recall-ai",
       ]}
       note={t(
-        "观察性研究，非随机分组；检出率不是治愈率。",
+        "观察性研究，并非随机分组；检出率不等于治愈率。",
         "Observational study, not randomized; detection is not cure.",
       )}
     />
     <article class="editorial-card">
       <p class="hw-kicker">QUALITY / HUMAN REVIEW</p>
-      <h2>{t("AI 提示之后，仍由医生判断", "AI flags; clinicians decide")}</h2>
+      <h2>{t("AI 提示之后，判断仍在医生", "AI flags; clinicians decide")}</h2>
       <ol class="evidence-flow">
         {[
           t("影像进入常规阅片", "Images enter routine reading"),
@@ -95,7 +95,7 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
       </ol>
       <p>
         {t(
-          "研究覆盖 463,094 名女性。更高的检出率与未显著增加的进一步检查率共同支持这一场景的价值；不能推广为所有医疗 AI 的效果。",
+          "研究覆盖 463,094 名女性。检出率更高，进一步检查率又没有显著上升，两者共同说明这一场景的价值；但不能推广成所有医疗 AI 的效果。",
           "The study covered 463,094 women. Higher detection and no significant increase in recall support this particular workflow, not every medical AI system.",
         )}
       </p>
@@ -110,12 +110,12 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
         "From observations to production decisions",
       )}
       description={t(
-        "Aardvark Weather · Nature 2025 · 点击环节查看解释",
+        "Aardvark Weather · Nature 2025 · 点选环节查看解释",
         "Aardvark Weather · Nature 2025 · select a stage",
       )}
       ids={["weather"]}
       note={t(
-        "机制图；连线不表示数据量、准确率或经济收益。",
+        "机制示意；连线不表示数据量、准确率，也不表示经济收益。",
         "Mechanism diagram; links do not encode data volume, accuracy or economic benefit.",
       )}
     />
@@ -123,25 +123,25 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
       <p class="hw-kicker">WEATHER / AGRICULTURE</p>
       <h2>
         {t(
-          "更早获取信息，仍需因地决策",
+          "信息到手更早，决策仍要看当地条件",
           "Earlier information, local decisions",
         )}
       </h2>
       <p>
         {t(
-          "端到端模型将观测映射为全球与地方预报，为农业、运输和能源提供信息基础。不同变量、分辨率与提前量需要分别检验。",
+          "端到端模型把观测映射为全球与地方预报，为农业、运输和能源提供信息来源。不同变量、分辨率和提前量，都要分别检验。",
           "End-to-end models map observations to global and local forecasts, informing agriculture, transport and energy. Variables, resolution and lead times require separate validation.",
         )}
       </p>
       <div class="quote-note">
         {t(
-          "气象研究没有直接测量农田增产，不能从预报表现推算增产百分比。",
+          "气象研究并没有直接测量农田增产，预报表现再好，也算不出增产百分比。",
           "Forecast research does not directly measure crop yields; forecast performance cannot establish a yield percentage.",
         )}
       </div>
       <p>
         {t(
-          "上方播种案例保留为 2016–2017 年早期实践，与这里的 2025 年研究分开阅读。",
+          "上面的播种案例是 2016–2017 年的早期实践，请与这里 2025 年的研究分开看。",
           "Read the earlier 2016–2017 sowing pilot separately from this research published in 2025.",
         )}
       </p>
@@ -152,11 +152,11 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
     <Chart
       kind="discovery"
       title={t(
-        "预测拓展空间，实验确认发现",
+        "预测打开空间，实验确认发现",
         "Prediction explores; experiments confirm",
       )}
       description={t(
-        "AlphaFold 3 · Nature 2024 · 点击环节查看解释",
+        "AlphaFold 3 · Nature 2024 · 点选环节查看解释",
         "AlphaFold 3 · Nature 2024 · select a stage",
       )}
       ids={["alpha"]}
@@ -173,13 +173,13 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
       </strong>
       <p>
         {t(
-          "2025 年自然科学领域 AI 相关论文",
+          "2025 年自然科学领域的 AI 相关论文",
           "AI-related natural-science papers in 2025",
         )}
       </p>
       <p>
         {t(
-          "论文规模反映研究活动。结构预测帮助设计实验，而真正的创新仍需要可重复的验证。",
+          "论文数量反映的是研究活跃程度。结构预测能帮助设计实验，而真正的创新仍要经得起重复验证。",
           "Publication volume reflects research activity. Structure prediction helps design experiments; innovation still requires reproducible validation.",
         )}
       </p>
@@ -191,7 +191,7 @@ const t = (z: string, e: string) => (lang === "en" ? e : z);
     <h2>{t("把知识送到工作现场", "Bring knowledge into the workflow")}</h2>
     <p>
       {t(
-        "正式发表的客服研究观察到平均每小时解决问题数提升约 15%。经验与任务不同，效果也不同；本页下方进一步比较客服、写作与开发者证据。",
+        "正式发表的客服研究观察到，平均每小时解决的问题数提升约 15%。经验和任务不同，效果也不同；本页下方会进一步比较客服、写作与开发者三组证据。",
         "The published support study reports about 15% more issues resolved per hour on average. Effects vary with experience and tasks; the section below compares support, writing and developer evidence.",
       )}
     </p>

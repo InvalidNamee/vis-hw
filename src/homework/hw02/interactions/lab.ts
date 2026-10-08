@@ -179,7 +179,7 @@ export function renderLab(this: AiViz) {
   this.updatePlayButton();
   const maxIdx = result.assisted.indexOf(Math.max(...result.assisted));
   this.status(
-    `${result.saved === 0 ? this.t("生产节省与额外复核恰好抵消。", "Production savings exactly offset extra review.") : result.saved < 0 ? this.t("额外复核超过了内容生产节省。", "Extra review outweighs production savings.") : this.t("内容生产节省超过额外复核成本。", "Production savings exceed extra review costs.")} ${this.t("当前耗时最多的阶段", "Largest effort stage")}: ${labels[maxIdx]}。 ${result.saved >= 0 ? this.t("节省", "Saves") : this.t("增加", "Adds")} ${Math.abs((result.baseTotal - result.aiTotal) / 60).toFixed(1)} ${this.t("小时。圆点表示同一批任务在串行总工时中的进度；整段约 12 秒，支持变速播放。", "hours. Dots show progress through serial effort for the same batch; playback takes about 12 seconds at 1×.")}`,
+    `${result.saved === 0 ? this.t("生产节省与额外复核正好抵消。", "Production savings exactly offset extra review.") : result.saved < 0 ? this.t("额外复核超过了内容生产的节省。", "Extra review outweighs production savings.") : this.t("内容生产的节省超过了额外复核成本。", "Production savings exceed extra review costs.")} ${this.t("目前最耗时的阶段", "Largest effort stage")}: ${labels[maxIdx]}。 ${result.saved >= 0 ? this.t("节省", "Saves") : this.t("增加", "Adds")} ${Math.abs((result.baseTotal - result.aiTotal) / 60).toFixed(1)} ${this.t("小时。圆点表示同一批任务在串行工时中的推进位置；整段约 12 秒，可变速播放。", "hours. Dots show progress through serial effort for the same batch; playback takes about 12 seconds at 1×.")}`,
   );
 }
 export function renderSensitivity(this: AiViz) {
@@ -232,7 +232,7 @@ export function renderSensitivity(this: AiViz) {
       threshold > 55 ? w - 22 : left,
       14,
       this.t(
-        `节省区间 > ${threshold.toFixed(1)}%`,
+        `净节省区间 > ${threshold.toFixed(1)}%`,
         `Savings above ${threshold.toFixed(1)}%`,
       ),
       "label",
@@ -319,11 +319,11 @@ export function renderSensitivity(this: AiViz) {
   this.status(
     threshold >= 100
       ? this.t(
-          "在当前加速与复核条件下，提高参与比例也无法获得正的净工时节省。",
+          "在当前的加速与复核条件下，参与比例再高，也没有正的净工时节省。",
           "At these speed and review settings, participation cannot produce positive net savings.",
         )
       : this.t(
-          `参与比例超过 ${threshold.toFixed(1)}% 时，模型才产生净工时节省。`,
+          `参与比例超过 ${threshold.toFixed(1)}% 后，模型才会出现净工时节省。`,
           `The model produces net effort savings above ${threshold.toFixed(1)}% participation.`,
         ),
   );

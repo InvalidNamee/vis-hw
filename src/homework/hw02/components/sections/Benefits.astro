@@ -12,15 +12,15 @@ const t = (z: string, e: string) => text(lang, z, e);
 
 <Chart
   kind="effects"
-  title={t("任务中的变化，可以被测量", "Measurable changes in specific tasks")}
+  title={t("具体任务里的变化，可以量出来", "Measurable changes in specific tasks")}
   description={t(
-    "各研究基准 = 100；选择指标，比较同一研究内的变化。",
+    "各研究以基准 = 100；选一个指标，比较同一研究内部的变化。",
     "Baseline = 100 within each study. Select an outcome for a within-study comparison.",
   )}
   ids={["nber", "writing"]}
   records={["support", "time", "quality"]}
   note={t(
-    "指数由报告的相对变化换算。各研究的基准、样本和结果不同，不能按指数排名或求平均。",
+    "指数由研究报告的相对变化换算。各研究的基准、样本和结果都不同，不能按指数排名，也不能求平均。",
     "Indices are derived from reported relative changes. Different studies and outcomes cannot be ranked or averaged together.",
   )}
 >
@@ -40,17 +40,17 @@ const t = (z: string, e: string) => text(lang, z, e);
   <Chart
     kind="developers"
     title={t(
-      "不同工作现场，结果为何不同？",
+      "换个工作现场，结果为什么会不同？",
       "Why do results differ across workplaces?",
     )}
     description={t(
-      "两项独立研究 · 任务数量与任务耗时分别比较",
+      "两项独立研究 · 任务数量与任务耗时分开比较",
       "Two independent studies · task counts and time compared separately",
     )}
     ids={["developers", "metr", "metr26"]}
     records={["dev-tasks", "dev-time"]}
     note={t(
-      "METR 2026 后续实验受选择偏差与计时问题影响，不能据早期结果判断当前工具。标准误不等于置信区间。",
+      "METR 2026 年的后续实验受选择偏差和计时问题影响，早期结果说明不了当前工具。标准误也不等于置信区间。",
       "METR’s 2026 follow-up has selection and timing issues; early results do not describe current tools. Standard error is not a confidence interval.",
     )}
   />
@@ -59,13 +59,13 @@ const t = (z: string, e: string) => text(lang, z, e);
     <h2>{t("收益需要什么条件？", "What makes gains possible?")}</h2>
     <p>
       {t(
-        "AI 辅助可能帮助经验较少的员工调用已有知识。效果取决于任务、工具与工作环境。",
+        "AI 辅助能帮经验较少的员工调用已有知识。效果好坏，取决于任务、工具和工作环境。",
         "AI assistance can help less experienced workers access existing knowledge. Effects depend on tasks, tools, and context.",
       )}
     </p>
     <div class="quote-note">
       {t(
-        "一个客服样本的收益，不是所有岗位的未来。",
+        "一个客服样本的收益，代表不了所有岗位的将来。",
         "One support sample does not predict the future of every job.",
       )}
     </div>
@@ -85,13 +85,13 @@ const t = (z: string, e: string) => text(lang, z, e);
       <li>{t("对谁有效，在哪种任务里？", "For whom, and in which tasks?")}</li>
       <li>
         {t(
-          "复核与学习成本是否被计入？",
+          "复核和学习的成本算进去了吗？",
           "Are review and learning costs included?",
         )}
       </li>
       <li>
         {t(
-          "组织是否允许把节省的时间转成有效产出？",
+          "组织能不能把省下来的时间变成有效产出？",
           "Can the organization turn saved time into useful output?",
         )}
       </li>

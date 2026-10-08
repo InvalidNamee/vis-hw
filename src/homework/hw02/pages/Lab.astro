@@ -14,9 +14,9 @@ const t = (z: string, e: string) => text(lang, z, e);
 
 <Chart
   kind="lab"
-  title={t("一个流程，两种工作方式", "One workflow. Two ways to work.")}
+  title={t("一条流程，两种干法", "One workflow. Two ways to work.")}
   description={t(
-    "教学模拟：仅生产阶段加速，计入额外复核。两条流程使用同一时间比例。",
+    "教学模拟：只有生产阶段加速，并把额外复核算进去。两条流程使用同一时间比例。",
     "Teaching simulation: only production accelerates; extra review is included. Both workflows use the same time scale.",
   )}
 >
@@ -47,7 +47,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       ["adoption", t("AI 参与比例", "AI participation"), 0, 100, 60, 5, "%"],
       [
         "speed",
-        t("参与任务加速倍率", "Speed-up on AI tasks"),
+        t("参与任务的加速倍率", "Speed-up on AI tasks"),
         1,
         8,
         3,
@@ -56,7 +56,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       ],
       [
         "review",
-        t("每项额外复核", "Extra review per task"),
+        t("每项任务的额外复核", "Extra review per task"),
         0,
         30,
         4,
@@ -92,7 +92,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       <strong data-result="assisted">{(initial.aiTotal/60).toFixed(1)} {t("小时","h")}</strong>
     </div>
     <div>
-      <span>{t("节省工时比例", "EFFORT SAVED")}</span>
+      <span>{t("节省工时", "EFFORT SAVED")}</span>
       <strong data-result="saved">{initial.saved.toFixed(1)}%</strong>
     </div>
   </div>
@@ -104,8 +104,8 @@ const t = (z: string, e: string) => text(lang, z, e);
     <button data-action="share">
       {t("复制情景链接", "Copy scenario link")}
     </button>
-    <button data-action="demo" aria-pressed="false">{t("演示三个情景", "Demonstrate scenarios")}</button>
-    <button data-action="demo-replay">{t("重播情景", "Replay scenarios")}</button>
+    <button data-action="demo" aria-pressed="false">{t("自动演示三个情景", "Demonstrate scenarios")}</button>
+    <button data-action="demo-replay">{t("重播", "Replay scenarios")}</button>
     <span data-demo-status aria-live="polite"></span>
     <Choice
       control="playback"
@@ -117,9 +117,9 @@ const t = (z: string, e: string) => text(lang, z, e);
 <div class="lab-context">
   <Chart
     kind="sensitivity"
-    title={t("何时，才能真正节省工时？", "When does acceleration pay off?")}
+    title={t("什么时候才真正省下工时？", "When does acceleration pay off?")}
     description={t(
-      "跟随上方参数，查看 AI 参与比例与总工时的关系。",
+      "沿用上方参数，看 AI 参与比例与总工时的关系。",
       "Using the parameters above, compare AI participation with total effort.",
     )}
   >
@@ -136,19 +136,19 @@ const t = (z: string, e: string) => text(lang, z, e);
   </Chart>
   <details class="method-panel" open>
     <summary>
-      {t("模型假设与计算方法", "Model assumptions and calculation")}
+      {t("模型假设与算法", "Model assumptions and calculation")}
     </summary>
     <div class="method-content">
       <p>
         {t(
-          "每项任务：需求整理 10 分钟、内容生产 30 分钟、原有复核 10 分钟、交付 5 分钟。AI 只加速内容生产；额外复核 r 对每项任务都计入。所有时间均为教学假设。",
+          "每项任务：需求整理 10 分钟、内容生产 30 分钟、原有复核 10 分钟、交付 5 分钟。AI 只加速内容生产；额外复核 r 则对每项任务都计入。所有时间都是教学假设。",
           "Each task: briefing 10 min, production 30 min, existing review 10 min, delivery 5 min. AI accelerates production only; extra review r applies to every task. All times are teaching assumptions.",
         )}
       </p>
       <code>T = n × [10 + 30 × (1 − a + a / s) + 10 + r + 5]</code>
       <p>
         {t(
-          "n 为任务数，a 为参与比例，s 为加速倍率。模型不包含并行、质量变化或经济收益；最长阶段只表示耗时重点，不等于并行产线瓶颈。",
+          "n 是任务数，a 是参与比例，s 是加速倍率。模型不含并行、质量变化或经济收益；最长阶段只说明工时集中在哪一段，不等于并行产线上的瓶颈。",
           "n = task count, a = participation, s = speed-up. This model excludes parallelism, quality changes, and economic returns. The longest stage is an effort concentration, not a parallel-system bottleneck.",
         )}
       </p>

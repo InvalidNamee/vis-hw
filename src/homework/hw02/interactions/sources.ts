@@ -36,7 +36,7 @@ class SourceBrowser extends HTMLElement {
         ? ""
         : en
           ? "No matching sources. Try another term."
-          : "没有匹配的来源，请换一个关键词。";
+          : "没有符合条件的来源，换个关键词试试。";
     };
     const restore = () => {
       search.value = fromUrl("search", "");

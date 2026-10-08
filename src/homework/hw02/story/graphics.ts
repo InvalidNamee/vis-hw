@@ -192,7 +192,7 @@ function investment(svg: Plot, w: number, lang: Lang) {
     310,
     lang === "en"
       ? "2025 · USD billion · three selected countries"
-      : "2025 年 · 十亿美元 · 所选三国",
+      : "2025 年 · 十亿美元 · 所选三个国家",
     11,
   );
 }
@@ -244,7 +244,7 @@ export function mountScene(
       note =
         lang === "en"
           ? "Links show applications, not their strength. Full evidence follows below."
-          : "连线表示应用关系，不表示强度；完整证据见下方探索区。";
+          : "连线只表示应用关系，不代表强度；完整证据见下方探索区。";
     } else if (kind.startsWith("effects-")) {
       h = 225;
       note = drawOutcome(svg, width, kind.slice(8), lang);

@@ -12,7 +12,7 @@ const t = (z: string, e: string) => text(lang, z, e);
 
 <Chart
   kind="energy"
-  title={t("智能背后，是物理基础设施", "Intelligence has a physical footprint")}
+  title={t("智能的背后，是物理基础设施", "Intelligence has a physical footprint")}
   description={t(
     "全球全部数据中心用电 · TWh · IEA 2026 报告版本",
     "Global electricity use of all data centres · TWh · IEA 2026 edition",
@@ -20,7 +20,7 @@ const t = (z: string, e: string) => text(lang, z, e);
   ids={["iea"]}
   records={["energy-2025", "energy-2030"]}
   note={t(
-    "485 TWh 为 2025 年历史估计；约 950 TWh 为 2030 年中央情景预测。数据中心包含多种负载，不能全部归因于 AI。",
+    "485 TWh 是 2025 年的历史估计；约 950 TWh 是 2030 年的中央情景预测。数据中心承载多种负载，不能全算在 AI 头上。",
     "485 TWh is the 2025 historical estimate; about 950 TWh is the 2030 central projection. Data centres host many workloads, not AI alone.",
   )}
 >
@@ -38,7 +38,7 @@ const t = (z: string, e: string) => text(lang, z, e);
 <Chart
   kind="exposure"
   title={t(
-    "工作会改变，但暴露不等于失业",
+    "工作会变，但暴露不等于失业",
     "Work may change; exposure is not job loss",
   )}
   description={t(
@@ -53,7 +53,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     "exposure-highest",
   ]}
   note={t(
-    "潜在职业暴露不是实际采用率或岗位消失概率。全球组包含各收入组，不可相加。",
+    "潜在职业暴露既不是实际采用率，也不是岗位消失的概率。全球组已包含各收入组，不能相加。",
     "Potential exposure is not actual adoption or a probability of job loss. Global employment includes income groups; values are not additive.",
   )}
 />
@@ -88,7 +88,7 @@ const t = (z: string, e: string) => text(lang, z, e);
 <section class="hw-section">
   <div class="section-intro">
     <p class="hw-kicker">FOUNDATIONS FOR PROGRESS</p>
-    <h2>{t("把条件补齐，让收益发生", "Build the conditions for gains")}</h2>
+    <h2>{t("把条件补齐，收益才会发生", "Build the conditions for gains")}</h2>
     <p>
       {t(
         "以下是机制解释，不是国家或行业评分。",
@@ -101,27 +101,27 @@ const t = (z: string, e: string) => text(lang, z, e);
       [
         t("数据与连接", "Data & connectivity"),
         t(
-          "可用的数据，稳定的基础设施",
+          "数据可用，基础设施稳定",
           "Usable data, dependable infrastructure",
         ),
         t(
-          "数据质量影响结果，连接能力影响谁能够使用。",
+          "数据质量影响结果，连接条件决定谁能用上。",
           "Data quality shapes outputs; connectivity shapes access.",
         ),
       ],
       [
         t("人才与组织", "Skills & organizations"),
-        t("学会使用，也重设工作流程", "Learn the tools, redesign the work"),
+        t("学会用工具，也重设流程", "Learn the tools, redesign the work"),
         t(
-          "培训、职责与复核机制，让新工具进入日常生产。",
+          "培训、职责和复核机制，让新工具真正进入日常生产。",
           "Training, ownership, and review bring new tools into daily work.",
         ),
       ],
       [
         t("能源与效率", "Energy & efficiency"),
-        t("同时考虑收益与资源消耗", "Account for gains and resources"),
+        t("收益与资源消耗一起考虑", "Account for gains and resources"),
         t(
-          "高效模型与合理部署，是降低基础设施压力的路径。",
+          "模型更高效、部署更合理，基础设施的压力才会降下来。",
           "Efficient models and deployment can ease infrastructure demands.",
         ),
       ],

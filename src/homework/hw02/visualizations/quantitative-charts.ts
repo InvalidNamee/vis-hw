@@ -67,7 +67,7 @@ export function drawOutcome(svg: Plot, w: number, key: string, lang: Lang) {
     .attr("font-weight", 600)
     .attr("fill", "var(--hw-mint)");
   text(svg, 38, 28, r.label[lang]);
-  return `${r.value > 0 ? "+" : ""}${r.value}% · ${key === "time" ? (lang === "en" ? "Less completion time; lower means faster." : "完成时间减少，数值更低表示更快。") : lang === "en" ? "A higher value indicates improvement on this outcome." : "相同指标下，数值更高表示改善。"} ${lang === "en" ? "Index derived from the reported change." : "基准指数由报告的相对变化换算。"}`;
+  return `${r.value > 0 ? "+" : ""}${r.value}% · ${key === "time" ? (lang === "en" ? "Less completion time; lower means faster." : "完成时间缩短，数值越低表示越快。") : lang === "en" ? "A higher value indicates improvement on this outcome." : "同一指标下，数值越高表示改善越大。"} ${lang === "en" ? "Index derived from the reported change." : "指数由研究报告的相对变化换算。"}`;
 }
 export function drawAdoption(
   svg: Plot,
@@ -221,5 +221,5 @@ export function drawEnergy(svg: Plot, w: number, lang: Lang, indexed = false) {
   });
   return lang === "en"
     ? "Solid: historical estimate. Dashed: central projection. No missing annual values are interpolated."
-    : "实心柱：历史估计。虚线柱：中央情景预测。不补画未报告的年度数值。";
+    : "实心柱是历史估计，虚线柱是中央情景预测；未报告的年度数值不补画。";
 }
