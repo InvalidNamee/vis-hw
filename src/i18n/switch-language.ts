@@ -46,7 +46,7 @@ async function switchLanguage(target: URL, traverse = false) {
     const storyStep = all<HTMLElement>('.story-step').filter(step => step.getBoundingClientRect().top <= innerHeight * .5).at(-1);
     const storyPosition = storyStep && { id: storyStep.id, offset: storyStep.getBoundingClientRect().top };
     const tabs = all('.homework-tabs').map(group => all('[role="tab"]', group).findIndex(tab => tab.getAttribute('aria-selected') === 'true'));
-    const controls = all<HTMLInputElement | HTMLSelectElement>('#main input:not([data-hw02-control]), #main select:not([data-hw02-control])').map(control => control.value);
+    const controls = all<HTMLInputElement | HTMLSelectElement>('#main input:not([data-hw02-control]):not([data-loom-control]), #main select:not([data-hw02-control]):not([data-loom-control])').map(control => control.value);
     const details = all<HTMLDetailsElement>('details').map(element => element.open);
     const flexSize = document.querySelector('flex-demo button[aria-pressed="true"]')?.getAttribute('data-size');
     const previousAnchoring = document.documentElement.style.overflowAnchor;
@@ -72,7 +72,7 @@ async function switchLanguage(target: URL, traverse = false) {
     }
     document.dispatchEvent(new Event('astro:after-swap'));
     all('.homework-tabs').forEach((group, index) => all<HTMLElement>('[role="tab"]', group)[tabs[index]]?.click());
-    all<HTMLInputElement | HTMLSelectElement>('#main input:not([data-hw02-control]), #main select:not([data-hw02-control])').forEach((control, index) => {
+    all<HTMLInputElement | HTMLSelectElement>('#main input:not([data-hw02-control]):not([data-loom-control]), #main select:not([data-hw02-control]):not([data-loom-control])').forEach((control, index) => {
       if (controls[index] === undefined) return;
       control.value = controls[index];
       control.dispatchEvent(new Event('input', { bubbles: true }));

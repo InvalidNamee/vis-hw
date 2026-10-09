@@ -1,5 +1,6 @@
 import hw01 from '../homework/hw01/meta';
 import hw02 from '../homework/hw02/meta';
+import hw03 from '../homework/hw03/meta';
 import type { HomeworkMeta } from '../homework/types';
 
 export interface Homework extends Omit<HomeworkMeta, 'title'> {
@@ -8,7 +9,7 @@ export interface Homework extends Omit<HomeworkMeta, 'title'> {
   title?: string;
 }
 
-const metadata: Partial<Record<string, HomeworkMeta>> = { hw01, hw02 };
+const metadata: Partial<Record<string, HomeworkMeta>> = { hw01, hw02, hw03 };
 export const homework: Homework[] = Array.from({ length: 6 }, (_, i) => {
   const id = `hw${String(i + 1).padStart(2, '0')}`;
   return {

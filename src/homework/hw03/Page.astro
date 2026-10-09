@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { copy } from './copy';
+import { localeFromUrl } from '../../i18n';
+import { Database, Upload, Download, Archive, Layers, ShieldCheck } from '@lucide/astro';
+import './style.css';
+const en = localeFromUrl(Astro.url) === 'en';
+const t = (key: keyof typeof copy) => copy[key][en ? 1 : 0];
+---
+<BaseLayout title={t('title')} description={t('intro')} current="hw03">
+  <section class="loom" data-loom>
+    <header class="loom-heading">
+      <div class="loom-brand"><h1>{t('title')}</h1><span data-current-source></span></div>
+      <div class="loom-actions">
+        <span data-save-status role="status">{t('loading')}</span>
+        <button data-action="import" class="primary"><Upload size={16}/>{t('import')}</button>
+        <button data-action="export"><Download size={16}/>{t('export')}</button>
+        <button data-action="backup"><Archive size={16}/>{t('backup')}</button>
+      </div>
+    </header>
+    <div class="loom-notice" data-notice role="alert" hidden></div>
+    <div class="loom-shell">
+      <aside class="loom-sidebar">
+        <details data-panel="datasets" open><summary><Database size={15}/>{t('datasets')}<span data-dataset-count></span></summary><div class="loom-panel-body"><div data-datasets></div><button data-action="import" class="loom-add">+ {t('import')}</button></div></details>
+        <details data-panel="fields" open><summary><Layers size={15}/>{t('fields')}<span data-column-count></span></summary><div class="loom-panel-body"><input type="search" data-field-search aria-label={t('searchFields')} placeholder={t('searchFields')}/><div data-fields class="loom-fields"></div></div></details>
+        <details data-panel="timeline" open><summary>{t('history')}<span data-step-count></span></summary><div class="loom-panel-body"><div class="loom-history-actions"><button data-action="undo">{t('undo')}</button><button data-action="redo">{t('redo')}</button></div><div data-history class="loom-steps"></div><div data-branches></div></div></details>
+        <details class="loom-storage" data-panel="storage"><summary><ShieldCheck size={15}/>{t('storage')}</summary><div class="loom-panel-body"><p>{t('local')}</p><label><input type="checkbox" data-autosave checked/> {t('autoSave')}</label><p data-capacity></p><button data-action="retry">{t('retry')}</button><button data-action="restore">{t('restore')}</button><button data-action="reset">{t('reset')}</button><button data-action="clear-storage">{t('clearStorage')}</button></div></details>
+      </aside>
+      <div class="loom-main">
+        <div class="loom-ribbon"><nav data-sections aria-label={t('toolSections')}></nav><div data-tools class="loom-tools"></div></div>
+        <div data-history-notice></div>
+        <div data-editor></div>
+        <div data-operation-summary aria-live="polite"></div>
+        <div class="loom-result-header"><div class="loom-view-switch"><button data-view-mode="overview">{t('overview')}</button><button data-view-mode="data">{t('data')}</button></div><div data-result-modes></div><div data-metrics class="loom-metrics"></div></div>
+        <div data-selection class="loom-selection"></div>
+        <div data-view class="loom-result"></div>
+        <div class="loom-bottom"><span data-source></span><button data-action="toggle-sidebar">{t('collapseSidebar')}</button></div>
+      </div>
+    </div>
+    <dialog data-import-dialog class="loom-dialog"><div class="loom-card-heading"><h2>{t('importTitle')}</h2><button data-action="close-import">{t('close')}</button></div><p>{t('importHint')}</p><p data-import-notice role="alert" hidden></p>
+      <div class="loom-form-grid"><label>{t('encoding')}<select data-encoding><option value="utf-8">UTF-8</option><option value="gb18030">GB18030 / GBK</option><option value="utf-16le">UTF-16 LE</option></select></label><label>{t('delimiter')}<select data-delimiter><option value="csv">{t('comma')}</option><option value="semicolon">{t('semicolon')}</option><option value="tsv">{t('tab')}</option></select></label></div>
+      <label class="loom-drop" data-drop><Upload size={28}/><span>{t('chooseFile')}</span><input type="file" data-import-files accept=".csv,.tsv,.json" multiple/></label>
+      <label>{t('paste')}<textarea data-paste rows="5" placeholder="name,value&#10;A,12&#10;B,24"></textarea></label><button class="primary" data-action="paste">{t('loadPaste')}</button>
+    </dialog>
+    <input type="file" data-backup-file accept=".json" hidden/>
+    <noscript><p>{en ? 'Enable JavaScript to use the data workspace.' : '请启用 JavaScript 使用数据工作台。'}</p></noscript>
+  </section>
+</BaseLayout>
+<script>import './controller';</script>
