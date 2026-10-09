@@ -11,6 +11,7 @@ function scheduleRefresh(refresh: () => void) {
 class StoryScene extends HTMLElement {
   abort?: AbortController;
   near?: IntersectionObserver;
+  headerSize?: MutationObserver;
   resize?: ResizeObserver;
   trigger?: Trigger;
   scene?: Scene;
@@ -19,6 +20,7 @@ class StoryScene extends HTMLElement {
   positions: number[] = [];
   active = false;
   pending = false;
+  remount = false;
   lastWidth = 0;
   lastHeight = 0;
   connectedCallback() {
@@ -37,21 +39,29 @@ class StoryScene extends HTMLElement {
     };
     this.toggleAttribute("data-reserved", canEnhance());
     let eligible = canEnhance();
-    window.addEventListener(
-      "resize",
-      () => {
-        const next = canEnhance();
-        if (next !== eligible) {
-          eligible = next;
-          this.disposeMedia?.();
-          this.scene = undefined;
-          this.statics = [];
-          this.toggleAttribute("data-reserved", next);
-          void this.mount();
-        }
-      },
-      { signal: this.abort.signal },
-    );
+    const reconsider = () => {
+      const next = canEnhance();
+      if (next !== eligible) {
+        eligible = next;
+        const initialized =
+          !!this.scene || this.statics.length > 0 || this.pending;
+        this.disposeMedia?.();
+        this.scene = undefined;
+        this.statics = [];
+        this.toggleAttribute("data-reserved", next);
+        if (this.pending) this.remount = true;
+        else if (initialized) void this.mount();
+      }
+    };
+    window.addEventListener("resize", reconsider, {
+      signal: this.abort.signal,
+    });
+    // The shared header measures itself after fonts, language and wrapping settle.
+    this.headerSize = new MutationObserver(reconsider);
+    this.headerSize.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
     this.near = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) void this.mount();
@@ -135,6 +145,7 @@ class StoryScene extends HTMLElement {
             ? mountNarration(this, steps, gsap)
             : undefined;
           const measure = () => {
+            narration?.measure();
             const stageHeight = context.conditions!.desktop
               ? 0
               : this.querySelector(".story-stage")!.getBoundingClientRect()
@@ -155,7 +166,7 @@ class StoryScene extends HTMLElement {
             return steps;
           };
           const proxy = { position: scrollY };
-          const render = () => {
+          const render = (animate = this.active) => {
             if (!this.scene) return;
             const y = proxy.position;
             let index = this.positions.findLastIndex((p) => y >= p);
@@ -172,35 +183,41 @@ class StoryScene extends HTMLElement {
               ),
             );
             this.scene.seek(index, p);
-            narration?.show(index, this.active);
+            narration?.show(index, animate);
             steps.forEach((s, i) =>
               s.toggleAttribute("data-active", i === index),
             );
           };
           measure();
-          render();
+          render(false);
+          // Reuse one follower tween; repeated wheel events retain its current position.
+          const follow = gsap.quickTo(proxy, "position", {
+            duration: 0.42,
+            ease: "power3.out",
+            onUpdate: () => render(),
+          });
           this.trigger = ScrollTrigger.create({
             trigger: this,
             start: "top bottom",
             end: "bottom top",
             onRefresh: () => {
               measure();
+              follow.tween.pause();
               proxy.position = scrollY;
               this.scene?.resize();
-              render();
+              render(false);
             },
             onUpdate: (self) => {
               this.active = self.isActive;
               if (document.hidden) return;
-              gsap.to(proxy, {
-                position: scrollY,
-                duration: matchMedia("(prefers-reduced-motion:reduce)").matches
-                  ? 0
-                  : 0.35,
-                ease: "power2.out",
-                overwrite: true,
-                onUpdate: render,
-              });
+              if (
+                !self.isActive ||
+                Math.abs(scrollY - proxy.position) > innerHeight
+              ) {
+                follow.tween.pause();
+                proxy.position = scrollY;
+                render(false);
+              } else follow(scrollY);
             },
           });
           const refresh = () => scheduleRefresh(() => ScrollTrigger.refresh());
@@ -214,16 +231,20 @@ class StoryScene extends HTMLElement {
             "hashchange",
             () => {
               measure();
-              gsap.killTweensOf(proxy);
+              follow.tween.pause();
               proxy.position = scrollY;
-              render();
+              render(false);
             },
             { signal: local.signal },
           );
           document.addEventListener(
             "visibilitychange",
             () => {
-              if (document.hidden) gsap.killTweensOf(proxy);
+              if (document.hidden) follow.tween.pause();
+              else {
+                proxy.position = scrollY;
+                render(false);
+              }
             },
             { signal: local.signal },
           );
@@ -247,12 +268,25 @@ class StoryScene extends HTMLElement {
             }
           });
           this.resize.observe(this.parentElement!);
+          if (chapter.id === "workplace") {
+            const cover = document.querySelector<HTMLElement>(".story-cover")!;
+            gsap.to(cover.querySelector("img"), {
+              yPercent: 10,
+              ease: "none",
+              scrollTrigger: {
+                trigger: cover,
+                start: "top top",
+                end: "bottom top",
+                scrub: 0.5,
+              },
+            });
+          }
           requestAnimationFrame(refresh);
           return () => {
             local.abort();
             theme.disconnect();
             this.resize?.disconnect();
-            gsap.killTweensOf(proxy);
+            follow.tween.kill();
             narration?.destroy();
             this.trigger?.kill();
             this.scene?.destroy();
@@ -270,11 +304,19 @@ class StoryScene extends HTMLElement {
         ""; /* Static text and source links remain readable. */
     } finally {
       this.pending = false;
+      if (this.remount && this.isConnected && !this.abort?.signal.aborted) {
+        this.remount = false;
+        this.disposeMedia?.();
+        this.scene = undefined;
+        this.statics = [];
+        void this.mount();
+      }
     }
   }
   disconnectedCallback() {
     this.abort?.abort();
     this.near?.disconnect();
+    this.headerSize?.disconnect();
     this.disposeMedia?.();
     this.resize?.disconnect();
   }

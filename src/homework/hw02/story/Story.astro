@@ -3,6 +3,7 @@ import { href } from "../../../config/homework";
 import { localizedHref, localeFromUrl } from "../../../i18n";
 import { type Lang } from "../data";
 import { storyChapters } from "./content";
+import { presentationFor } from "./presentation";
 import Source from "../components/Source.astro";
 import Industries from "../pages/Industries.astro";
 import Benefits from "../components/sections/Benefits.astro";
@@ -12,26 +13,41 @@ import Lab from "../pages/Lab.astro";
 import { ArrowDown, ArrowUpRight } from "@lucide/astro";
 const { lang } = Astro.props as { lang: Lang };
 const t = (zh: string, en: string) => (lang === "en" ? en : zh);
-const explorers = [null, Industries, Benefits, Momentum, Boundaries, Lab];
-const presentations = [
-  { layout: "split", motion: "flow" },
-  { layout: "reverse", motion: "slide" },
-  { layout: "wide", motion: "focus" },
-  { layout: "reverse", motion: "trace" },
-  { layout: "split", motion: "reveal" },
-  { layout: "wide", motion: "assemble" },
-];
+const explorers = {
+  capabilities: Industries,
+  evidence: Benefits,
+  diffusion: Momentum,
+  conditions: Boundaries,
+  experiment: Lab,
+};
 const values = [
-  [t("效率", "Efficiency"), t("把生产、学习与复核的成本一起算进去。", "Account for production, learning and review costs.")],
-  [t("质量", "Quality"), t("在具体任务上检验结果，判断仍由人来做。", "Evaluate specific tasks and retain human judgment.")],
-  [t("创新", "Innovation"), t("先拓展可探索的空间，再用实验确认发现。", "Expand the search space, then validate discoveries.")],
+  [
+    t("效率", "Efficiency"),
+    t(
+      "把生产、学习与复核的成本一起算进去。",
+      "Account for production, learning and review costs.",
+    ),
+  ],
+  [
+    t("质量", "Quality"),
+    t(
+      "在具体任务上检验结果，判断仍由人来做。",
+      "Evaluate specific tasks and retain human judgment.",
+    ),
+  ],
+  [
+    t("创新", "Innovation"),
+    t(
+      "先拓展可探索的空间，再用实验确认发现。",
+      "Expand the search space, then validate discoveries.",
+    ),
+  ],
 ];
 ---
 
 <header class="story-cover" id="opening">
   <img src={href("images/hw02/intelligence.webp")} width="1600" height="1000" alt="" fetchpriority="high" />
   <div class="story-cover-copy">
-    <p class="hw-kicker">AI / NEW PRODUCTIVE FORCES</p>
     <h1>
       {t("智变", "The intelligence shift")}
       <span>{t("人工智能，怎样成为新质生产力？", "How does AI become a productive force?")}</span>
@@ -58,23 +74,25 @@ const values = [
 </header>
 
 {storyChapters.map((chapter, index) => {
-  const Explore = explorers[index];
+  const Explore = explorers[chapter.id as keyof typeof explorers];
+  const presentation = presentationFor(chapter, lang);
   return (
-    <section class="story-chapter" id={chapter.id} data-story-chapter data-layout={presentations[index].layout}>
+    <section class="story-chapter" id={chapter.id} data-story-chapter data-layout={presentation.layout} data-family={presentation.family}>
       <header class="story-chapter-heading">
-        <span class="chapter-number" aria-hidden="true">0{index + 1}</span>
-        <p class="hw-kicker">{chapter.eyebrow}</p>
+        <span class="chapter-position">{t(`第 ${index + 1} 章`, `Chapter ${index + 1}`)}</span>
         <h2>{chapter.title[lang]}</h2>
         <p>{chapter.intro[lang]}</p>
       </header>
-      <story-scene data-chapter={chapter.id} data-lang={lang} data-layout={presentations[index].layout} data-motion={presentations[index].motion}>
+      <story-scene data-chapter={chapter.id} data-lang={lang} data-layout={presentation.layout} data-family={presentation.family}>
+        <div class="story-viewport">
         <div class="story-stage" aria-hidden="true">
           <div class="story-stage-heading">
-            <span data-scene-number>01 / {String(chapter.steps.length).padStart(2, "0")}</span><p data-scene-title>{chapter.steps[0].title[lang]}</p>
+            <p>{presentation.label}</p><span data-scene-number>1 / {chapter.steps.length}</span>
           </div>
           <div class="story-plot"><div class="scene-placeholder" aria-hidden="true"><i></i><i></i><i></i></div></div>
           <p class="story-stage-caption" data-scene-caption></p>
           <div class="scene-progress"><i></i></div>
+        </div>
         </div>
         <div class="story-steps">
           {chapter.steps.map((step, stepIndex) => (
@@ -93,7 +111,6 @@ const values = [
       <section class="story-explore" id={chapter.explore}>
         <div class="explore-heading">
           <div>
-            <p class="hw-kicker">{t("现在，自己动手", "NOW, EXPLORE")}</p>
             <h3>{index === 0
               ? t("效率、质量、创新", "Efficiency, quality, innovation")
               : t("停下来，看得再深一些", "Pause and look closer")}</h3>
@@ -120,7 +137,6 @@ const values = [
 })}
 
 <section class="story-conclusion" id="conclusions">
-  <p class="hw-kicker">THE NEXT QUESTION</p>
   <h2>{t("问题不再是“能做什么”，而是“怎样做好”。", "From what AI can do, to how we do it well.")}</h2>
   <p>{t(
     "效率来自整条流程的改善，质量来自持续验证，创新来自探索与实验。技术能否兑现潜力，取决于数据、组织，以及人是否担起责任。",

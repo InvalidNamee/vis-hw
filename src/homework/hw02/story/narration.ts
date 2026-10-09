@@ -1,11 +1,12 @@
 import type { gsap as GSAP } from "gsap";
 
-/** Move the real copy into one sticky stage; keep the original step anchors. */
+/** One copy of each paragraph, one sticky boundary for both text and chart. */
 export function mountNarration(
   host: HTMLElement,
   steps: HTMLElement[],
   gsap: typeof GSAP,
 ) {
+  const viewport = host.querySelector<HTMLElement>(".story-viewport")!;
   const stage = document.createElement("div");
   stage.className = "story-narration";
   const stack = document.createElement("div");
@@ -19,111 +20,104 @@ export function mountNarration(
     stack.append(copy);
     return copy;
   });
-  const graphic = host.querySelector<HTMLElement>(".story-stage")!;
-  const viewport =
-    host.dataset.layout === "wide" ? document.createElement("div") : undefined;
-  if (viewport) {
-    // One sticky boundary: the caption band must leave with its chart.
-    viewport.className = "story-viewport";
-    graphic.before(viewport);
-    viewport.append(stage, graphic);
-  } else host.prepend(stage);
+  viewport.prepend(stage);
   let current = -1;
   let transition: gsap.core.Timeline | undefined;
-  const clear = "opacity,transform,filter,clipPath,transformOrigin";
+  const clear = "opacity,transform,visibility";
+  const measure = () => {
+    // All copies share a grid cell. Its natural height reserves the longest paragraph.
+    // Reading distance grows with the actual content instead of a fixed title-band height.
+    const available = viewport.clientHeight;
+    copies.forEach((copy, i) => {
+      steps[i].style.setProperty(
+        "--step-span",
+        `${Math.ceil(Math.max(available * 0.82, copy.offsetHeight * 1.65))}px`,
+      );
+    });
+  };
+  const resize = new ResizeObserver(measure);
+  resize.observe(stack);
+  resize.observe(viewport);
+  measure();
+
   const show = (index: number, animate: boolean) => {
     if (index === current) return;
     const previous = current;
     const direction = index >= current ? 1 : -1;
+    const interrupted = transition?.isActive();
     transition?.kill();
     copies.forEach((copy, i) => {
       copy.inert = i !== index;
-      gsap.set(copy, { autoAlpha: i === index || i === previous ? 1 : 0 });
-      gsap.set(copy.children, { clearProps: clear });
+      if (i !== index && i !== previous) {
+        gsap.set(copy, { autoAlpha: 0 });
+        gsap.set(copy.children, { clearProps: clear });
+      }
     });
     current = index;
-    if (!animate || previous < 0) {
-      copies.forEach((copy, i) =>
-        gsap.set(copy, { autoAlpha: i === index ? 1 : 0 }),
-      );
+    if (!animate || previous < 0 || Math.abs(index - previous) > 1) {
+      copies.forEach((copy, i) => {
+        gsap.set(copy, { autoAlpha: i === index ? 1 : 0 });
+        gsap.set(copy.children, { clearProps: clear });
+      });
       return;
     }
     const incoming = copies[index];
     const outgoing = copies[previous];
-    const enter: gsap.TweenVars = { opacity: 0 };
-    const exit: gsap.TweenVars = {};
-    let stagger = 0.045;
-    switch (host.dataset.motion) {
-      case "slide":
-        enter.x = 30 * direction;
-        exit.x = -18 * direction;
-        stagger = 0.03;
-        break;
-      case "focus":
-        enter.scale = 0.97;
-        exit.scale = 1.015;
-        stagger = 0.015;
-        break;
-      case "trace":
-        enter.x = 12 * direction;
-        stagger = 0.025;
-        break;
-      case "reveal":
-        enter.y = 10 * direction;
-        enter.clipPath = "inset(18% 0 0 0)";
-        stagger = 0.06;
-        break;
-      case "assemble":
-        enter.y = 14 * direction;
-        stagger = 0.085;
-        break;
-      default:
-        enter.y = 22 * direction;
-        exit.y = -12 * direction;
-    }
+    const distance = Math.min(24, incoming.offsetHeight * 0.065);
+    const duration = interrupted ? 0.3 : 0.5;
+    const wide = host.dataset.layout === "wide";
+    const children = Array.from(incoming.children).filter(
+      (el) => !el.classList.contains("step-static"),
+    );
+    // Interruptions continue from the displayed position; they never reset the outgoing copy.
     transition = gsap.timeline();
     transition.to(
       outgoing,
-      { autoAlpha: 0, duration: 0.18, ease: "power1.out" },
-      0,
-    );
-    transition.to(
-      outgoing.children,
-      { ...exit, duration: 0.22, ease: "power2.in" },
-      0,
-    );
-    transition.fromTo(
-      incoming.children,
-      enter,
       {
-        opacity: 1,
-        x: 0,
-        y: 0,
-        scale: 1,
-        clipPath: "inset(0% 0 0 0)",
-        duration: 0.48,
-        stagger,
-        ease: "power3.out",
-        clearProps: clear,
+        autoAlpha: 0,
+        y: -distance * direction * 0.4,
+        duration: duration * 0.55,
+        ease: "power2.out",
       },
-      0.13,
+      0,
     );
+    gsap.set(incoming, { autoAlpha: 1, y: 0 });
+    children.forEach((child, i) => {
+      const horizontal = wide && child.tagName === "H3";
+      transition!.fromTo(
+        child,
+        {
+          opacity: 0,
+          x: horizontal ? distance * direction : 0,
+          y: horizontal ? 0 : distance * direction,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          duration,
+          ease: "power3.out",
+          clearProps: clear,
+        },
+        0.06 + Math.min(i * 0.035, 0.1),
+      );
+    });
   };
   return {
     show,
+    measure,
     destroy() {
+      resize.disconnect();
       transition?.kill();
       copies.forEach((copy, i) => {
-        gsap.set([copy, ...copy.children], {
-          clearProps: `${clear},visibility`,
-        });
+        gsap.set([copy, ...copy.children], { clearProps: clear });
         copy.inert = false;
         delete copy.dataset.narrationStep;
         steps[i].removeAttribute("aria-hidden");
+        steps[i].style.removeProperty("--step-span");
         steps[i].append(copy);
       });
       stage.remove();
-      if (viewport) viewport.replaceWith(graphic);
     },
   };
 }

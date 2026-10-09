@@ -5,6 +5,8 @@
   --hw-mint: #287a68;
   --hw-purple: #81619b;
   --hw-orange: #ad692e;
+  --hw-paper: #eef2f7;
+  --hw-ink: #243147;
   --hw-gutter: 48px;
   --control-height: 44px;
   --control-radius: 8px;
@@ -16,6 +18,8 @@
   --hw-mint: #91cdbb;
   --hw-purple: #c7aad9;
   --hw-orange: #e0ad77;
+  --hw-paper: var(--surface);
+  --hw-ink: var(--text-primary);
 }
 @media (max-width: 1200px) {
   .hw-shell {

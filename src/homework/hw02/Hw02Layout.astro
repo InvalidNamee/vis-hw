@@ -17,8 +17,10 @@ const locale = localeFromUrl(Astro.url),
 const current = chapters.find((c) => c.id === chapter)!;
 const t = (zh: string, en: string) => (lang === "en" ? en : zh);
 const home = localizedHref("hw02/", locale);
+const homeworkTitle = translate(locale, getHomework("hw02").title);
+const pageTitle = chapter === "" ? homeworkTitle : `${current.name[lang]} · ${homeworkTitle}`;
 ---
-<BaseLayout title={`${current.name[lang]} · ${translate(locale,getHomework('hw02').title)}`} description={current.desc[lang]} current="hw02" variant="workspace">
+<BaseLayout title={pageTitle} description={current.desc[lang]} current="hw02" variant="workspace">
  <hw02-shell class="hw-shell hw-story-shell" data-lang={lang}>
   <nav class="story-nav" aria-label={t('HW02 章节导航','HW02 chapters')}>
    <a href={home} class="story-wordmark">{t('智变','AI / SHIFT')}</a>

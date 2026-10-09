@@ -10,7 +10,6 @@ export interface StoryStep {
 export interface StoryChapter {
   id: string;
   title: LocalText;
-  eyebrow: string;
   intro: LocalText;
   steps: StoryStep[];
   explore: string;
@@ -34,7 +33,6 @@ export const storyChapters: StoryChapter[] = [
   {
     id: "workplace",
     title: bi("从一个工作现场说起", "Begin with a working day"),
-    eyebrow: "01 / THE WORKFLOW",
     intro: bi(
       "技术进了流程，变化才真正开始。",
       "Change begins when technology enters a workflow.",
@@ -73,7 +71,6 @@ export const storyChapters: StoryChapter[] = [
   {
     id: "capabilities",
     title: bi("能力，怎么进入产业？", "How do capabilities enter industry?"),
-    eyebrow: "02 / CAPABILITIES",
     intro: bi(
       "能力可以相同，流程与责任各不相同。",
       "Shared capabilities. Different workflows and responsibilities.",
@@ -95,7 +92,6 @@ export const storyChapters: StoryChapter[] = [
   {
     id: "evidence",
     title: bi("有没有用，要用证据来量", "Measure the change"),
-    eyebrow: "03 / THE EVIDENCE",
     intro: bi(
       "先看清量的是什么，再谈收益。",
       "Understand the measure before interpreting the gain.",
@@ -143,7 +139,6 @@ export const storyChapters: StoryChapter[] = [
   {
     id: "diffusion",
     title: bi("技术在扩散，机会并不平均", "Adoption grows, unevenly"),
-    eyebrow: "04 / DIFFUSION",
     intro: bi(
       "投入、采用与收益，是三件不同的事。",
       "Investment, adoption and gains are different measures.",
@@ -182,7 +177,6 @@ export const storyChapters: StoryChapter[] = [
   {
     id: "conditions",
     title: bi("潜力要落地，得有实现条件", "Potential needs foundations"),
-    eyebrow: "05 / THE BOUNDARIES",
     intro: bi(
       "从物理资源，到组织，再到人的责任。",
       "From physical resources to organizations and human responsibility.",
@@ -221,7 +215,6 @@ export const storyChapters: StoryChapter[] = [
   {
     id: "experiment",
     title: bi("现在，假设交给你", "Put the assumptions in your hands"),
-    eyebrow: "06 / YOUR EXPERIMENT",
     intro: bi(
       "生产加快了，总时间就一定省下来了吗？",
       "Does faster production always save total time?",

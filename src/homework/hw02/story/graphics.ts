@@ -11,6 +11,7 @@ import {
 } from "../visualizations/quantitative-charts";
 import { canAnimate, commitPlot } from "../interactions/motion";
 import type { StoryStep } from "./content";
+import { drawingMotion } from "./scene-motion";
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 const label = (svg: Plot, x: number, y: number, value: string, size = 13) =>
   svg
@@ -24,13 +25,13 @@ function flow(svg: Plot, w: number, lang: Lang) {
     lang === "en"
       ? ["Retrieve", "Produce", "Review", "Deliver"]
       : ["检索知识", "形成答案", "人工复核", "交付结果"];
-  const narrow = w < 500,
+  const narrow = w < 560,
     cols = narrow ? 2 : 4,
     gap = 16,
     box = (w - 32 - (cols - 1) * gap) / cols;
   names.forEach((name, i) => {
     const x = 16 + (i % cols) * (box + gap),
-      y = 80 + Math.floor(i / cols) * 120;
+      y = 120 + Math.floor(i / cols) * 120;
     const g = svg
       .append("g")
       .attr("data-key", `task-${i}`)
@@ -42,7 +43,7 @@ function flow(svg: Plot, w: number, lang: Lang) {
       .attr("height", 72)
       .attr("rx", 8)
       .attr("fill", "var(--surface-muted)")
-      .attr("stroke", i === 2 ? "var(--hw-mint)" : "var(--border-soft)");
+      .attr("stroke", i === 2 ? "var(--hw-purple)" : "var(--border-soft)");
     label(g as unknown as Plot, x + 14, y + 24, `0${i + 1}`, 11).attr(
       "fill",
       "var(--hw-blue)",
@@ -50,7 +51,7 @@ function flow(svg: Plot, w: number, lang: Lang) {
     label(g as unknown as Plot, x + 14, y + 51, name, 13);
     if (i < 3) {
       const nx = 16 + ((i + 1) % cols) * (box + gap),
-        ny = 80 + Math.floor((i + 1) / cols) * 120;
+        ny = 120 + Math.floor((i + 1) / cols) * 120;
       svg
         .append("path")
         .attr("data-flow-link", i)
@@ -64,20 +65,32 @@ function flow(svg: Plot, w: number, lang: Lang) {
         .attr("stroke", "var(--hw-blue)")
         .attr("stroke-width", 2);
     }
+    if (i < 2) {
+      svg
+        .append("path")
+        .attr("data-ai-link", i)
+        .attr(
+          "d",
+          `M${w / 2} 62 C${w / 2} 92 ${x + box / 2} 86 ${x + box / 2} ${y}`,
+        )
+        .attr("fill", "none")
+        .attr("stroke", "var(--hw-mint)")
+        .attr("stroke-width", 2);
+      svg
+        .append("circle")
+        .attr("data-ai-packet", i)
+        .attr("r", 4)
+        .attr("fill", "var(--hw-mint)");
+    }
   });
-  label(
-    svg,
-    16,
-    35,
-    lang === "en" ? "AI · retrieval + drafting" : "AI · 检索与起草",
-    18,
-  )
+  label(svg, w / 2, 44, lang === "en" ? "AI assistance" : "AI 辅助", 17)
     .attr("data-ai-label", "")
+    .attr("text-anchor", "middle")
     .attr("fill", "var(--hw-mint)");
   label(
     svg,
     16,
-    narrow ? 325 : 230,
+    narrow ? 355 : 265,
     lang === "en"
       ? "A workflow illustration, not measured time"
       : "流程关系示意，不表示实测耗时",
@@ -209,14 +222,7 @@ export function mountScene(
   let index = -1,
     progress = 1,
     width = 0;
-  let paths: { node: SVGPathElement; length: number }[] = [];
-  let bars: {
-    node: SVGRectElement;
-    width: number;
-    height: number;
-    y: number;
-  }[] = [];
-  const title = host.parentElement?.querySelector("[data-scene-title]");
+  let updateDrawing = (_phase: number) => {};
   const number = host.parentElement?.querySelector("[data-scene-number]");
   const caption = host.parentElement?.querySelector("[data-scene-caption]");
   function draw(animate = false) {
@@ -294,34 +300,13 @@ export function mountScene(
         ? 280
         : 0;
     commitPlot(host, node, duration, node.dataset.view);
-    if (title) title.textContent = step.title[lang];
     if (number)
       number.textContent = `${String(index + 1).padStart(2, "0")} / ${String(steps.length).padStart(2, "0")}`;
     if (caption) caption.textContent = note;
-    paths = Array.from(
-      host.querySelectorAll<SVGPathElement>(
-        'svg:not([aria-hidden]) path[fill="none"]:not(.domain):not([stroke-dasharray])',
-      ),
-    )
-      .map((node) => ({ node, length: node.getTotalLength() }))
-      .filter((p) => p.length > 0);
-    bars =
-      kind.startsWith("lab") ||
-      kind.startsWith("workflow") ||
-      kind.startsWith("industry")
-        ? []
-        : Array.from(
-            host.querySelectorAll<SVGRectElement>(
-              "svg:not([aria-hidden]) rect",
-            ),
-          )
-            .filter((n) => Number(n.getAttribute("height")) > 5)
-            .map((node) => ({
-              node,
-              width: Number(node.getAttribute("width")),
-              height: Number(node.getAttribute("height")),
-              y: Number(node.getAttribute("y")),
-            }));
+    updateDrawing = drawingMotion(
+      host.querySelector<SVGSVGElement>("svg:not([aria-hidden])")!,
+      kind,
+    );
   }
   function seek(next: number, p: number) {
     const changed = index !== next;
@@ -330,46 +315,45 @@ export function mountScene(
     if (changed) {
       draw(steps.length > 1);
     }
-    const phase = d3.easeCubicInOut(clamp(progress / 0.42)),
+    const phase = d3.easeCubicInOut(clamp(progress / 0.48)),
       k = steps[index].scene;
-    paths.forEach(({ node, length }, i) => {
-      // Case changes highlight one relationship in a complete network.
-      const reveal = k.startsWith("industry")
-        ? 1
-        : k === "foundations"
-          ? clamp(phase * 2 - (i % 4) * 0.25)
-          : phase;
-      node.style.strokeDasharray = `${length} ${length}`;
-      node.style.strokeDashoffset = String(length * (1 - reveal));
-    });
-    bars.forEach(({ node, width, height, y }) => {
-      const reveal = 0.15 + 0.85 * phase;
-      if (k === "energy") {
-        node.setAttribute("height", String(height * reveal));
-        node.setAttribute("y", String(y + height * (1 - reveal)));
-      } else node.setAttribute("width", String(width * reveal));
-    });
+    updateDrawing(phase);
     if (k.startsWith("workflow")) {
       const stage = Number(k.slice(-1));
+      const states = [
+        [1, 1, 1, 1],
+        [1, 1, 0.45, 0.45],
+        [0.6, 0.6, 1, 1],
+      ];
+      const from = states[Math.max(0, stage - 1)],
+        to = states[stage];
       host
         .querySelectorAll<SVGElement>("[data-flow-node]")
         .forEach(
           (n, i) =>
-            (n.style.opacity = String(
-              stage === 0
-                ? 0.25 + 0.75 * clamp(phase * 4 - i)
-                : stage === 1
-                  ? i < 2
-                    ? 1
-                    : 0.5
-                  : i === 2
-                    ? 1
-                    : 0.65,
-            )),
+            (n.style.opacity = String(from[i] + (to[i] - from[i]) * phase)),
         );
       const ai = host.querySelector<SVGElement>("[data-ai-label]");
       if (ai)
         ai.style.opacity = String(stage === 0 ? 0 : stage === 1 ? phase : 1);
+      host
+        .querySelectorAll<SVGPathElement>("[data-ai-link]")
+        .forEach((path, i) => {
+          const length = path.getTotalLength();
+          const arrival =
+            stage === 0 ? 0 : stage === 1 ? clamp(phase * 1.25 - i * 0.12) : 1;
+          path.style.strokeDasharray = `${length} ${length}`;
+          path.style.strokeDashoffset = String(length * (1 - arrival));
+          const point = path.getPointAtLength(length * arrival);
+          const packet = host.querySelector<SVGCircleElement>(
+            `[data-ai-packet="${i}"]`,
+          )!;
+          packet.setAttribute("cx", String(point.x));
+          packet.setAttribute("cy", String(point.y));
+          packet.style.opacity = String(
+            stage === 1 && arrival > 0 && arrival < 1 ? 1 : 0,
+          );
+        });
     }
     if (k.startsWith("lab")) {
       const stage = Number(k.slice(-1));

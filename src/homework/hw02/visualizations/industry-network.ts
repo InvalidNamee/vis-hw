@@ -47,8 +47,8 @@ export function drawIndustryNetwork(
       .attr("fill", "var(--text-secondary)")
       .attr("font-size", compact ? 14 : 11)
       .text(value);
-  label(left, 22, lang === "en" ? "INDUSTRIES" : "产业场景");
-  label(right, 22, lang === "en" ? "CAPABILITIES" : "智能能力");
+  label(left, 22, lang === "en" ? "Industries" : "产业场景");
+  label(right, 22, lang === "en" ? "Capabilities" : "智能能力");
   const links = dataset.cases.flatMap((c) =>
     c.capabilities.map((cap) => ({
       industry: c.id,

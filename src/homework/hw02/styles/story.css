@@ -1,8 +1,12 @@
 .hw-story-shell {
   display: block;
+  color: var(--hw-ink);
   --story-nav-height: 44px;
   --story-top: calc(var(--site-header-height, 65px) + var(--story-nav-height));
   --story-height: calc(100svh - var(--story-top));
+  --story-display: "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --story-gap: clamp(28px, 4vw, 64px);
+  --story-gutter: clamp(24px, 3.4vw, 48px);
 }
 .hw-story-shell > .hw-main {
   padding: 0;
@@ -128,7 +132,8 @@
   font-size: clamp(64px, 8vw, 120px);
   line-height: 1.05;
   letter-spacing: -0.055em;
-  font-weight: 760;
+  font-family: var(--story-display);
+  font-weight: 650;
   margin: 24px 0;
 }
 .story-cover h1 span {
@@ -173,73 +178,45 @@
 }
 .story-chapter {
   --chapter-accent: var(--hw-blue);
-  --chapter-paper: color-mix(in srgb, var(--chapter-accent) 9%, var(--surface));
+  --chapter-paper: color-mix(
+    in srgb,
+    var(--chapter-accent) 5%,
+    var(--hw-paper)
+  );
   scroll-margin-top: var(--story-top);
-  border-top: 1px solid var(--border-soft);
-  background-color: var(--chapter-paper);
-  background-image: radial-gradient(
-    ellipse at 90% 10%,
-    color-mix(in srgb, var(--chapter-accent) 12%, transparent),
-    transparent 65%
-  );
+  background: var(--chapter-paper);
 }
-#capabilities {
+.story-chapter[data-family="network"] {
   --chapter-accent: var(--hw-purple);
-  background-image: linear-gradient(
-    125deg,
-    transparent 50%,
-    color-mix(in srgb, var(--chapter-accent) 7%, transparent)
-  );
 }
-#evidence {
+.story-chapter[data-family="comparison"] {
   --chapter-accent: var(--hw-mint);
 }
-#diffusion {
-  background-image:
-    linear-gradient(
-      color-mix(in srgb, var(--chapter-accent) 5%, transparent) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--chapter-accent) 5%, transparent) 1px,
-      transparent 1px
-    );
-  background-size: 64px 64px;
-}
-#conditions {
+.story-chapter[data-family="resources"] {
   --chapter-accent: var(--hw-orange);
-  background-image: radial-gradient(
-    color-mix(in srgb, var(--chapter-accent) 12%, transparent) 1px,
-    transparent 1px
-  );
-  background-size: 24px 24px;
 }
-#experiment {
-  background-image: radial-gradient(
-    ellipse at 50% 0%,
-    color-mix(in srgb, var(--hw-mint) 16%, transparent),
-    transparent 60%
-  );
+.story-chapter[data-family="model"] {
+  --chapter-accent: var(--hw-mint);
 }
 .story-chapter-heading {
-  position: relative;
-  isolation: isolate;
   max-width: 1440px;
   margin: auto;
-  padding: 88px 48px 48px;
+  padding: 88px var(--story-gutter) 48px;
 }
-.chapter-number {
-  position: absolute;
-  right: 48px;
-  top: 22px;
-  font-size: clamp(120px, 16vw, 230px);
-  font-weight: 750;
-  line-height: 1;
-  letter-spacing: -0.08em;
-  color: color-mix(in srgb, var(--chapter-accent) 13%, transparent);
-  z-index: -1;
-  user-select: none;
+.chapter-position {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--chapter-accent);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.chapter-position::before {
+  content: "";
+  width: 24px;
+  height: 3px;
+  background: currentColor;
+  border-radius: 3px;
 }
 .story-chapter-heading h2,
 .story-chapter-heading > p {
@@ -248,7 +225,8 @@
 .story-chapter-heading h2 {
   font-size: clamp(30px, 4vw, 52px);
   line-height: 1.25;
-  font-weight: 720;
+  font-family: var(--story-display);
+  font-weight: 600;
   letter-spacing: -0.035em;
   margin: 16px 0;
 }
@@ -279,17 +257,19 @@ story-scene {
 }
 .step-number {
   font-size: 11px;
-  letter-spacing: 0.15em;
+  font-variant-numeric: tabular-nums;
   color: var(--hw-blue);
 }
 .story-step-copy h3 {
   font-size: clamp(23px, 2.1vw, 32px);
   line-height: 1.4;
-  font-weight: 670;
+  font-family: var(--story-display);
+  font-weight: 600;
   margin: 16px 0;
   letter-spacing: -0.02em;
 }
 .story-step-copy > p {
+  max-width: 66ch;
   font-size: 16px;
   line-height: 1.95;
   color: var(--text-secondary);
@@ -310,30 +290,39 @@ story-scene {
 }
 story-scene:is([data-enhanced], [data-reserved]) {
   display: grid;
-  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.35fr);
-  padding: 0 48px;
-  column-gap: 56px;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0 var(--story-gutter);
 }
-:is([data-enhanced], [data-reserved]) .story-stage {
-  grid-column: 2;
-  grid-row: 1;
+:is([data-enhanced], [data-reserved]) .story-viewport {
+  grid-area: 1 / 1;
   align-self: start;
   position: sticky;
   top: var(--story-top);
   height: var(--story-height);
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.35fr);
+  gap: 0 var(--story-gap);
+  min-width: 0;
+}
+:is([data-enhanced], [data-reserved]) .story-stage {
+  grid-area: 1 / 2;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   min-width: 0;
-  padding: 32px 0;
+  min-height: 0;
+  margin-block: clamp(24px, 4svh, 40px);
+  padding: clamp(20px, 2.4vw, 32px);
+  border-radius: 12px;
+  background: var(--surface);
 }
 :is([data-enhanced], [data-reserved]) .story-steps {
-  grid-column: 1;
-  grid-row: 1;
+  grid-area: 1 / 1;
+  width: 100%;
   max-width: none;
+  padding-bottom: var(--story-height);
 }
 :is([data-enhanced], [data-reserved]) .story-step {
-  min-height: calc(var(--story-height) * 0.85);
+  min-height: var(--step-span, calc(var(--story-height) * 0.82));
   display: flex;
   align-items: center;
   padding: 48px 0;
@@ -342,16 +331,11 @@ story-scene:is([data-enhanced], [data-reserved]) {
   display: none;
 }
 .story-narration {
-  grid-column: 1;
-  grid-row: 1;
-  position: sticky;
-  top: var(--story-top);
-  height: var(--story-height);
-  align-self: start;
+  grid-area: 1 / 1;
   display: flex;
   align-items: center;
   min-width: 0;
-  padding: 48px 0;
+  padding: 40px 0;
   z-index: 1;
 }
 .story-narration-stack {
@@ -371,7 +355,7 @@ story-scene:is([data-enhanced], [data-reserved]) {
   align-items: baseline;
   min-height: 54px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-soft);
+  justify-content: space-between;
 }
 .story-stage-heading span {
   font-size: 11px;
@@ -379,21 +363,24 @@ story-scene:is([data-enhanced], [data-reserved]) {
   white-space: nowrap;
 }
 .story-stage-heading p {
-  font-size: 18px;
+  font-size: 13px;
   line-height: 1.5;
-  font-weight: 600;
+  font-weight: 500;
 }
 .story-plot {
   position: relative;
   width: 100%;
   min-height: 0;
-  flex: 0 1 auto;
+  flex: 1;
+  display: grid;
+  align-items: center;
 }
 .story-plot svg {
   width: 100%;
   display: block;
-  max-height: calc(var(--story-height) - 190px);
-  height: auto;
+  max-height: 100%;
+  height: 100%;
+  min-height: 0;
   overflow: visible;
 }
 .story-plot text,
@@ -476,13 +463,7 @@ story-scene:is([data-enhanced], [data-reserved]) {
   max-width: none;
   margin: auto;
   padding: 96px max(48px, calc((100% - 1248px) / 2)) 120px;
-  background:
-    radial-gradient(
-      ellipse at 90% 0%,
-      color-mix(in srgb, var(--hw-purple) 16%, transparent),
-      transparent 70%
-    ),
-    color-mix(in srgb, var(--hw-blue) 7%, var(--surface));
+  background: color-mix(in srgb, var(--hw-blue) 7%, var(--surface));
 }
 .story-conclusion h2,
 .story-conclusion h1 {
@@ -542,8 +523,15 @@ story-scene:is([data-enhanced], [data-reserved]) {
     display: block;
     padding: 0 24px;
   }
-  :is([data-enhanced], [data-reserved]) .story-stage {
+  :is([data-enhanced], [data-reserved]) .story-viewport {
+    display: block;
     height: clamp(280px, 42svh, 360px);
+    z-index: 5;
+  }
+  :is([data-enhanced], [data-reserved]) .story-stage {
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
     padding: 12px 0 8px;
     background: var(--chapter-paper);
     z-index: 5;
@@ -555,7 +543,7 @@ story-scene:is([data-enhanced], [data-reserved]) {
     border: 0;
   }
   .story-stage-heading p {
-    font-size: 14px;
+    font-size: 12px;
   }
   .story-plot {
     flex: 1;
@@ -576,6 +564,14 @@ story-scene:is([data-enhanced], [data-reserved]) {
   :is([data-enhanced], [data-reserved]) .story-step {
     min-height: calc(var(--story-height) * 0.72);
     padding: 40px 0;
+  }
+  .hw-story-shell story-scene:is([data-enhanced], [data-reserved]) .story-step {
+    scroll-margin-top: calc(
+      var(--story-nav-height) + clamp(280px, 42svh, 360px) + 24px
+    );
+  }
+  :is([data-enhanced], [data-reserved]) .story-steps {
+    padding-bottom: 0;
   }
   :is([data-enhanced], [data-reserved]) .story-step-copy {
     max-width: 650px;
@@ -706,77 +702,55 @@ story-scene:is([data-enhanced], [data-reserved]) {
 
 @media (min-width: 1024px) {
   .hw-story-shell :is([data-enhanced], [data-reserved]) .story-step {
-    /* The document already reserves the global header via scroll-padding. */
+    /* Root scroll-padding already reserves the global header. */
     scroll-margin-top: calc(var(--story-nav-height) - 2px);
   }
-  :is([data-enhanced], [data-reserved]) .story-steps {
-    /* Finish the last chart while the entire stage is still pinned. */
-    padding-bottom: var(--story-height);
+  [data-layout="reverse"] .story-viewport {
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.8fr);
   }
-  story-scene[data-layout="reverse"]:is([data-enhanced], [data-reserved]) {
-    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.8fr);
-  }
-  [data-layout="reverse"]:is([data-enhanced], [data-reserved]) .story-stage {
+  [data-layout="reverse"] .story-stage {
     grid-column: 1;
   }
-  [data-layout="reverse"]:is([data-enhanced], [data-reserved])
-    :is(.story-steps, .story-narration) {
+  [data-layout="reverse"] .story-narration {
     grid-column: 2;
   }
-  [data-layout="wide"].story-chapter .story-chapter-heading {
-    text-align: center;
-  }
-  [data-layout="wide"].story-chapter .story-chapter-heading :is(h2, p) {
-    margin-inline: auto;
-  }
-  story-scene[data-layout="wide"]:is([data-enhanced], [data-reserved]) {
-    --narration-height: 220px;
+  [data-layout="wide"] .story-viewport {
     grid-template-columns: minmax(0, 1fr);
-    column-gap: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+    row-gap: 12px;
+    padding-block: 24px;
   }
-  [data-layout="wide"]:is([data-enhanced], [data-reserved]) .story-narration {
-    height: var(--narration-height);
-    padding: 24px 0;
+  [data-layout="wide"] .story-narration {
+    grid-area: 1 / 1;
+    padding: 0;
   }
   [data-layout="wide"] .story-narration .story-step-copy {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.35fr);
-    column-gap: 56px;
+    gap: 0 var(--story-gap);
   }
   [data-layout="wide"] .story-narration .step-number {
-    grid-column: 1;
-    grid-row: 1;
+    grid-area: 1 / 1;
   }
   [data-layout="wide"] .story-narration h3 {
     grid-column: 1;
     grid-row: 2 / span 2;
-    margin-top: 10px;
+    margin: 8px 0 0;
   }
   [data-layout="wide"] .story-narration .story-step-copy > p {
     grid-column: 2;
     grid-row: 1 / span 2;
     font-size: 15px;
-    line-height: 1.7;
-    margin-bottom: 14px;
+    line-height: 1.8;
+    margin: 0 0 12px;
   }
   [data-layout="wide"] .story-narration .source-note {
-    grid-column: 2;
-    grid-row: 3;
+    grid-area: 3 / 2;
   }
-  [data-layout="wide"]:is([data-enhanced], [data-reserved]) .story-stage {
-    grid-column: 1;
-    margin-top: var(--narration-height);
-    top: calc(var(--story-top) + var(--narration-height));
-    height: calc(var(--story-height) - var(--narration-height));
-    padding: 24px 32px;
-    justify-content: center;
-    background: color-mix(in srgb, var(--surface) 86%, transparent);
-    border: 1px solid
-      color-mix(in srgb, var(--chapter-accent) 22%, var(--border-soft));
-    border-radius: 20px;
-  }
-  [data-layout="wide"] .story-plot svg {
-    max-height: calc(var(--story-height) - var(--narration-height) - 160px);
+  [data-layout="wide"] .story-stage {
+    grid-area: 2 / 1;
+    margin: 0;
+    padding: 20px 32px;
   }
   [data-layout="wide"] .story-stage-caption {
     min-height: 0;
@@ -784,34 +758,6 @@ story-scene:is([data-enhanced], [data-reserved]) {
   }
   [data-layout="wide"] .scene-progress {
     margin-top: 12px;
-  }
-  [data-layout="wide"] .story-viewport {
-    grid-column: 1;
-    grid-row: 1;
-    position: sticky;
-    top: var(--story-top);
-    height: var(--story-height);
-    align-self: start;
-    display: grid;
-    grid-template-rows: var(--narration-height) minmax(0, 1fr);
-    min-width: 0;
-  }
-  [data-layout="wide"] .story-viewport .story-narration {
-    position: static;
-    grid-row: 1;
-  }
-  [data-layout="wide"] .story-viewport .story-stage {
-    position: static;
-    grid-row: 2;
-    margin-top: 0;
-    height: 100%;
-  }
-}
-@media (max-width: 1023px) {
-  .chapter-number {
-    right: 24px;
-    top: 28px;
-    font-size: 120px;
   }
 }
 
@@ -833,4 +779,22 @@ story-scene:is([data-enhanced], [data-reserved]) {
     .chart-status {
     min-height: 8.25em;
   }
+}
+
+.hw-story-shell :is(a, summary, button, input):focus-visible {
+  outline: 2px solid var(--hw-blue);
+  outline-offset: 4px;
+}
+.story-step-copy,
+.story-chapter-heading,
+.story-cover-copy {
+  text-wrap: pretty;
+}
+.story-step-copy h3,
+.story-chapter-heading h2 {
+  text-wrap: balance;
+}
+.story-plot,
+.step-static {
+  font-variant-numeric: tabular-nums;
 }

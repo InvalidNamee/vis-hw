@@ -92,7 +92,15 @@ const tweened = new Set([
   "transform",
   "opacity",
   "stroke-width",
+  "fill",
+  "stroke",
 ]);
+function paint(element: Element, value: string) {
+  const variable = /^var\((--[\w-]+)\)$/.exec(value);
+  return variable
+    ? getComputedStyle(element).getPropertyValue(variable[1]).trim()
+    : value;
+}
 /** Reconcile detached drawing instructions into persistent, keyed SVG elements. */
 function reconcile(
   current: BoundElement,
@@ -118,7 +126,13 @@ function reconcile(
     const from = current.getAttribute(attr.name),
       to = attr.value;
     if (from === to) continue;
-    if (duration && from !== null && tweened.has(attr.name)) {
+    const color = attr.name === "fill" || attr.name === "stroke";
+    if (
+      duration &&
+      from !== null &&
+      tweened.has(attr.name) &&
+      (!color || (from !== "none" && to !== "none"))
+    ) {
       transition ??= selection
         .transition("update")
         .delay(
@@ -128,7 +142,15 @@ function reconcile(
         )
         .duration(duration)
         .ease(d3.easeCubicOut);
-      transition.attrTween(attr.name, () => d3.interpolateString(from, to));
+      transition.attrTween(attr.name, () =>
+        color
+          ? d3.interpolateRgb(paint(current, from), paint(current, to))
+          : d3.interpolateString(from, to),
+      );
+      if (color)
+        transition.on(`end.${attr.name}`, () =>
+          current.setAttribute(attr.name, to),
+        );
     } else current.setAttribute(attr.name, to);
   }
   if (!next.children.length) {
