@@ -12,6 +12,7 @@ import {
 import { canAnimate, commitPlot } from "../interactions/motion";
 import type { StoryStep } from "./content";
 import { drawingMotion } from "./scene-motion";
+import { allowFilters, ensureGlow } from "./fx";
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 const label = (svg: Plot, x: number, y: number, value: string, size = 13) =>
   svg
@@ -44,6 +45,20 @@ function flow(svg: Plot, w: number, lang: Lang) {
       .attr("rx", 8)
       .attr("fill", "var(--surface-muted)")
       .attr("stroke", i === 2 ? "var(--hw-purple)" : "var(--border-soft)");
+    // Expanding ring marks the node that gains emphasis; driven by scroll phase.
+    g.append("rect")
+      .attr("data-flow-ring", i)
+      .attr("x", x)
+      .attr("y", y)
+      .attr("width", box)
+      .attr("height", 72)
+      .attr("rx", 8)
+      .attr("fill", "none")
+      .attr("stroke", i >= 2 ? "var(--hw-mint)" : "var(--hw-blue)")
+      .attr("stroke-width", 1.5)
+      .style("transform-box", "fill-box")
+      .style("transform-origin", "center")
+      .style("opacity", 0);
     label(g as unknown as Plot, x + 14, y + 24, `0${i + 1}`, 11).attr(
       "fill",
       "var(--hw-blue)",
@@ -76,10 +91,19 @@ function flow(svg: Plot, w: number, lang: Lang) {
         .attr("fill", "none")
         .attr("stroke", "var(--hw-mint)")
         .attr("stroke-width", 2);
+      [0.09, 0.06, 0.03].forEach((lag, k) =>
+        svg
+          .append("circle")
+          .attr("data-ai-trail", i)
+          .attr("data-lag", lag)
+          .attr("r", 1.5 + k * 0.7)
+          .attr("fill", "var(--hw-mint)")
+          .style("opacity", 0),
+      );
       svg
         .append("circle")
         .attr("data-ai-packet", i)
-        .attr("r", 4)
+        .attr("r", 4.5)
         .attr("fill", "var(--hw-mint)");
     }
   });
@@ -303,10 +327,14 @@ export function mountScene(
     if (number)
       number.textContent = `${String(index + 1).padStart(2, "0")} / ${String(steps.length).padStart(2, "0")}`;
     if (caption) caption.textContent = note;
-    updateDrawing = drawingMotion(
-      host.querySelector<SVGSVGElement>("svg:not([aria-hidden])")!,
-      kind,
-    );
+    const live = host.querySelector<SVGSVGElement>("svg:not([aria-hidden])")!;
+    if (allowFilters() && kind.startsWith("workflow")) {
+      const glow = ensureGlow(live, 3);
+      live
+        .querySelectorAll("[data-ai-packet], [data-ai-link]")
+        .forEach((el) => el.setAttribute("filter", glow));
+    }
+    updateDrawing = drawingMotion(live, kind);
   }
   function seek(next: number, p: number) {
     const changed = index !== next;
@@ -350,9 +378,26 @@ export function mountScene(
           )!;
           packet.setAttribute("cx", String(point.x));
           packet.setAttribute("cy", String(point.y));
-          packet.style.opacity = String(
-            stage === 1 && arrival > 0 && arrival < 1 ? 1 : 0,
-          );
+          const moving = stage === 1 && arrival > 0 && arrival < 1;
+          packet.style.opacity = String(moving ? 1 : 0);
+          host
+            .querySelectorAll<SVGCircleElement>(`[data-ai-trail="${i}"]`)
+            .forEach((dot) => {
+              const lagged = Math.max(0, arrival - Number(dot.dataset.lag));
+              const pt = path.getPointAtLength(length * lagged);
+              dot.setAttribute("cx", String(pt.x));
+              dot.setAttribute("cy", String(pt.y));
+              dot.style.opacity = String(moving && lagged > 0 ? 0.5 : 0);
+            });
+        });
+      // Rings pulse outward on the nodes this stage brings forward.
+      const focus = stage === 1 ? [0, 1] : stage === 2 ? [2, 3] : [];
+      host
+        .querySelectorAll<SVGRectElement>("[data-flow-ring]")
+        .forEach((ring, i) => {
+          const on = focus.includes(i) && phase > 0 && phase < 1;
+          ring.style.opacity = String(on ? 0.8 * (1 - phase) : 0);
+          ring.style.transform = `scale(${1 + 0.12 * phase})`;
         });
     }
     if (k.startsWith("lab")) {

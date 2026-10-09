@@ -88,15 +88,7 @@ function mount() {
     signal: abort.signal,
   });
   window.addEventListener("hashchange", openTarget, { signal: abort.signal });
-  const cover = shell.querySelector<HTMLElement>(".story-cover-copy");
-  if (cover && !matchMedia("(prefers-reduced-motion:reduce)").matches)
-    cover.animate(
-      [
-        { opacity: 0, transform: "translateY(18px)" },
-        { opacity: 1, transform: "translateY(0)" },
-      ],
-      { duration: 850, easing: "cubic-bezier(.22,1,.36,1)" },
-    );
+  // Cover entrance (decoding title, staggered copy) is owned by poster.ts.
   restoreLegacyAnchor();
   openTarget();
   const settleAnchor = (readingTarget?: HTMLElement) => {

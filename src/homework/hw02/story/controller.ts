@@ -268,19 +268,7 @@ class StoryScene extends HTMLElement {
             }
           });
           this.resize.observe(this.parentElement!);
-          if (chapter.id === "workplace") {
-            const cover = document.querySelector<HTMLElement>(".story-cover")!;
-            gsap.to(cover.querySelector("img"), {
-              yPercent: 10,
-              ease: "none",
-              scrollTrigger: {
-                trigger: cover,
-                start: "top top",
-                end: "bottom top",
-                scrub: 0.5,
-              },
-            });
-          }
+          // Cover parallax and poster transitions live in poster.ts.
           requestAnimationFrame(refresh);
           return () => {
             local.abort();

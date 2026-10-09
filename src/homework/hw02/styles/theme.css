@@ -1,25 +1,62 @@
-/* HW02 owns these values; site navigation keeps the global theme. */
+/* HW02 is a dark tech poster in both site themes; global nav keeps its own theme. */
 .hw-shell {
-  --hw-blue: #5065bb;
-  --hw-on-blue: #fff;
-  --hw-mint: #287a68;
-  --hw-purple: #81619b;
-  --hw-orange: #ad692e;
-  --hw-paper: #eef2f7;
-  --hw-ink: #243147;
+  --hw-blue: #3ee6ff;
+  --hw-on-blue: #031018;
+  --hw-mint: #c6ff3d;
+  --hw-purple: #8a7dff;
+  --hw-orange: #ff3d8b;
+  --hw-paper: #05070d;
+  --hw-ink: #e6edf7;
+  --hw-glow: 0 0 18px color-mix(in srgb, var(--hw-blue) 45%, transparent);
+  --hw-grid: color-mix(in srgb, var(--hw-blue) 7%, transparent);
+  --hw-panel: color-mix(in srgb, #0b1220 82%, transparent);
+  --hw-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
   --hw-gutter: 48px;
   --control-height: 44px;
   --control-radius: 8px;
   --control-gap: 8px;
+  /* Shared site tokens re-scoped so every chart and control reads on the dark paper. */
+  --surface: #0a0f1a;
+  --surface-muted: #070b14;
+  --surface-raised: #111a2b;
+  --border-soft: #1c2a40;
+  --border-strong: #2a3d5c;
+  --border-emphasis: #3d5578;
+  --text-primary: #f2f7ff;
+  --text-body: #dbe4f0;
+  --text-secondary: #b3c0d3;
+  --text-subtle: #8494ad;
+  --accent: #3ee6ff;
+  --accent-strong: #9cf3ff;
+  --accent-soft: #0c2633;
+  --diagram-text: #9cf3ff;
+  --diagram-heading: #d7fbff;
+  --diagram-fill: #0f2838;
+  --diagram-border: #1d4a5e;
+  --diagram-border-strong: #2f7a92;
+  --border-hover: #3ee6ff;
+  --border-active: #1d4a5e;
+  --inline-code: #111a2b;
+  --demo-stage: #070b14;
+  --teal-fill: #1d2e10;
+  --teal-text: #c6ff3d;
+  --indigo-fill: #1b1838;
+  --indigo-text: #c2baff;
+  --action: #3ee6ff;
+  --action-hover: #9cf3ff;
+  --on-action: #031018;
+  --switch-off: #3d5578;
+  color-scheme: dark;
+  color: var(--hw-ink);
+  background-color: var(--hw-paper);
+  background-image:
+    linear-gradient(var(--hw-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hw-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
-.dark .hw-shell {
-  --hw-blue: #a8b6ed;
-  --hw-on-blue: #172039;
-  --hw-mint: #91cdbb;
-  --hw-purple: #c7aad9;
-  --hw-orange: #e0ad77;
-  --hw-paper: var(--surface);
-  --hw-ink: var(--text-primary);
+.hw-shell ::selection {
+  background: color-mix(in srgb, var(--hw-orange) 55%, transparent);
+  color: #fff;
 }
 @media (max-width: 1200px) {
   .hw-shell {

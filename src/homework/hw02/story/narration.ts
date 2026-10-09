@@ -23,7 +23,7 @@ export function mountNarration(
   viewport.prepend(stage);
   let current = -1;
   let transition: gsap.core.Timeline | undefined;
-  const clear = "opacity,transform,visibility";
+  const clear = "opacity,transform,visibility,clipPath,filter";
   const measure = () => {
     // All copies share a grid cell. Its natural height reserves the longest paragraph.
     // Reading distance grows with the actual content instead of a fixed title-band height.
@@ -84,22 +84,29 @@ export function mountNarration(
     gsap.set(incoming, { autoAlpha: 1, y: 0 });
     children.forEach((child, i) => {
       const horizontal = wide && child.tagName === "H3";
+      // Wipe in like a scanline: clip from the reading edge, blur resolves to sharp.
+      const from =
+        direction > 0 ? "inset(0% 100% 0% 0%)" : "inset(0% 0% 0% 100%)";
       transition!.fromTo(
         child,
         {
           opacity: 0,
+          clipPath: from,
+          filter: "blur(6px)",
           x: horizontal ? distance * direction : 0,
-          y: horizontal ? 0 : distance * direction,
+          y: horizontal ? 0 : distance * direction * 0.5,
         },
         {
           opacity: 1,
+          clipPath: "inset(0% 0% 0% 0%)",
+          filter: "blur(0px)",
           x: 0,
           y: 0,
           duration,
-          ease: "power3.out",
+          ease: "expo.out",
           clearProps: clear,
         },
-        0.06 + Math.min(i * 0.035, 0.1),
+        0.06 + Math.min(i * 0.05, 0.16),
       );
     });
   };

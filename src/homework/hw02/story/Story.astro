@@ -47,10 +47,14 @@ const values = [
 
 <header class="story-cover" id="opening">
   <img src={href("images/hw02/intelligence.webp")} width="1600" height="1000" alt="" fetchpriority="high" />
+  <canvas class="cover-field" data-cover-field aria-hidden="true"></canvas>
+  <div class="poster-hud" aria-hidden="true">
+    <span>HW—02</span><span>{t("人工智能 × 新质生产力", "AI × PRODUCTIVE FORCES")}</span><span>N 39.9° / E 116.4°</span><span>{storyChapters.length} CH · {storyChapters.reduce((n, c) => n + c.steps.length, 0)} STEPS</span>
+  </div>
   <div class="story-cover-copy">
     <h1>
-      {t("智变", "The intelligence shift")}
-      <span>{t("人工智能，怎样成为新质生产力？", "How does AI become a productive force?")}</span>
+      <span class="cover-title" data-decode>{t("智变", "The intelligence shift")}</span>
+      <span class="cover-subtitle" data-decode>{t("人工智能，怎样成为新质生产力？", "How does AI become a productive force?")}</span>
     </h1>
     <p>{t(
       "从一个工作现场出发，走进五个产业，用证据检验变化，最后亲手做一次效率实验。",
@@ -78,14 +82,25 @@ const values = [
   const presentation = presentationFor(chapter, lang);
   return (
     <section class="story-chapter" id={chapter.id} data-story-chapter data-layout={presentation.layout} data-family={presentation.family}>
-      <header class="story-chapter-heading">
+      <header class="story-chapter-heading" data-poster>
+        <span class="poster-number" aria-hidden="true">0{index + 1}</span>
+        <span class="poster-slab" aria-hidden="true"></span>
         <span class="chapter-position">{t(`第 ${index + 1} 章`, `Chapter ${index + 1}`)}</span>
-        <h2>{chapter.title[lang]}</h2>
+        <h2 data-poster-title>{chapter.title[lang]}</h2>
         <p>{chapter.intro[lang]}</p>
+        <dl class="poster-meta" aria-hidden="true">
+          <div><dt>STEPS</dt><dd>{String(chapter.steps.length).padStart(2, "0")}</dd></div>
+          <div><dt>SOURCES</dt><dd>{String(new Set(chapter.steps.flatMap((s) => s.sources)).size).padStart(2, "0")}</dd></div>
+          <div><dt>MODE</dt><dd>{presentation.family.toUpperCase()}</dd></div>
+        </dl>
+        <div class="poster-marquee" aria-hidden="true"><div>
+          {[0, 1].map(() => chapter.steps.map((s) => <span>{s.title[lang]}<i>◆</i></span>))}
+        </div></div>
       </header>
       <story-scene data-chapter={chapter.id} data-lang={lang} data-layout={presentation.layout} data-family={presentation.family}>
         <div class="story-viewport">
         <div class="story-stage" aria-hidden="true">
+          <i class="stage-corner" data-corner="tl"></i><i class="stage-corner" data-corner="tr"></i><i class="stage-corner" data-corner="bl"></i><i class="stage-corner" data-corner="br"></i>
           <div class="story-stage-heading">
             <p>{presentation.label}</p><span data-scene-number>1 / {chapter.steps.length}</span>
           </div>
@@ -137,7 +152,8 @@ const values = [
 })}
 
 <section class="story-conclusion" id="conclusions">
-  <h2>{t("问题不再是“能做什么”，而是“怎样做好”。", "From what AI can do, to how we do it well.")}</h2>
+  <canvas class="cover-field" data-cover-field data-mode="grid" aria-hidden="true"></canvas>
+  <h2 data-decode>{t("问题不再是“能做什么”，而是“怎样做好”。", "From what AI can do, to how we do it well.")}</h2>
   <p>{t(
     "效率来自整条流程的改善，质量来自持续验证，创新来自探索与实验。技术能否兑现潜力，取决于数据、组织，以及人是否担起责任。",
     "Efficiency comes from improving the whole workflow, quality from evaluation, and innovation from exploration and experiments. Data, organizations and human responsibility help realize the potential.",
@@ -151,4 +167,5 @@ const values = [
 </section>
 <script>
   import "./controller";
+  import "./poster";
 </script>
