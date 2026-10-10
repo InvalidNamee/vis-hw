@@ -221,5 +221,5 @@ export function drawEnergy(svg: Plot, w: number, lang: Lang, indexed = false) {
   });
   return lang === "en"
     ? "Solid: historical estimate. Dashed: central projection. No missing annual values are interpolated."
-    : "实心柱是历史估计，虚线柱是中央情景预测；未报告的年度数值不补画。";
+    : "实心柱是历史估计，虚线柱是基准情景预测；未报告的年度数值不补画。";
 }

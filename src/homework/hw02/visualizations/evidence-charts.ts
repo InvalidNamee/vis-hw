@@ -100,7 +100,7 @@ export function drawEvidence(svg: Svg, w: number, kind: string, lang: Lang) {
             "Annual installations in 2025; approximations retain source precision. Not a causal AI benefit.",
           )
         : t(
-            "全球最高暴露类别占 3.3%，是总体暴露的一部分，不能与 25% 相加。",
+            "触及比例最高的类别占 3.3%，已包含在 25% 之内，不能相加。",
             "The global highest-exposure category is 3.3%, a subset of the 25% overall exposure, not an additional group.",
           );
   }
@@ -113,7 +113,7 @@ export function drawEvidence(svg: Svg, w: number, kind: string, lang: Lang) {
       },
       {
         ids: ["medical-recall-base", "medical-recall-ai"],
-        title: t("进一步检查率", "Recall for assessment"),
+        title: t("复检率", "Recall for assessment"),
         max: 45,
       },
     ];
@@ -160,7 +160,7 @@ export function drawEvidence(svg: Svg, w: number, kind: string, lang: Lang) {
         .call(d3.axisBottom(x).ticks(4));
     });
     return t(
-      "研究显示的是关联：检出率提高，进一步检查率的差异未达统计显著。两组图各有刻度，也不表示治愈率。",
+      "研究显示的是关联：检出率提高，复检率的差异未达统计显著。两组图各有刻度，也不表示治愈率。",
       "Study association: detection improved; the recall difference was not statistically significant. Separate scales; these are not cure rates.",
     );
   }

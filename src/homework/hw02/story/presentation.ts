@@ -25,7 +25,7 @@ const compositions: Record<
   },
   comparison: {
     layout: "wide",
-    label: { zh: "研究结果对照", en: "Reading the evidence" },
+    label: { zh: "研究对照", en: "Reading the evidence" },
   },
   trend: {
     layout: "reverse",

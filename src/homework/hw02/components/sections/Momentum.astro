@@ -27,7 +27,7 @@ const t = (z: string, e: string) => text(lang, z, e);
   <div class="chart-controls">
     <Choice
       control="year"
-      label={t("聚焦年份", "Focus year")}
+      label={t("选择年份", "Focus year")}
       options={["all", "2023", "2024", "2025"].map((value) => ({
         value,
         label: value === "all" ? t("全部", "All") : value,
@@ -60,7 +60,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     ids={["eurostat"]}
     records={["eu-small", "eu-medium", "eu-large"]}
     note={t(
-      "覆盖行业中 10 人及以上的企业。与上方 Stanford 的受访组织不是同一个总体，不能直接比较。",
+      "覆盖行业中 10 人及以上的企业。与上方 Stanford 的受访组织不是同一批调查对象，不能直接比较。",
       "Enterprises with 10+ persons in covered sectors. A different population from the Stanford survey above; not directly comparable.",
     )}
   />

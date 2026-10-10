@@ -20,14 +20,14 @@ const t = (z: string, e: string) => text(lang, z, e);
   ids={["iea"]}
   records={["energy-2025", "energy-2030"]}
   note={t(
-    "485 TWh 是 2025 年的历史估计；约 950 TWh 是 2030 年的中央情景预测。数据中心承载多种负载，不能全算在 AI 头上。",
+    "485 TWh 是 2025 年的历史估计；约 950 TWh 是 2030 年的基准情景预测。数据中心运行着多种任务，不能全算在 AI 头上。",
     "485 TWh is the 2025 historical estimate; about 950 TWh is the 2030 central projection. Data centres host many workloads, not AI alone.",
   )}
 >
   <div class="chart-controls">
     <Choice
       control="energy"
-      label={t("展示口径", "Display")}
+      label={t("展示方式", "Display")}
       options={[
         { value: "absolute", label: t("用电量", "Electricity") },
         { value: "index", label: t("相对指数", "Index") },
@@ -38,11 +38,11 @@ const t = (z: string, e: string) => text(lang, z, e);
 <Chart
   kind="exposure"
   title={t(
-    "工作会变，但暴露不等于失业",
+    "工作会变，但不等于失业",
     "Work may change; exposure is not job loss",
   )}
   description={t(
-    "ILO 2025 指数 · 各收入组总就业中潜在暴露的比例",
+    "ILO 2025 指数 · 各收入组中可能被 AI 触及的工作占比",
     "ILO 2025 index · potentially exposed share of employment in each income group",
   )}
   ids={["ilo"]}
@@ -53,7 +53,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     "exposure-highest",
   ]}
   note={t(
-    "潜在职业暴露既不是实际采用率，也不是岗位消失的概率。全球组已包含各收入组，不能相加。",
+    "这些数字是各收入组中可能被 AI 触及的工作占比，既不是实际采用率，也不是岗位消失的概率。全球组已包含各收入组，不能相加。",
     "Potential exposure is not actual adoption or a probability of job loss. Global employment includes income groups; values are not additive.",
   )}
 />

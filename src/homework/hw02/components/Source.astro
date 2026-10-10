@@ -18,7 +18,7 @@ const en = localeFromUrl(Astro.url) === "en";
       <ExternalLink href={s.url}>
         {id === "concept" && en ? "Concept reference" : s.title}
       </ExternalLink>
-      <a href={localizedHref(`hw02/sources/#source-${id}`, localeFromUrl(Astro.url))} class="source-definition">{en ? "Definitions" : "口径"}</a>
+      <a href={localizedHref(`hw02/sources/#source-${id}`, localeFromUrl(Astro.url))} class="source-definition">{en ? "Definitions" : "定义"}</a>
     );
   })}
   {note && <p>{note}</p>}

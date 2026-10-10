@@ -52,7 +52,7 @@
       "url": "https://doi.org/10.1126/science.adh2586",
       "section": "Abstract · professional writing experiment",
       "note": {
-        "zh": "职业写作实验：完成时间 −40%，质量评分 +18%；两者不是同一类指标。",
+        "zh": "职场写作实验：完成时间 −40%，质量评分 +18%；两者不是同一类指标。",
         "en": "Professional writing experiment: time −40%, quality score +18%; these are different outcomes."
       },
       "retrieved": "2026-10-01",
@@ -67,7 +67,7 @@
       "url": "https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary",
       "section": "Updated data centre electricity demand outlook",
       "note": {
-        "zh": "2026 版：2025 年为历史估计，2030 年为中央预测；覆盖全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
+        "zh": "2026 版：2025 年为历史估计，2030 年为基准预测；覆盖全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
         "en": "2026 edition: 2025 historical estimate and 2030 central projection; all data centres, not AI alone. CC BY 4.0."
       },
       "retrieved": "2026-10-01",
@@ -202,7 +202,7 @@
       "url": "https://www.nature.com/articles/s41591-024-03408-6",
       "section": "Abstract · German multicentre observational study",
       "note": {
-        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，进一步检查率的差异未达统计显著。",
+        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，复检率的差异未达统计显著。",
         "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
       },
       "retrieved": "2026-10-02",
@@ -262,7 +262,7 @@
       "url": "https://www.ilo.org/publications/generative-ai-and-jobs-refined-global-index-occupational-exposure",
       "section": "Working Paper 140 · global index",
       "note": {
-        "zh": "职业潜在暴露，不是实际采用，也不是失业预测；最高暴露类别已包含在总体暴露中。",
+        "zh": "这是各收入组中可能被 AI 触及的工作占比，不是实际采用，也不是失业预测；最高类别已包含在总体之内。",
         "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
       },
       "retrieved": "2026-10-02",
@@ -292,7 +292,7 @@
       "url": "https://www.nature.com/articles/s41586-025-08897-0",
       "section": "Figure 1 · Abstract · supplement updated 2025-06-17",
       "note": {
-        "zh": "端到端气象预测研究；输入的数据量与预测误差不是一回事，不能据此推断农业增产。",
+        "zh": "气象预测研究；输入的数据量与预测误差不是一回事，不能据此推断农业增产。",
         "en": "End-to-end weather research. Observation volume is not forecast error and does not establish crop-yield gains."
       },
       "retrieved": "2026-10-02",
@@ -530,7 +530,7 @@
         "en": "Study-specific sample; relative to baseline"
       },
       "limitation": {
-        "zh": "职业写作实验：完成时间 −40%，质量评分 +18%；两者不是同一类指标。",
+        "zh": "职场写作实验：完成时间 −40%，质量评分 +18%；两者不是同一类指标。",
         "en": "Professional writing experiment: time −40%, quality score +18%; these are different outcomes."
       }
     },
@@ -557,7 +557,7 @@
         "en": "Study-specific sample; relative to baseline"
       },
       "limitation": {
-        "zh": "职业写作实验：完成时间 −40%，质量评分 +18%；两者不是同一类指标。",
+        "zh": "职场写作实验：完成时间 −40%，质量评分 +18%；两者不是同一类指标。",
         "en": "Professional writing experiment: time −40%, quality score +18%; these are different outcomes."
       }
     },
@@ -584,14 +584,14 @@
         "en": "All data centres worldwide"
       },
       "limitation": {
-        "zh": "2026 版：2025 年为历史估计，2030 年为中央预测；覆盖全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
+        "zh": "2026 版：2025 年为历史估计，2030 年为基准预测；覆盖全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
         "en": "2026 edition: 2025 historical estimate and 2030 central projection; all data centres, not AI alone. CC BY 4.0."
       }
     },
     {
       "id": "energy-2030",
       "label": {
-        "zh": "中央情景预测",
+        "zh": "基准情景预测",
         "en": "Central projection"
       },
       "value": 950,
@@ -611,7 +611,7 @@
         "en": "All data centres worldwide"
       },
       "limitation": {
-        "zh": "2026 版：2025 年为历史估计，2030 年为中央预测；覆盖全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
+        "zh": "2026 版：2025 年为历史估计，2030 年为基准预测；覆盖全部数据中心，不等于 AI 单独用电。CC BY 4.0。",
         "en": "2026 edition: 2025 historical estimate and 2030 central projection; all data centres, not AI alone. CC BY 4.0."
       }
     },
@@ -827,7 +827,7 @@
         "en": "12 German screening sites; women aged 50–69"
       },
       "limitation": {
-        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，进一步检查率的差异未达统计显著。",
+        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，复检率的差异未达统计显著。",
         "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
       }
     },
@@ -854,14 +854,14 @@
         "en": "12 German screening sites; women aged 50–69"
       },
       "limitation": {
-        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，进一步检查率的差异未达统计显著。",
+        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，复检率的差异未达统计显著。",
         "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
       }
     },
     {
       "id": "medical-recall-base",
       "label": {
-        "zh": "常规进一步检查率",
+        "zh": "常规复检率",
         "en": "Standard recall"
       },
       "value": 38.3,
@@ -881,14 +881,14 @@
         "en": "12 German screening sites; women aged 50–69"
       },
       "limitation": {
-        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，进一步检查率的差异未达统计显著。",
+        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，复检率的差异未达统计显著。",
         "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
       }
     },
     {
       "id": "medical-recall-ai",
       "label": {
-        "zh": "AI 辅助进一步检查率",
+        "zh": "AI 辅助复检率",
         "en": "AI-assisted recall"
       },
       "value": 37.4,
@@ -908,7 +908,7 @@
         "en": "12 German screening sites; women aged 50–69"
       },
       "limitation": {
-        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，进一步检查率的差异未达统计显著。",
+        "zh": "观察性研究；筛查期为 2021-07 至 2023-02。检出率不是治愈率，复检率的差异未达统计显著。",
         "en": "Observational screening study, July 2021–February 2023. Detection is not cure; the recall difference was not statistically significant."
       }
     },
@@ -997,7 +997,7 @@
         "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
       },
       "limitation": {
-        "zh": "职业潜在暴露，不是实际采用，也不是失业预测；最高暴露类别已包含在总体暴露中。",
+        "zh": "这是各收入组中可能被 AI 触及的工作占比，不是实际采用，也不是失业预测；最高类别已包含在总体之内。",
         "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
       }
     },
@@ -1024,7 +1024,7 @@
         "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
       },
       "limitation": {
-        "zh": "职业潜在暴露，不是实际采用，也不是失业预测；最高暴露类别已包含在总体暴露中。",
+        "zh": "这是各收入组中可能被 AI 触及的工作占比，不是实际采用，也不是失业预测；最高类别已包含在总体之内。",
         "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
       }
     },
@@ -1051,14 +1051,14 @@
         "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
       },
       "limitation": {
-        "zh": "职业潜在暴露，不是实际采用，也不是失业预测；最高暴露类别已包含在总体暴露中。",
+        "zh": "这是各收入组中可能被 AI 触及的工作占比，不是实际采用，也不是失业预测；最高类别已包含在总体之内。",
         "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
       }
     },
     {
       "id": "exposure-highest",
       "label": {
-        "zh": "最高暴露类别（子集）",
+        "zh": "最高类别（子集）",
         "en": "Highest exposure (subset)"
       },
       "value": 3.3,
@@ -1078,7 +1078,7 @@
         "en": "Total employment in the corresponding income group; global figures cover worldwide employment"
       },
       "limitation": {
-        "zh": "职业潜在暴露，不是实际采用，也不是失业预测；最高暴露类别已包含在总体暴露中。",
+        "zh": "这是各收入组中可能被 AI 触及的工作占比，不是实际采用，也不是失业预测；最高类别已包含在总体之内。",
         "en": "Potential occupational exposure, not actual adoption or predicted job loss. Highest exposure is a subset of overall exposure."
       }
     },

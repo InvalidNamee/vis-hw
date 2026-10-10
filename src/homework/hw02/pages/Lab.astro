@@ -21,7 +21,7 @@ const t = (z: string, e: string) => text(lang, z, e);
   )}
 >
   <div class="chart-controls preset-controls">
-    <span>{t("教学情景", "Teaching scenarios")}</span>
+    <span>{t("教学预设", "Teaching scenarios")}</span>
     {[
       ["low-review", t("低复核成本", "Low review")],
       ["high-review", t("高复核成本", "High review")],
@@ -92,7 +92,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       <strong data-result="assisted">{(initial.aiTotal/60).toFixed(1)} {t("小时","h")}</strong>
     </div>
     <div>
-      <span>{t("节省工时", "EFFORT SAVED")}</span>
+      <span>{t("净省工时", "EFFORT SAVED")}</span>
       <strong data-result="saved">{initial.saved.toFixed(1)}%</strong>
     </div>
   </div>
@@ -102,9 +102,9 @@ const t = (z: string, e: string) => text(lang, z, e);
     </button>
     <button data-action="reset">{t("恢复默认", "Reset")}</button>
     <button data-action="share">
-      {t("复制情景链接", "Copy scenario link")}
+      {t("复制这组参数", "Copy scenario link")}
     </button>
-    <button data-action="demo" aria-pressed="false">{t("自动演示三个情景", "Demonstrate scenarios")}</button>
+    <button data-action="demo" aria-pressed="false">{t("自动演示三组预设", "Demonstrate scenarios")}</button>
     <button data-action="demo-replay">{t("重播", "Replay scenarios")}</button>
     <span data-demo-status aria-live="polite"></span>
     <Choice
@@ -126,7 +126,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     <div class="legend">
       <span>
         <i class="dot blue"></i>
-        {t("AI 情景", "AI scenario")}
+        {t("AI 协作", "AI scenario")}
       </span>
       <span>
         <i class="dot gray"></i>

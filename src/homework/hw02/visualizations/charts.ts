@@ -334,7 +334,7 @@ export class AiViz extends HTMLElement {
     history.replaceState(history.state, "", url);
     try {
       await navigator.clipboard.writeText(url.href);
-      this.status(this.t("情景链接已复制。", "Scenario link copied."));
+      this.status(this.t("参数链接已复制。", "Scenario link copied."));
     } catch {
       this.status(
         this.t(

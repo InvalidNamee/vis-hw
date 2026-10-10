@@ -37,7 +37,7 @@ const t = (z: string, e: string) => text(lang, z, e);
         type="search"
         data-control="search"
         data-hw02-control
-        placeholder={t("机构、标题或口径…", "Organization, title, or scope…")}
+        placeholder={t("机构、标题或统计说明…", "Organization, title, or scope…")}
       />
     </label>
     <Choice
@@ -108,9 +108,9 @@ const t = (z: string, e: string) => text(lang, z, e);
 <div class="two-col">
   <article class="editorial-card">
     <p class="hw-kicker">DATA DICTIONARY</p>
-    <h2>{t("先看口径，再看数字", "Read the definition before the number")}</h2>
+    <h2>{t("先弄清数字是怎么来的", "Read the definition before the number")}</h2>
     <dl>
-      <dt>{t("观测与研究结果", "Observations & study results")}</dt>
+      <dt>{t("实测数据与研究结果", "Observations & study results")}</dt>
       <dd>
         {t(
           "只对应特定样本、时期与任务，不代表普遍规律。",
@@ -127,7 +127,7 @@ const t = (z: string, e: string) => text(lang, z, e);
       <dt>{t("机制图与模拟", "Mechanisms & simulations")}</dt>
       <dd>
         {t(
-          "关系图由编辑整理；实验参数属于假设，不与观测数据混在一起。",
+          "关系图由编辑整理；实验参数属于假设，不与实测数据混在一起。",
           "Connections are editorial synthesis; lab parameters are assumptions, separate from observations.",
         )}
       </dd>
@@ -138,7 +138,7 @@ const t = (z: string, e: string) => text(lang, z, e);
     <h2>{t("数据怎样变成图形", "How data becomes a visual")}</h2>
     <p>
       {t(
-        "比例尺把数值映射到位置，轴提供参照，数据绑定让每个图形始终对应固定的记录。",
+        "比例尺把数值换算成位置，轴提供参照，数据绑定让每个图形始终对应固定的记录。",
         "Scales map values to positions; axes provide reference; data joins keep records attached to their marks.",
       )}
     </p>
@@ -196,7 +196,7 @@ const t = (z: string, e: string) => text(lang, z, e);
   <p class="hw-kicker">READ / EXPLORE</p>
   <h2>{t("这份展示怎么读", "Reading this story")}</h2>
   <p>{t("六章主线随滚动推进，往上滚就能回看。在章末展开完整图表后，选哪个产业、参数怎么调都由你决定；继续往下读，不会覆盖这些选择。", "Scroll through the six chapters and scroll back to revisit them. After opening a chapter’s full charts, you control industry selections and experiment parameters; reading onward preserves those choices.")}</p>
-  <p>{t("动画展示的是数据与假设的变化，不是额外观测。系统开启减少动态效果时，关键图形按步骤依次排开；教学实验的假设与公式，可在主文实验区查看。", "Animations illustrate changes in data and assumptions, not additional observations. With reduced motion, key graphics appear beside their steps. The experiment’s assumptions and formula are available in the story’s experiment section.")}</p>
+  <p>{t("动画展示的是数据与假设的变化，不是额外的实测数据。系统开启减少动态效果时，关键图形按步骤依次排开；教学实验的假设与公式，可在主文实验区查看。", "Animations illustrate changes in data and assumptions, not additional observations. With reduced motion, key graphics appear beside their steps. The experiment’s assumptions and formula are available in the story’s experiment section.")}</p>
   <a class="hw-text-link" href={href(`${lang === "en" ? "en/" : ""}hw02/#parameters`)}>{t("查看实验假设与公式", "Experiment assumptions and formula")}</a>
 </section>
 

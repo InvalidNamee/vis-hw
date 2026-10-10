@@ -27,7 +27,7 @@ export function drawScience(
         [
           "AI 预报",
           "AI forecast",
-          "Aardvark 把观测映射为全球与地方预报；不同变量、不同提前量都要分别验证。",
+          "Aardvark 把实测数据换算成全球与地方预报；不同变量、不同提前量都要分别验证。",
           "Aardvark maps observations to global and local forecasts; validation depends on variable and lead time.",
         ],
         [

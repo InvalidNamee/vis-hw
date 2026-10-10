@@ -45,7 +45,7 @@ const data = dataset.records.filter((r) => records.includes(r.id));
       {kind === "sensitivity"
         ? lang === "en"
           ? "LINKED SCENARIO"
-          : "情景联动"
+          : "参数联动"
         : [
               "investment",
               "enterprise",
@@ -56,7 +56,7 @@ const data = dataset.records.filter((r) => records.includes(r.id));
             ].includes(kind)
           ? lang === "en"
             ? "EVIDENCE"
-            : "研究对比"
+            : "研究对照"
           : lang === "en"
             ? "EXPLORE"
             : "交互探索"}
@@ -77,7 +77,7 @@ const data = dataset.records.filter((r) => records.includes(r.id));
   {data.length > 0 && (
     <details class="data-disclosure">
       <summary>
-        {lang === "en" ? "View data & definitions" : "查看数据与口径"}
+        {lang === "en" ? "View data & definitions" : "查看数据与统计说明"}
       </summary>
       <div class="table-scroll">
         <table>
@@ -101,7 +101,7 @@ const data = dataset.records.filter((r) => records.includes(r.id));
                     "单位",
                     "发表/版本",
                     "类型",
-                    "范围 / 分母",
+                    "统计范围 / 占谁的比例",
                     "限制",
                   ]
               ).map((h) => (
@@ -121,7 +121,7 @@ const data = dataset.records.filter((r) => records.includes(r.id));
                   {lang === "en"
                     ? r.kind
                     : {
-                        observed: "观测/实验",
+                        observed: "实测/研究",
                         estimate: "估计",
                         projection: "预测",
                       }[r.kind]}
