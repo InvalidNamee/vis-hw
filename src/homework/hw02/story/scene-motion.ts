@@ -150,7 +150,7 @@ export function drawingMotion(
           : undefined,
     })).map((bar) => {
       const cap = document.createElementNS(SVG_NS, "rect");
-      cap.setAttribute("fill", "#fff");
+      cap.setAttribute("fill", "var(--hw-fx-cap)");
       cap.classList.add("fx-cap");
       if (kind === "energy") {
         cap.setAttribute("x", String(bar.x));

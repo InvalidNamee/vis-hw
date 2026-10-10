@@ -13,6 +13,7 @@ const english: Record<string, string> = {
   "智变：AI 与新质生产力": "The intelligence shift: AI & productivity",
   "通过交互图谱、研究证据和流程实验，看人工智能怎样改变生产。": "Explore how AI changes production through interactive networks, evidence, and workflow experiments.",
   "人工智能连接数据、产业与生产力的关系示意": "AI connecting data, industries, and productivity",
+  "盒模型层叠与页面网格组成的网页布局示意": "Web layout illustrated with layered boxes and a page grid",
   "可视化导论": "Introduction to Visualization",
   "《可视化导论》课程作业：从网页基础到数据可视化。": "Course assignments: from web fundamentals to data visualization.",
   "跳到正文": "Skip to content",

@@ -1,4 +1,4 @@
-import { dataset, type Lang } from "../data";
+import { industryCases, dataset, type Lang } from "../data";
 import type { Plot } from "./quantitative-charts";
 export function drawIndustryNetwork(
   svg: Plot,
@@ -15,7 +15,7 @@ export function drawIndustryNetwork(
     left = nodeWidth / 2 + 4,
     right = w - nodeWidth / 2 - 4;
   const nodes = [
-    ...dataset.cases.map((c, i) => ({
+    ...industryCases.map((c, i) => ({
       id: c.id,
       label: c.name[lang],
       group: 0,
@@ -31,10 +31,10 @@ export function drawIndustryNetwork(
     })),
   ];
   const related = capability
-    ? dataset.cases
+    ? industryCases
         .filter((c) => c.capabilities.includes(capability))
         .map((c) => c.id)
-    : dataset.cases.find((c) => c.id === activeIndustry)!.capabilities;
+    : industryCases.find((c) => c.id === activeIndustry)!.capabilities;
   const active = capability || activeIndustry,
     isActive = (industry: string, cap: string) =>
       capability ? cap === capability : industry === activeIndustry;
@@ -49,7 +49,7 @@ export function drawIndustryNetwork(
       .text(value);
   label(left, 22, lang === "en" ? "Industries" : "产业场景");
   label(right, 22, lang === "en" ? "Capabilities" : "智能能力");
-  const links = dataset.cases.flatMap((c) =>
+  const links = industryCases.flatMap((c) =>
     c.capabilities.map((cap) => ({
       industry: c.id,
       cap,

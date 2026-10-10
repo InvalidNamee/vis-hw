@@ -1,4 +1,4 @@
-import { dataset, type LocalText } from "../data";
+import { industryCases, type LocalText } from "../data";
 const bi = (zh: string, en: string): LocalText => ({ zh, en });
 export interface StoryStep {
   id: string;
@@ -76,18 +76,16 @@ export const storyChapters: StoryChapter[] = [
       "Shared capabilities. Different workflows and responsibilities.",
     ),
     explore: "applications",
-    steps: ["manufacturing", "health", "agriculture", "science", "service"]
-      .map((id) => dataset.cases.find((c) => c.id === id)!)
-      .map((c) => ({
-        id: `case-${c.id}`,
-        title: c.task,
-        body: bi(
-          `${c.meaning.zh}流程由“${c.before.zh.join(" → ")}”转向“${c.after.zh.join(" → ")}”。${c.limit.zh}`,
-          `${c.meaning.en} From “${c.before.en.join(" → ")}” to “${c.after.en.join(" → ")}”. ${c.limit.en}`,
-        ),
-        scene: `industry-${c.id}`,
-        sources: [c.source],
-      })),
+    steps: industryCases.map((c) => ({
+      id: `case-${c.id}`,
+      title: c.task,
+      body: bi(
+        `${c.meaning.zh}流程由“${c.before.zh.join(" → ")}”转向“${c.after.zh.join(" → ")}”。${c.limit.zh}`,
+        `${c.meaning.en} From “${c.before.en.join(" → ")}” to “${c.after.en.join(" → ")}”. ${c.limit.en}`,
+      ),
+      scene: `industry-${c.id}`,
+      sources: [c.source],
+    })),
   },
   {
     id: "evidence",

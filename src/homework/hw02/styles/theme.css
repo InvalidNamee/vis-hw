@@ -1,4 +1,4 @@
-/* HW02 is a dark tech poster in both site themes; global nav keeps its own theme. */
+/* Paired HW02 poster palettes; the global navigation owns its separate theme. */
 .hw-shell {
   --hw-blue: #3ee6ff;
   --hw-on-blue: #031018;
@@ -11,11 +11,28 @@
   --hw-grid: color-mix(in srgb, var(--hw-blue) 7%, transparent);
   --hw-panel: color-mix(in srgb, #0b1220 82%, transparent);
   --hw-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --hw-title-start: #fff;
+  --hw-cover-opacity: 0.38;
+  --hw-cover-blend: screen;
+  --hw-cover-filter: hue-rotate(-20deg) saturate(1.4) contrast(1.15);
+  --hw-title-shadow: drop-shadow(
+    0 0 28px color-mix(in srgb, var(--hw-blue) 35%, transparent)
+  );
+  --hw-panel-inset: #0008;
+  --hw-panel-shadow-strength: 40%;
+  --hw-scan-ink: #ffffff05;
+  --hw-source-overlay-start: #05070de6;
+  --hw-source-overlay-end: #05070d60;
+  --hw-metric-paper: #05070dc0;
+  --hw-source-ink: #f6f8fa;
+  --hw-source-copy: #e1e4ee;
+  --hw-fx-cap: #fff;
+  --hw-selection: color-mix(in srgb, var(--hw-orange) 55%, transparent);
   --hw-gutter: 48px;
   --control-height: 44px;
   --control-radius: 8px;
   --control-gap: 8px;
-  /* Shared site tokens re-scoped so every chart and control reads on the dark paper. */
+  /* Scoped semantic tokens also cover every explorer, table and native control. */
   --surface: #0a0f1a;
   --surface-muted: #070b14;
   --surface-raised: #111a2b;
@@ -55,8 +72,72 @@
   background-size: 48px 48px;
 }
 .hw-shell ::selection {
-  background: color-mix(in srgb, var(--hw-orange) 55%, transparent);
+  background: var(--hw-selection);
   color: #fff;
+}
+:root:not(.dark) .hw-shell {
+  --hw-blue: #007d96;
+  --hw-on-blue: #fff;
+  --hw-mint: #537600;
+  --hw-purple: #6650c8;
+  --hw-orange: #bc2667;
+  --hw-paper: #f3f7fc;
+  --hw-ink: #10263d;
+  --hw-glow: 0 0 12px color-mix(in srgb, var(--hw-blue) 12%, transparent);
+  --hw-grid: color-mix(in srgb, var(--hw-blue) 5%, transparent);
+  --hw-panel: color-mix(in srgb, #fff 90%, transparent);
+  --hw-title-start: #10263d;
+  --hw-cover-opacity: 0.2;
+  --hw-cover-blend: multiply;
+  --hw-cover-filter: hue-rotate(-20deg) saturate(0.9) contrast(1.03);
+  --hw-title-shadow: drop-shadow(
+    0 2px 12px color-mix(in srgb, var(--hw-blue) 12%, transparent)
+  );
+  --hw-panel-inset: #fff9;
+  --hw-panel-shadow-strength: 12%;
+  --hw-scan-ink: #007d9607;
+  --hw-source-overlay-start: #f3f7fcf2;
+  --hw-source-overlay-end: #f3f7fc99;
+  --hw-metric-paper: #ffffffe6;
+  --hw-source-ink: #10263d;
+  --hw-source-copy: #40536b;
+  --hw-fx-cap: #10263d;
+  --hw-selection: var(--hw-orange);
+  --surface: #fff;
+  --surface-muted: #eaf0f7;
+  --surface-raised: #f7faff;
+  --border-soft: #ccd8e5;
+  --border-strong: #a6b9cd;
+  --border-emphasis: #6b829d;
+  --text-primary: #10263d;
+  --text-body: #293f58;
+  --text-secondary: #40536b;
+  --text-subtle: #566b82;
+  --accent: var(--hw-blue);
+  --accent-strong: #005e74;
+  --accent-soft: #e0f3f7;
+  --diagram-text: #00647a;
+  --diagram-heading: #104154;
+  --diagram-fill: #e0f3f7;
+  --diagram-border: #8ec4d0;
+  --diagram-border-strong: #468fa3;
+  --border-hover: var(--hw-blue);
+  --border-active: #73afbf;
+  --inline-code: #eaf0f7;
+  --demo-stage: #eaf0f7;
+  --teal-fill: #edf3d9;
+  --teal-text: var(--hw-mint);
+  --indigo-fill: #ece8fa;
+  --indigo-text: var(--hw-purple);
+  --action: var(--hw-blue);
+  --action-hover: #005e74;
+  --on-action: #fff;
+  --switch-off: #7e93aa;
+  color-scheme: light;
+  background-color: var(--hw-paper);
+  background-image:
+    linear-gradient(var(--hw-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hw-grid) 1px, transparent 1px);
 }
 @media (max-width: 1200px) {
   .hw-shell {

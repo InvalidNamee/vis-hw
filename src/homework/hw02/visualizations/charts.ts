@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { dataset, text, type Lang } from "../data";
+import { industryCases, dataset, text, type Lang } from "../data";
 import { defaults, presets } from "../model.mjs";
 import { drawEvidence } from "./evidence-charts";
 import { drawScience } from "./science-graphs";
@@ -272,7 +272,7 @@ export class AiViz extends HTMLElement {
     if (this.kind === "industry" || this.kind === "lab") {
       const steps =
         this.kind === "industry"
-          ? dataset.cases.map((c) => ({
+          ? industryCases.map((c) => ({
               label: c.name[this.locale],
               duration: 3000,
               apply: () => {

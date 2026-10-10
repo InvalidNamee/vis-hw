@@ -9,7 +9,7 @@
   border-radius: 16px;
   overflow: hidden;
   background: #18233d;
-  color: #f6f8fa;
+  color: var(--hw-source-ink);
 }
 .hw-shell .poster-heading > img {
   position: absolute;
@@ -34,7 +34,7 @@
   margin: 0;
 }
 .hw-shell .poster-title p {
-  color: #e1e4ee;
+  color: var(--hw-source-copy);
   font-size: 14px;
   line-height: 1.75;
   margin: 12px 0 0;

@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { dataset } from "../data";
+import { industryCases, dataset } from "../data";
 import { setParams } from "./url-state";
 import { showPanel, resizePanel } from "./motion";
 import { drawIndustryNetwork } from "../visualizations/industry-network";
@@ -37,7 +37,7 @@ export function renderIndustry(this: AiViz) {
     placeholder?.remove();
     select.value = selected;
   }
-  const relatedCases = dataset.cases.filter((c) =>
+  const relatedCases = industryCases.filter((c) =>
     c.capabilities.includes(capability),
   );
   const panel = document.querySelector<HTMLElement>("[data-capability-panel]")!;
@@ -80,7 +80,7 @@ export function renderIndustry(this: AiViz) {
       .padding(0.1);
     const y = d3
       .scaleBand()
-      .domain(dataset.cases.map((c) => c.id))
+      .domain(industryCases.map((c) => c.id))
       .range([top, 390])
       .padding(0.18);
     dataset.capabilities.forEach((c) => {
@@ -121,7 +121,7 @@ export function renderIndustry(this: AiViz) {
         }
       });
     });
-    dataset.cases.forEach((c) => {
+    industryCases.forEach((c) => {
       this.label(
         svg,
         left - 10,
@@ -196,7 +196,7 @@ export function renderIndustry(this: AiViz) {
     );
     return;
   }
-  const c = dataset.cases.find((c) => c.id === selected)!;
+  const c = industryCases.find((c) => c.id === selected)!;
   this.status(
     `${c.name[this.locale]} · ${c.task[this.locale]} — ${this.t("案例与来源已同步更新。图中位置远近不代表相似程度。", "Linked case and source updated. Layout distance is not a similarity metric.")}`,
   );

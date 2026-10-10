@@ -26,6 +26,22 @@ export function mountField(canvas: HTMLCanvasElement, reduced: boolean) {
     settle = 0;
   const pointer = { x: -9999, y: -9999 };
   let particles: Particle[] = [];
+  let colors = COLORS;
+  let dark = true;
+  const readPalette = () => {
+    const style = getComputedStyle(canvas);
+    colors = ["--hw-blue", "--hw-orange", "--hw-mint", "--hw-purple"].map(
+      (name, i) => {
+        const hex = style.getPropertyValue(name).trim();
+        return /^#[\da-f]{6}$/i.test(hex)
+          ? [1, 3, 5]
+              .map((offset) => parseInt(hex.slice(offset, offset + 2), 16))
+              .join(",")
+          : COLORS[i];
+      },
+    );
+    dark = style.colorScheme === "dark";
+  };
 
   const build = () => {
     const rect = canvas.getBoundingClientRect();
@@ -70,7 +86,7 @@ export function mountField(canvas: HTMLCanvasElement, reduced: boolean) {
     const pos = particles.map((p) => ({
       x: p.x,
       y: p.y + (lineY - p.y) * collapse * collapse,
-      c: COLORS[p.hue],
+      c: colors[p.hue],
     }));
     ctx.lineWidth = 1;
     for (let i = 0; i < pos.length; i++) {
@@ -81,7 +97,8 @@ export function mountField(canvas: HTMLCanvasElement, reduced: boolean) {
         if (d < link) {
           const near =
             Math.hypot(pos[i].x - pointer.x, pos[i].y - pointer.y) < 160;
-          const a = (1 - d / link) * (near ? 0.55 : 0.18) * (1 - collapse * 0.6);
+          const a =
+            (1 - d / link) * (near ? 0.55 : 0.18) * (1 - collapse * 0.6);
           ctx.strokeStyle = `rgba(${pos[i].c},${a})`;
           ctx.beginPath();
           ctx.moveTo(pos[i].x, pos[i].y);
@@ -94,7 +111,7 @@ export function mountField(canvas: HTMLCanvasElement, reduced: boolean) {
       const near = Math.hypot(p.x - pointer.x, p.y - pointer.y) < 160;
       ctx.fillStyle = `rgba(${p.c},${near ? 1 : 0.75})`;
       ctx.shadowColor = `rgba(${p.c},0.9)`;
-      ctx.shadowBlur = near ? 14 : 6;
+      ctx.shadowBlur = dark ? (near ? 14 : 6) : near ? 4 : 0;
       ctx.beginPath();
       ctx.arc(p.x, p.y, near ? 2.4 : 1.6, 0, Math.PI * 2);
       ctx.fill();
@@ -102,9 +119,9 @@ export function mountField(canvas: HTMLCanvasElement, reduced: boolean) {
     ctx.shadowBlur = 0;
     if (collapse > 0.02) {
       const g = ctx.createLinearGradient(0, 0, w, 0);
-      g.addColorStop(0, "rgba(62,230,255,0)");
-      g.addColorStop(0.5, `rgba(62,230,255,${collapse})`);
-      g.addColorStop(1, "rgba(62,230,255,0)");
+      g.addColorStop(0, `rgba(${colors[0]},0)`);
+      g.addColorStop(0.5, `rgba(${colors[0]},${collapse})`);
+      g.addColorStop(1, `rgba(${colors[0]},0)`);
       ctx.fillStyle = g;
       ctx.fillRect(0, lineY - 1, w, 2);
     }
@@ -114,7 +131,8 @@ export function mountField(canvas: HTMLCanvasElement, reduced: boolean) {
     draw();
     if (grid && settle > 0) settle = Math.min(1, settle + 0.004);
     const still = grid && settle >= 1;
-    frame = visible && !document.hidden && !still ? requestAnimationFrame(loop) : 0;
+    frame =
+      visible && !document.hidden && !still ? requestAnimationFrame(loop) : 0;
   };
   const start = () => {
     if (reduced) return draw();
@@ -125,8 +143,18 @@ export function mountField(canvas: HTMLCanvasElement, reduced: boolean) {
     frame = 0;
   };
 
+  readPalette();
   build();
   draw();
+  // Repaint even a paused/reduced-motion field without resetting its particle positions.
+  const theme = new MutationObserver(() => {
+    readPalette();
+    draw();
+  });
+  theme.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class", "data-theme"],
+  });
   const io = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
     if (visible) {
@@ -174,6 +202,7 @@ export function mountField(canvas: HTMLCanvasElement, reduced: boolean) {
       stop();
       io.disconnect();
       ro.disconnect();
+      theme.disconnect();
       local.abort();
     },
   };

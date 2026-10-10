@@ -1,5 +1,13 @@
 import raw from "../../../public/data/hw02/dataset.json";
 export const dataset = raw;
+// One presentation order for chapter steps, diagrams and the complete explorer.
+export const industryCases = [
+  "manufacturing",
+  "health",
+  "agriculture",
+  "science",
+  "service",
+].map((id) => dataset.cases.find((c) => c.id === id)!);
 export const recordById = (id: string) => {
   const record = dataset.records.find((r) => r.id === id);
   if (!record) throw new Error(`Unknown HW02 record: ${id}`);

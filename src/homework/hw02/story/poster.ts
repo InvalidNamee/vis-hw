@@ -1,5 +1,5 @@
-/** Cover field, decoding titles and per-chapter poster transitions. Purely decorative. */
-import { decodeText, prefersReduced, splitChars } from "./fx";
+/** Cover field and per-chapter poster transitions. Purely decorative. */
+import { prefersReduced, splitChars } from "./fx";
 
 let dispose: (() => void) | undefined;
 
@@ -33,11 +33,17 @@ async function mount() {
 
   const ctx = gsap.context(() => {
     if (reduced) return;
-    // Cover: decode once, then let scrolling collapse the field into a single line.
-    const decoders = Array.from(
-      cover.querySelectorAll<HTMLElement>("[data-decode]"),
-    ).map((el, i) => decodeText(el, i ? 900 : 1200, i * 260));
-    cleanups.push(() => decoders.forEach((d) => d()));
+    // Keep the real title readable throughout its brief entrance.
+    gsap.fromTo(cover.querySelector(".cover-title"), {
+      opacity: 0.8,
+      y: 8,
+    }, {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      ease: "power2.out",
+      clearProps: "opacity,transform",
+    });
     gsap.from(cover.querySelectorAll(".story-cover-copy > :not(h1), .cover-index a, .poster-hud span"), {
       autoAlpha: 0,
       y: 18,
@@ -73,7 +79,7 @@ async function mount() {
       },
     );
 
-    // Chapter posters: number fills and slides, slab wipes open, title rises per character.
+    // Original chapter posters: filled numbers, slab wipe and character stagger.
     document.querySelectorAll<HTMLElement>("[data-poster]").forEach((poster) => {
       const title = poster.querySelector<HTMLElement>("[data-poster-title]")!;
       const split = splitChars(title);
@@ -99,13 +105,15 @@ async function mount() {
     });
 
     const conclusion = document.querySelector<HTMLElement>(".story-conclusion");
-    const line = conclusion?.querySelector<HTMLElement>("[data-decode]");
+    const line = conclusion?.querySelector<HTMLElement>("h2");
     if (conclusion && line) {
-      ScrollTrigger.create({
-        trigger: conclusion,
-        start: "top 70%",
-        once: true,
-        onEnter: () => cleanups.push(decodeText(line, 1400)),
+      gsap.fromTo(line, { y: 8, opacity: 0.8 }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power2.out",
+        clearProps: "opacity,transform",
+        scrollTrigger: { trigger: conclusion, start: "top 70%", once: true },
       });
     }
   });

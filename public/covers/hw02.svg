@@ -1,1 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540"><defs><radialGradient id="g"><stop stop-color="#cbd5ff"/><stop offset="1" stop-color="#f1f5fa"/></radialGradient></defs><rect width="960" height="540" fill="#f1f5fa"/><circle cx="650" cy="270" r="250" fill="url(#g)"/><g stroke="#a4b7ea" fill="none"><circle cx="650" cy="270" r="180" stroke-dasharray="3 9"/><circle cx="650" cy="270" r="110"/><path d="M650 270 530 155M650 270 780 160M650 270 815 310M650 270 680 430M650 270 470 340"/></g><g fill="#4263eb"><circle cx="650" cy="270" r="46"/><circle cx="530" cy="155" r="16"/><circle cx="780" cy="160" r="20"/><circle cx="815" cy="310" r="14"/></g><g fill="#168476"><circle cx="680" cy="430" r="20"/><circle cx="470" cy="340" r="17"/></g><g font-family="sans-serif"><text x="650" y="282" text-anchor="middle" fill="white" font-size="32">AI</text><text x="66" y="128" fill="#4263eb" font-size="17" letter-spacing="4">HW02 / AI SHIFT</text><text x="62" y="248" fill="#172039" font-size="70" font-weight="700">智变</text><text x="66" y="312" fill="#52617d" font-size="25">从智能，到生产力。</text><text x="66" y="442" fill="#617190" font-size="13" letter-spacing="3">DATA · MECHANISMS · EXPERIMENTS</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title">
+  <title id="title">AI shift: data, AI assistance and work processes</title>
+  <defs>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#007d96"/><stop offset="1" stop-color="#6650c8"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#57708e" flood-opacity=".18"/>
+    </filter>
+  </defs>
+  <rect width="960" height="540" fill="#f3f7fc"/>
+  <g fill="none" stroke="#c6d5e5" stroke-width="1">
+    <path d="M40 92V40H92M868 40H920V92M40 448V500H92M868 500H920V448"/>
+    <path d="M44 458H916"/>
+  </g>
+  <g font-family="'Avenir Next','Segoe UI',Arial,sans-serif">
+    <text x="44" y="79" fill="#007d96" font-size="22" font-weight="700">HW02</text>
+    <text x="44" y="230" fill="#10263d" font-size="72" font-weight="800" letter-spacing="-4">AI / Shift</text>
+    <text x="48" y="275" fill="#566b82" font-size="23">Intelligence at work.</text>
+    <g stroke="#007d96" fill="none" stroke-width="2">
+      <path d="M48 334H238"/><path d="M222 326L238 334L222 342"/>
+    </g>
+    <g stroke="#c6d5e5" fill="none" stroke-width="1">
+      <path d="M390 110H914M390 410H914M428 90V430M640 90V430M852 90V430" stroke-dasharray="3 9"/>
+    </g>
+    <g fill="#ffffff" stroke="#c6d5e5" stroke-width="1.5">
+      <rect x="382" y="124" width="116" height="66" rx="8"/>
+      <rect x="382" y="224" width="116" height="66" rx="8"/>
+      <rect x="382" y="324" width="116" height="66" rx="8"/>
+    </g>
+    <g fill="#007d96">
+      <rect x="399" y="141" width="62" height="6" rx="2"/><rect x="399" y="155" width="80" height="5" rx="2" opacity=".4"/><rect x="399" y="169" width="45" height="5" rx="2" opacity=".25"/>
+      <rect x="399" y="241" width="80" height="6" rx="2"/><rect x="399" y="255" width="48" height="5" rx="2" opacity=".4"/><rect x="399" y="269" width="65" height="5" rx="2" opacity=".25"/>
+      <rect x="399" y="341" width="45" height="6" rx="2"/><rect x="399" y="355" width="70" height="5" rx="2" opacity=".4"/><rect x="399" y="369" width="80" height="5" rx="2" opacity=".25"/>
+    </g>
+    <g fill="none" stroke="#007d96" stroke-width="2.5">
+      <path d="M498 157C542 157 527 214 568 214M498 257H568M498 357C542 357 527 300 568 300"/>
+    </g>
+    <g fill="none" stroke-width="3">
+      <path d="M708 214C758 214 743 151 792 151" stroke="#537600"/>
+      <path d="M708 257H792" stroke="#6650c8"/>
+      <path d="M708 300C758 300 743 363 792 363" stroke="#bc2667"/>
+    </g>
+    <g transform="translate(568 187)" filter="url(#shadow)">
+      <path d="M0 16L16 0H124L140 16V124L124 140H16L0 124Z" fill="#ffffff" stroke="url(#edge)" stroke-width="2.5"/>
+      <path d="M18 30V18H30M110 18H122V30M18 110V122H30M110 122H122V110" fill="none" stroke="#007d96" stroke-width="3"/>
+      <rect x="29" y="29" width="82" height="82" rx="8" fill="#007d96" fill-opacity=".1"/>
+      <text x="70" y="89" text-anchor="middle" fill="#10263d" font-size="51" font-weight="800" letter-spacing="-2">AI</text>
+    </g>
+    <g fill="#ffffff" stroke-width="1.5">
+      <rect x="792" y="117" width="122" height="68" rx="8" stroke="#537600"/>
+      <rect x="792" y="223" width="122" height="68" rx="8" stroke="#6650c8"/>
+      <rect x="792" y="329" width="122" height="68" rx="8" stroke="#bc2667"/>
+    </g>
+    <g stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M808 154L820 164L839 138M853 143H895M853 158H885" stroke="#537600"/>
+      <path d="M809 269V249M821 269V239M833 269V245M853 249H895M853 264H885" stroke="#6650c8"/>
+      <path d="M808 363H838M823 348V378M853 355H895M853 370H885" stroke="#bc2667"/>
+    </g>
+    <g fill="#007d96"><circle cx="540" cy="257" r="5"/><circle cx="526" cy="181" r="4"/><circle cx="526" cy="333" r="4"/></g>
+    <g fill="#537600"><circle cx="757" cy="178" r="4"/></g>
+    <g fill="#6650c8"><circle cx="751" cy="257" r="5"/></g>
+    <g fill="#bc2667"><circle cx="757" cy="336" r="4"/></g>
+    <text x="48" y="494" fill="#566b82" font-size="21">Explore / Measure / Experiment</text>
+    <text x="912" y="494" text-anchor="end" fill="#007d96" font-size="21" font-weight="700">02</text>
+  </g>
+</svg>

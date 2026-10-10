@@ -27,8 +27,8 @@ const available = homework.filter(hw => hw.ready);
           const Card = hw.ready ? 'a' : 'div';
           return <Card class:list={['assignment', { 'assignment-ready': hw.ready }]} {...(hw.ready ? { href: localizedHref(`${hw.id}/`, locale) } : {})}>
             {hw.cover && <div class="assignment-cover-wrap">
-              {hw.coverDark && <img class="assignment-cover assignment-cover-dark" src={href(hw.coverDark)} alt="" width="640" height="360" loading="lazy" decoding="async" />}
-              <img class:list={['assignment-cover', { 'assignment-cover-light': Boolean(hw.coverDark) }]} src={href(hw.cover)} alt={hw.coverAlt ?? ''} width="640" height="360" loading="lazy" decoding="async" />
+              {hw.coverDark && <img class="assignment-cover assignment-cover-dark" src={href(hw.coverDark)} alt={t(hw.coverAlt ?? '')} width="640" height="360" loading="lazy" decoding="async" />}
+              <img class:list={['assignment-cover', { 'assignment-cover-light': Boolean(hw.coverDark) }]} src={href(hw.cover)} alt={t(hw.coverAlt ?? '')} width="640" height="360" loading="lazy" decoding="async" />
             </div>}
             <div class="assignment-body">
               <div class="assignment-top"><span class="assignment-id">{hw.id.toUpperCase()}</span><span class:list={['badge', { 'badge-ready': hw.ready }]}>{hw.ready ? t("可查看") : t("未添加")}</span></div>

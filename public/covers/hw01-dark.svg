@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title">
+  <title id="title">Web layout: layered box model and page grid</title>
+  <defs>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#3ee6ff"/><stop offset="1" stop-color="#8a7dff"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000000" flood-opacity=".18"/>
+    </filter>
+  </defs>
+  <rect width="960" height="540" fill="#0a0f1a"/>
+  <g fill="none" stroke="#2a405c" stroke-width="1">
+    <path d="M40 92V40H92M868 40H920V92M40 448V500H92M868 500H920V448"/>
+    <path d="M44 458H916"/>
+  </g>
+  <g font-family="'Avenir Next','Segoe UI',Arial,sans-serif">
+    <text x="44" y="79" fill="#3ee6ff" font-size="22" font-weight="700">HW01</text>
+    <text x="44" y="230" fill="#f2f7ff" font-size="76" font-weight="800" letter-spacing="-4">Layout</text>
+    <text x="48" y="275" fill="#a2b4cd" font-size="23">Give content space.</text>
+    <g fill="none" stroke="#3ee6ff" stroke-width="2">
+      <path d="M48 324H236M48 316V332M236 316V332"/>
+      <path d="M48 350H118M132 350H174M188 350H236" stroke-width="8"/>
+    </g>
+    <g fill="none" stroke="#2a405c" stroke-dasharray="4 7">
+      <path d="M460 116L416 180M880 166L836 230M384 364L340 428M804 414L760 478"/>
+    </g>
+    <g transform="translate(416 180) matrix(1 .12 -.28 .92 0 0)">
+      <rect width="420" height="270" rx="10" fill="#162740" stroke="#8a7dff" stroke-width="1.5"/>
+      <rect x="18" y="18" width="384" height="234" rx="4" fill="none" stroke="#8a7dff" stroke-dasharray="5 7" opacity=".5"/>
+    </g>
+    <g transform="translate(438 148) matrix(1 .12 -.28 .92 0 0)">
+      <rect width="420" height="270" rx="10" fill="#0a0f1a" stroke="#3ee6ff" stroke-width="1.5"/>
+      <path d="M24 24H396V246H24Z" fill="#3ee6ff" fill-opacity=".06" stroke="#3ee6ff" stroke-opacity=".35"/>
+    </g>
+    <g transform="translate(460 116) matrix(1 .12 -.28 .92 0 0)" filter="url(#shadow)">
+      <rect width="420" height="270" rx="10" fill="#111d31" stroke="url(#edge)" stroke-width="2"/>
+      <path d="M0 46H420" stroke="#2a405c"/>
+      <g fill="#3ee6ff">
+        <circle cx="24" cy="23" r="4"/><circle cx="40" cy="23" r="4" opacity=".55"/><circle cx="56" cy="23" r="4" opacity=".25"/>
+        <rect x="328" y="18" width="68" height="10" rx="3" opacity=".2"/>
+      </g>
+      <rect x="22" y="66" width="76" height="180" rx="5" fill="#3ee6ff" fill-opacity=".1" stroke="#3ee6ff" stroke-opacity=".35"/>
+      <g fill="#3ee6ff" opacity=".55"><rect x="36" y="84" width="47" height="6" rx="2"/><rect x="36" y="105" width="34" height="6" rx="2"/><rect x="36" y="126" width="42" height="6" rx="2"/></g>
+      <rect x="116" y="66" width="282" height="38" rx="5" fill="#162740"/>
+      <rect x="130" y="80" width="132" height="9" rx="3" fill="#f2f7ff" opacity=".28"/>
+      <g stroke-width="1.5">
+        <rect x="116" y="120" width="134" height="74" rx="5" fill="#8a7dff" fill-opacity=".15" stroke="#8a7dff"/>
+        <rect x="264" y="120" width="134" height="74" rx="5" fill="#3ee6ff" fill-opacity=".14" stroke="#3ee6ff"/>
+      </g>
+      <g fill="#8a7dff" opacity=".7"><rect x="132" y="138" width="51" height="10" rx="2"/><rect x="132" y="160" width="96" height="5" rx="2"/></g>
+      <g fill="#3ee6ff" opacity=".7"><rect x="280" y="138" width="51" height="10" rx="2"/><rect x="280" y="160" width="96" height="5" rx="2"/></g>
+      <rect x="116" y="210" width="282" height="36" rx="5" fill="#162740"/>
+      <g fill="#3ee6ff"><rect x="130" y="223" width="102" height="9" rx="3" opacity=".3"/><rect x="310" y="219" width="73" height="17" rx="4" opacity=".7"/></g>
+    </g>
+    <text x="48" y="494" fill="#a2b4cd" font-size="21">Box model / Grid / Flex</text>
+    <text x="912" y="494" text-anchor="end" fill="#3ee6ff" font-size="21" font-weight="700">01</text>
+  </g>
+</svg>
