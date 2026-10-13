@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {spawnSync} from 'node:child_process';import {parseData,replay} from '../src/homework/hw03/model.mjs';import {columnRenameOperation} from '../src/homework/hw03/column-rename.mjs';
+const columns=['Sales Total','UnitPrice','region_code'],rows=[{'Sales Total':12,UnitPrice:3,region_code:'East'}];
+test('batch rename validates all final names and preserves index/dtype metadata',()=>{const raw=JSON.stringify(rows),d={id:'r',name:'r',format:'json',raw,...parseData(raw,'json')},ops=[{type:'dtype',params:{column:'UnitPrice',dtype:'Int64'}},{type:'columnRename',params:{columns,method:'snake'}}],r=replay(d,ops,2);assert.deepEqual(r.columns,['sales_total','unit_price','region_code']);assert.deepEqual(r.types.unit_price,{dtype:'Int64'});assert.throws(()=>columnRenameOperation(rows,columns,{params:{columns:['UnitPrice'],method:'names',names:'region_code'}}),/duplicateColumns/);assert.throws(()=>columnRenameOperation(rows,columns,{params:{columns,method:'names',names:'x\ny'}}),/renameCount/);});
+const python=process.env.PANDAS_PYTHON??'python3',ready=spawnSync(python,['-c','import pandas'],{encoding:'utf8'}),cases=[];for(const selected of [columns,[columns[1]]])for(const method of ['affix','strip','lower','upper','literal','regex','names'])cases.push({columns:selected,method,prefix:'pre_',suffix:'_post',find:method==='regex'?'[ _]':'_',replacement:'-',names:selected.map((_,i)=>'field'+i).join('\n')});
+test(`pandas differential: ${cases.length} batch naming, selected fields and replacement rules`,{skip:ready.status!==0?'pandas unavailable':false},()=>{const py=spawnSync(python,['-c',String.raw`import pandas as pd,json,re,sys
+x=json.load(sys.stdin);out=[]
+for c in x['cases']:
+ names=[]
+ for col in x['columns']:
+  if col not in c['columns']:names.append(col);continue
+  m=c['method'];names.append(c['prefix']+col+c['suffix'] if m=='affix' else col.strip() if m=='strip' else col.lower() if m=='lower' else col.upper() if m=='upper' else col.replace(c['find'],c['replacement']) if m=='literal' else re.sub(c['find'],c['replacement'],col) if m=='regex' else c['names'].splitlines()[c['columns'].index(col)])
+ d=pd.DataFrame(x['rows']);d.columns=names;out.append({'columns':names,'rows':json.loads(d.to_json(orient='records'))})
+print(json.dumps(out))`],{input:JSON.stringify({columns,rows,cases}),encoding:'utf8'});assert.equal(py.status,0,py.stderr);JSON.parse(py.stdout).forEach((expected,i)=>{const r=columnRenameOperation(rows,columns,{params:cases[i]});assert.deepEqual({columns:r.columns,rows:r.rows},expected);});});

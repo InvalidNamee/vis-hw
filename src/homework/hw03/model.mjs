@@ -1,3 +1,27 @@
+import {columnRenameOperation} from './column-rename.mjs';
+import {weightedWindowOperation} from './weighted-window.mjs';
+import {dtypeTypes,dtypeOperation,typedProfile} from './dtypes.mjs';
+import {asofOperation} from './asof.mjs';
+import {extractAllOperation} from './extract-all.mjs';
+import {axisReshapeTypes,axisReshapeOperation} from './axis-reshape.mjs';
+import {validateListValues,explodeOperation} from './list-values.mjs';
+import {alignmentTypes,alignmentOperation} from './index-alignment.mjs';
+import {indexTypes,indexOperation,rangeIndex,applyIndexedOperation} from './indexing.mjs';
+import { groupToolsOperation } from './group-tools.mjs';
+import { ewmOperation } from './ewm.mjs';
+import { datetimeOperation } from './datetime.mjs';
+import { binningOperation } from './binning.mjs';
+import { samplingOperation } from './sampling.mjs';
+import { calculationOperation } from './calculation.mjs';
+import { stringOperation } from './strings.mjs';
+import { windowOperation } from './windows.mjs';
+import { reshapeTypes, reshapeOperation } from './reshape.mjs';
+import { mergeOperation, concatOperation } from './relational.mjs';
+import { groupingOperation } from './grouping.mjs';
+import { selectionTypes, selectionOperation, matchesCondition, compileCondition } from './selection.mjs';
+import { cleaningTypes, cleaningOperation } from './cleaning.mjs';
+import { statisticalTypes, statisticalOperation, moments, quantile } from './statistics.mjs';
+import { extendedTypes, extendedOperation } from './extended.mjs';
 export const isMissing = v => v === null || v === undefined || v === '';
 export const isNumber = v => typeof v === 'number' && Number.isFinite(v);
 export function parseDelimited(text, delimiter = ',') {
@@ -29,17 +53,17 @@ export function parseData(raw, format) {
   if (format === 'json') {
     try { rows = JSON.parse(raw); } catch { throw new Error('jsonInvalid'); }
     if (!Array.isArray(rows) || !rows.length || rows.some(r => !r || Array.isArray(r) || typeof r !== 'object')) throw new Error('jsonInvalid');
-    if (rows.some(r => Object.values(r).some(v => v !== null && typeof v === 'object'))) throw new Error('nestedJson');
+    validateListValues(rows);
   } else rows = parseDelimited(raw, format === 'tsv' ? '\t' : format === 'semicolon' ? ';' : ',');
   if (!rows.length) throw new Error('emptyFile');
   const columns = [...new Set(rows.flatMap(r => Object.keys(r)))];
   if (rows.length > 100000 || columns.length > 200 || rows.length * columns.length > 2000000) throw new Error('tooManyRows');
   // Preserve identifiers with leading zeroes; infer only consistently numeric columns.
   const numeric = new Set(columns.filter(c => {
-    const values = rows.map(r => r[c]).filter(v => !isMissing(v));
-    return values.length && values.every(v => typeof v === 'number' ? isNumber(v) : /^[-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?$/i.test(String(v).trim()) && !/^[-+]?0\d/.test(String(v).trim()));
+    const values = rows.map(r => Object.hasOwn(r,c)?r[c]:undefined).filter(v => !isMissing(v));
+    return values.length && values.every(v => typeof v === 'number' ? isNumber(v) : typeof v === 'string' && Number.isFinite(Number(v)) && /^[-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?$/i.test(String(v).trim()) && !/^[-+]?0\d/.test(String(v).trim()) && (!/^[-+]?\d+$/.test(String(v).trim()) || Number.isSafeInteger(Number(v))));
   }));
-  rows = rows.map(r => Object.fromEntries(columns.map(c => [c, isMissing(r[c]) ? null : numeric.has(c) ? Number(r[c]) : r[c]])));
+  rows = rows.map(r => Object.fromEntries(columns.map(c => [c, !Object.hasOwn(r,c)||isMissing(r[c]) ? null : numeric.has(c) ? Number(r[c]) : r[c]])));
   return { rows, columns };
 }
 export function defaultDatasets() {
@@ -61,6 +85,7 @@ export function defaultDatasets() {
 export function columnType(rows, column) {
   const values = rows.map(r => r[column]).filter(v => !isMissing(v));
   if (!values.length) return 'empty';
+  if (values.some(Array.isArray)) return 'list';
   if (values.every(isNumber)) return 'number';
   if (values.every(v => typeof v === 'boolean')) return 'boolean';
   if (values.every(v => /^\d{4}-\d{2}-\d{2}(?:T.*)?$/.test(String(v)) && Number.isFinite(Date.parse(String(v))))) return 'date';
@@ -71,23 +96,12 @@ export function profile(rows, columns) {
     const values = rows.map(r => r[column]).filter(v => !isMissing(v));
     const numbers = values.filter(isNumber).sort((a, b) => a - b);
     const mean = numbers.length ? numbers.reduce((a, b) => a + b, 0) / numbers.length : null;
-    return { column, type: columnType(rows, column), missing: rows.length - values.length, unique: new Set(values.map(v => JSON.stringify(v))).size, min: numbers[0] ?? null, max: numbers.at(-1) ?? null, mean, median: numbers.length ? (numbers[Math.floor((numbers.length - 1) / 2)] + numbers[Math.floor(numbers.length / 2)]) / 2 : null };
+    return { column, type: columnType(rows, column), missing: rows.length - values.length, unique: new Set(values.map(v => JSON.stringify(v))).size, min: numbers[0] ?? null, max: numbers.at(-1) ?? null, ...moments(numbers), count: values.length, q1: quantile(numbers,.25), q3: quantile(numbers,.75), mean, median: quantile(numbers,.5) };
   });
 }
-export function matches(row, f) {
-  const v = row[f.column];
-  if (f.operator === 'missing') return isMissing(v);
-  if (f.operator === 'present') return !isMissing(v);
-  if (isMissing(v)) return false;
-  if (f.operator === 'eq') return String(v) === String(f.value);
-  if (f.operator === 'contains') return String(v).toLowerCase().includes(String(f.value).toLowerCase());
-  if (f.operator === 'range') return isNumber(v) && v >= Number(f.value) && v <= Number(f.upper);
-  if (f.operator === 'gte') return isNumber(v) && v >= Number(f.value);
-  if (f.operator === 'lte') return isNumber(v) && v <= Number(f.value);
-  return false;
-}
+export const matches = matchesCondition;
 export function aggregate(values, method) {
-  if (!['count','nunique','sum','mean','median','min','max','std'].includes(method)) throw new Error('invalidOperation');
+  if (!['count','nunique','sum','mean','median','min','max','std','var'].includes(method)) throw new Error('invalidOperation');
   const valid = values.filter(v => !isMissing(v)), nums = valid.filter(isNumber).sort((a, b) => a - b);
   if (method === 'count') return valid.length;
   if (method === 'nunique') return new Set(valid.map(v => JSON.stringify(v))).size;
@@ -97,24 +111,44 @@ export function aggregate(values, method) {
   if (method === 'median') return (nums[Math.floor((nums.length - 1) / 2)] + nums[Math.floor(nums.length / 2)]) / 2;
   if (method === 'min') return nums[0];
   if (method === 'max') return nums.at(-1);
-  if (method === 'std') { if (nums.length < 2) return null; const m = aggregate(nums, 'mean'); return Math.sqrt(nums.reduce((a, v) => a + (v - m) ** 2, 0) / (nums.length - 1)); }
+  if (method === 'std' || method === 'var') return moments(nums)[method];
   throw new Error('invalidOperation');
 }
 function requireColumns(columns, keys) { if (keys.some(c => !columns.includes(c))) throw new Error('missingColumn'); }
-export function applyOperation(rows, columns, op, datasets = []) {
+function executeOperation(rows, columns, op, datasets = []) {
   if (!op || !op.params || typeof op.params !== 'object') throw new Error('invalidOperation');
+  if(op.type==='columnRename')return columnRenameOperation(rows,columns,op);
+  if(op.type==='weightedWindow')return weightedWindowOperation(rows,columns,op);
+  if(dtypeTypes.includes(op.type))return dtypeOperation({rows,columns,index:rangeIndex(rows.length)},op);
+  if(op.type==='asof')return asofOperation(rows,columns,op,datasets);
+  if(op.type==='extractAll')return extractAllOperation({rows,columns,index:rangeIndex(rows.length)},op);
+  if(axisReshapeTypes.includes(op.type))return axisReshapeOperation({rows,columns,index:rangeIndex(rows.length)},op);
+  if(op.type==='explode')return explodeOperation({rows,columns,index:rangeIndex(rows.length)},op);
+  if(alignmentTypes.includes(op.type))return alignmentOperation({rows,columns,index:rangeIndex(rows.length)},op,datasets);
+  if(indexTypes.includes(op.type))return indexOperation({rows,columns},op);
+  if (['groupNamed','groupFilter','groupRank'].includes(op.type)) return groupToolsOperation(rows,columns,op);
+  if (op.type==='ewm') return ewmOperation(rows,columns,op);
+  if (['dateparts','datediff','dateparse','resample'].includes(op.type)) return datetimeOperation(rows,columns,op);
+  if (op.type==='binning') return binningOperation(rows,columns,op);
+  if (op.type==='sampling') return samplingOperation(rows,columns,op);
+  if (['formula','numeric'].includes(op.type)) return calculationOperation(rows, columns, op);
+  if (op.type === 'strings') return stringOperation(rows, columns, op);
+  if (op.type === 'windows') return windowOperation(rows, columns, op);
+  if (reshapeTypes.includes(op.type)) return reshapeOperation(rows, columns, op);
+  if (op.type === 'merge') return mergeOperation(rows, columns, op, datasets);
+  if (op.type === 'concat') return concatOperation(rows, columns, op, datasets);
+  if (op.type === 'groupMulti') return groupingOperation(rows, columns, op);
+  if (selectionTypes.includes(op.type)) return selectionOperation(rows,columns,op);
+  if (cleaningTypes.includes(op.type)) return cleaningOperation(rows,columns,op);
+  if (statisticalTypes.includes(op.type)) return statisticalOperation(rows, columns, op);
+  if (extendedTypes.includes(op.type)) return extendedOperation(rows, columns, op);
   const p = op.params;
   let output = rows, names = [...columns];
   switch (op.type) {
-    case 'filter': requireColumns(columns, p.filters.map(f => f.column)); output = rows.filter(r => { const matched = p.mode === 'or' ? p.filters.some(f => matches(r, f)) : p.filters.every(f => matches(r, f)); return p.exclude ? !matched : matched; }); break;
-    case 'sort': requireColumns(columns, [p.column]); output = [...rows].sort((a, b) => isMissing(a[p.column]) ? (isMissing(b[p.column]) ? 0 : 1) : isMissing(b[p.column]) ? -1 : (isNumber(a[p.column]) && isNumber(b[p.column]) ? a[p.column] - b[p.column] : String(a[p.column]).localeCompare(String(b[p.column]))) * (p.desc ? -1 : 1)); break;
-    case 'dedup': { const seen = new Set(); output = rows.filter(r => { const key = JSON.stringify(columns.map(c => r[c])); if (seen.has(key)) return false; seen.add(key); return true; }); break; }
-    case 'dropMissing': requireColumns(columns, [p.column]); output = rows.filter(r => !isMissing(r[p.column])); break;
-    case 'fill': {
-      requireColumns(columns, [p.column]); let value = p.value;
-      if (p.method !== 'constant') value = aggregate(rows.map(r => r[p.column]), p.method);
-      else if (columnType(rows, p.column) === 'number') { if (String(value).trim() === '' || !Number.isFinite(Number(value))) throw new Error('invalidNumber'); value = Number(value); }
-      if (isMissing(value)) throw new Error('noValues'); output = rows.map(r => isMissing(r[p.column]) ? { ...r, [p.column]: value } : r); break;
+    case 'filter': {
+      if(!Array.isArray(p.filters))throw new Error('invalidCondition');
+      const tests=p.filters.map(f=>compileCondition(f,columns));
+      output=rows.filter(row=>{const matched=p.mode==='or'?tests.some(test=>test(row)):tests.every(test=>test(row));return p.exclude?!matched:matched;});break;
     }
     case 'calculate': {
       if (!['+','-','*','/'].includes(p.operator)) throw new Error('invalidOperation');
@@ -147,13 +181,18 @@ export function applyOperation(rows, columns, op, datasets = []) {
   }
   return { rows: output, columns: names };
 }
+export function applyOperation(rows, columns, op, datasets = []) {
+  const result=executeOperation(rows,columns,op,datasets);
+  if(result.rows.length>100000||result.columns.length>200||result.rows.length*result.columns.length>2000000)throw new Error('tooManyRows');
+  return result;
+}
 export function replay(dataset, operations, cursor, datasets) {
-  let result = { rows: dataset.rows, columns: dataset.columns }; const steps = [];
-  for (const op of operations.slice(0, cursor)) { const before = result.rows.length; result = applyOperation(result.rows, result.columns, op, datasets); steps.push({ before, after: result.rows.length }); }
-  return { ...result, steps, profile: profile(result.rows, result.columns) };
+  let result = { rows: dataset.rows, columns: dataset.columns, index:rangeIndex(dataset.rows.length) }; const steps = [];
+  for (const [index,op] of operations.slice(0, cursor).entries()) { const before = result.rows.length; result = applyIndexedOperation(result,op,(rows,columns)=>applyOperation(rows,columns,op,datasets),datasets); if(result.analysis)result.analysis.sourceCursor=index; steps.push({ before, after: result.rows.length }); }
+  return { ...result, steps, profile: typedProfile(profile(result.rows, result.columns),result.types) };
 }
 export function toCSV(rows, columns) {
-  const escape = v => '"' + String(v ?? '').replaceAll('"', '""') + '"';
+  const escape = v => '"' + (Array.isArray(v)?JSON.stringify(v):String(v ?? '')).replaceAll('"', '""') + '"';
   return '\uFEFF' + [columns.map(escape).join(','), ...rows.map(r => columns.map(c => escape(r[c])).join(','))].join('\r\n');
 }
 export function validateBackup(value) {

@@ -58,3 +58,20 @@ Lucide 已安装供后续界面使用，例如在 Astro 的 frontmatter 中 `imp
 - 通用界面文案位于 `src/i18n/index.ts`，首页、关于和占位页共用 `src/views/` 中的页面组件。
 - HW01 英文全文位于 `src/pages/en/hw01/index.mdx`，与中文共用交互组件。修改章节结构时需同步两份 MDX，保证目录锚点对应。
 - 验证：`npm run check && npm run build && node --test tests/*.test.mjs`。构建测试检查双语路由、内部链接、英文文案和章节对应关系。
+## HW03 数据织坊
+
+`/hw03/` 与 `/en/hw03/` 是同一套双语可视化数据分析工作台。实现清单、验证与语义边界见 [功能覆盖](docs/hw03-coverage.md)，展示说明见 [双语亮点](docs/hw03-highlights.md)。
+
+- 构建要求 Node.js >=22.12、npm >=9.6.5；`npm ci` 后运行 `npm run check` 与 `npm run build`。
+- `predev/prebuild` 会执行 `scripts/hw03-runtime.mjs`，生成 `public/hw03/replay-engine.js`，供自包含离线重放导出使用。生成文件无需提交，也不需要后端。
+- 数据和操作保存在用户浏览器 IndexedDB；导入不会上传到服务端。公开 URL 导入仍由浏览器遵守 CORS。
+- 重放 `.mjs` 文件需要 Node.js 20+；Python/pandas 导出是显式桥接脚本，还需要 pandas，它保留索引/分类/可空类型，而不是逐步生成原生 pandas 调用。
+- 基础测试：`node --test --test-concurrency=1 tests/*.test.mjs`。对照测试需要 Python 3.12 环境中的 pandas 2.2.3、SciPy、PyArrow 与 openpyxl；设置 `PANDAS_PYTHON` 指向该环境。缺少依赖会明确跳过，不能视作已通过对照验证。
+
+```sh
+python3.12 -m venv .venv
+.venv/bin/python -m pip install pandas==2.2.3 numpy==2.3.5 scipy==1.18.1 pyarrow==26.0.0 openpyxl
+PANDAS_PYTHON=.venv/bin/python node --test --test-concurrency=1 tests/*.test.mjs
+```
+
+构建后再运行完整测试，因为部分站点测试读取 `dist/`。不要让构建与读取 `dist/` 的测试并行。详细容量、日期/正则/抽样及类型边界见覆盖文档；本站不声称兼容 pandas 的全部 API 或任意用户函数。

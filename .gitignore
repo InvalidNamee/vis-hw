@@ -5,3 +5,9 @@ dist/
 .DS_Store
 .playwright-cli/
 output/playwright/
+
+# Generated from the HW03 pure model by predev/prebuild.
+public/hw03/replay-engine.js
+# Generated submission assets and PDF render checks.
+output/submission/
+output/pdf/

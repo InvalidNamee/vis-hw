@@ -9,7 +9,9 @@
     "preview": "astro preview",
     "check": "astro check",
     "data:hw02": "node scripts/hw02-data.mjs",
-    "prebuild": "npm run data:hw02"
+    "prebuild": "npm run data:hw02 && npm run data:hw03",
+    "data:hw03": "node scripts/hw03-runtime.mjs",
+    "predev": "npm run data:hw03"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -22,7 +24,10 @@
     "astro": "^7.3.2",
     "astro-expressive-code": "^0.44.2",
     "d3": "^7.9.0",
+    "exceljs": "4.4.0",
     "gsap": "^3.15.0",
+    "hyparquet": "1.31.4",
+    "hyparquet-compressors": "1.1.2",
     "simple-icons": "^16.31.0",
     "tailwind-merge": "^3.6.0",
     "tailwind-variants": "^3.3.1",
@@ -31,6 +36,7 @@
     "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "@types/d3": "^7.4.3"
+    "@types/d3": "^7.4.3",
+    "esbuild": "0.28.2"
   }
 }

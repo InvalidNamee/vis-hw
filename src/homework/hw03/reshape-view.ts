@@ -1,0 +1,13 @@
+import {t,type Key} from './copy';
+const esc=(v:any)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
+const format=(v:any,proportion=false)=>v==null?'—':typeof v==='number'?new Intl.NumberFormat(document.documentElement.lang==='en'?'en-US':'zh-CN',{maximumFractionDigits:proportion?2:4,style:proportion?'percent':'decimal'}).format(v):String(v);
+export function reshapeHTML(data:any){
+ const a=data.analysis;
+ if(a.kind==='reshape')return `<section class="loom-card loom-statistics"><h2>${t(a.tool==='melt'?'meltTool':'transposeTool')}</h2><div class="loom-relational-flow"><div>${t('sourceShape')}<strong>${a.sourceRows} × ${a.sourceColumns}</strong></div><span aria-hidden="true">→</span><div>${t('resultShape')}<strong>${data.rows.length} × ${data.columns.length}</strong></div></div><p>${t(a.tool==='melt'?'meltHint':'transposeHint')}</p><div class="loom-table-wrap"><table><thead><tr>${data.columns.map((c:string)=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${data.rows.slice(0,100).map((r:any)=>`<tr>${data.columns.map((c:string)=>`<td>${esc(format(r[c]))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${data.rows.length>100?`<p>${t('displayLimit')} 100 / ${data.rows.length}. ${t('fullExportHint')}</p>`:''}</section>`;
+ const proportion=a.normalize!=='raw';
+ return `<section class="loom-card loom-statistics"><h2>${t(a.tool==='crosstab'?'crosstabTool':'pivotMultiTool')}</h2><p>${t('pivotValidRows')}: ${a.validRows} / ${a.sourceRows}</p><p>${t('heatmapHint')}</p>${a.blocks.map((b:any)=>{
+  const extent=Math.max(1e-12,...b.matrix.flat().filter((v:any)=>typeof v==='number'&&Number.isFinite(v)).map(Math.abs));
+  const names=b.keys.map((key:any[])=>key.map(v=>format(v)).join(' / '));
+  return `<section class="loom-pivot-block"><h3>${esc(b.metric??t('frequency'))} · ${esc(t(b.method as Key))}</h3><div class="loom-table-wrap"><table class="loom-pivot-heatmap"><thead><tr><th>${esc(a.index.join(' / '))} ↔ ${esc(a.across.join(' / '))}</th>${names.map((n:string)=>`<th title="${esc(n)}">${esc(n)}</th>`).join('')}</tr></thead><tbody>${b.matrix.map((row:any[],i:number)=>{const name=a.rows[i].map((v:any)=>format(v)).join(' / ');return `<tr><th title="${esc(name)}">${esc(name)}</th>${row.map((v:any,j:number)=>`<td class="${v==null?'null':'numeric'}" style="--heat:${typeof v==='number'?Math.min(1,Math.abs(v)/extent):0};--heat-color:${v<0?'#c07d32':'#5080cf'}" title="${esc(`${name} / ${names[j]}: ${format(v,proportion)}`)}">${esc(format(v,proportion))}</td>`).join('')}</tr>`;}).join('')}</tbody></table></div></section>`;
+ }).join('')}${a.rows.length>100?`<p>${t('displayLimit')} 100 / ${a.rows.length}. ${t('fullExportHint')}</p>`:''}</section>`;
+}

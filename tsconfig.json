@@ -12,6 +12,7 @@
     "node_modules",
     "dist",
     "output",
-    ".sites-runtime"
+    ".sites-runtime",
+    "public/hw03/replay-engine.js"
   ]
 }

@@ -1,0 +1,46 @@
+import {binaryValue} from './calculation.mjs';import {booleanNumericLevels} from './index-labels.mjs';
+const fail=k=>{throw new Error(k);},missing=v=>v==null||v==='',unique=values=>[...new Set(values)];
+export const alignmentTypes=['indexJoin','indexConcat','indexArithmetic'];
+function compareValue(a,b){if(missing(a)||missing(b))return missing(a)===missing(b)?0:missing(a)?1:-1;if(typeof a==='boolean')a=+a;if(typeof b==='boolean')b=+b;if(typeof a==='number'&&typeof b==='number')return a-b;if(typeof a==='number'||typeof b==='number')return typeof a==='number'?-1:1;const aa=Array.from(String(a)),bb=Array.from(String(b));for(let i=0;i<Math.min(aa.length,bb.length);i++){const c=aa[i].codePointAt(0)-bb[i].codePointAt(0);if(c)return c;}return aa.length-bb.length;}
+const compare=(a,b)=>{for(let i=0;i<a.length;i++){const n=compareValue(a[i],b[i]);if(n)return n;}return 0;};
+const capacity=(rows,columns,levels)=>{if(rows>100000||columns>200||levels>200||rows*columns>2000000||rows*levels>2000000)fail('tooManyRows');};
+function projected(frame,names){if(!Array.isArray(names)||new Set(names).size!==names.length||names.some(c=>!frame.columns.includes(c)))fail('missingColumn');return {...frame,columns:names};}
+export function indexedSource(dataset,keys,names){
+ if(!dataset)fail('missingDataset');if(!Array.isArray(keys)||new Set(keys).size!==keys.length||keys.some(c=>!dataset.columns.includes(c)))fail('missingColumn');if((keys.length||1)!==names.length)fail('indexLevelMismatch');
+ return {rows:dataset.rows,columns:dataset.columns.filter(c=>!keys.includes(c)),index:{names:[...names],values:dataset.rows.map((r,i)=>keys.length?keys.map(c=>missing(r[c])?null:r[c]):[i]),explicit:true}};
+}
+function mappings(left,right){const levels=left.index.names.length,flags=booleanNumericLevels([...left.index.values,...right.index.values],levels),token=tuple=>JSON.stringify(tuple.map((v,i)=>missing(v)?null:typeof v==='boolean'&&flags[i]?+v:v)),li=new Map(),ri=new Map();left.index.values.forEach((t,i)=>{const k=token(t);if(!li.has(k))li.set(k,[]);li.get(k).push(i);});right.index.values.forEach((t,i)=>{const k=token(t);if(!ri.has(k))ri.set(k,[]);ri.get(k).push(i);});const same=left.rows.length===right.rows.length&&left.index.values.every((t,i)=>token(t)===token(right.index.values[i]));return {li,ri,token,same,flags};}
+function pairsFor(left,right,map,how,sort,columns,positional=false){
+ if(!['left','right','inner','outer'].includes(how))fail('invalidOperation');capacity(0,columns,left.index.names.length);const pairs=[],levels=left.index.names.length,push=(l,r)=>{capacity(pairs.length+1,columns,levels);pairs.push({l,r,label:[...(l<0?right.index.values[r]:left.index.values[l])]});};
+ if(positional&&map.same){left.rows.forEach((_,i)=>push(i,i));return pairs;}
+ const matchedRight=new Set();if(how==='right'){right.rows.forEach((_,r)=>{const matches=map.li.get(map.token(right.index.values[r]))??[];if(matches.length)for(const l of matches)push(l,r);else push(-1,r);});}
+ else{left.rows.forEach((_,l)=>{const matches=map.ri.get(map.token(left.index.values[l]))??[];if(matches.length)for(const r of matches){push(l,r);matchedRight.add(r);}else if(how==='left'||how==='outer')push(l,-1);});if(how==='outer')right.rows.forEach((_,r)=>{if(!matchedRight.has(r))push(-1,r);});}
+ if(sort||how==='outer')pairs.sort((a,b)=>compare(a.label,b.label));return pairs;
+}
+function resultFor(rows,columns,index,pairs,left,right,operation){const counts={both:0,left_only:0,right_only:0};pairs.forEach(pair=>counts[pair.l<0?'right_only':pair.r<0?'left_only':'both']++);const sample=pairs.length<=50?pairs.map((_,i)=>i):Array.from({length:50},(_,i)=>Math.round(i*(pairs.length-1)/49));return {rows,columns,index:{...index,booleanNumeric:booleanNumericLevels(index.values,index.names.length)},analysis:{kind:'alignment',operation,counts,leftRows:left.rows.length,rightRows:right.rows.length,outputRows:rows.length,mapping:sample.map(i=>({...pairs[i],output:i})),leftUsed:new Set(pairs.filter(p=>p.l>=0).map(p=>p.l)).size,rightUsed:new Set(pairs.filter(p=>p.r>=0).map(p=>p.r)).size}};}
+function columnsForJoin(left,right,p){const overlaps=left.columns.filter(c=>right.columns.includes(c)),suffixes=[p.leftSuffix??'_x',p.rightSuffix??'_y'];if(suffixes.some(s=>typeof s!=='string'))fail('invalidOperation');const lm=left.columns.map(c=>[c,overlaps.includes(c)?c+suffixes[0]:c]),rm=right.columns.map(c=>[c,overlaps.includes(c)?c+suffixes[1]:c]),names=[...lm,...rm].map(([,c])=>c);if(new Set(names).size!==names.length)fail('duplicateColumns');return {lm,rm,names};}
+export function alignmentOperation(state,op,datasets){
+ const p=op.params??{},left=state,right=indexedSource(datasets.find(d=>d.id===p.dataset),p.rightKeys??[],left.index.names),map=mappings(left,right),sort=p.sort==='include',how=p.how??(op.type==='indexJoin'?'left':'outer'),levels=left.index.names.length;
+ if(op.type==='indexJoin'){
+  const validation=p.validate??'many_to_many';if(!['many_to_many','one_to_one','one_to_many','many_to_one'].includes(validation))fail('invalidOperation');if(['one_to_one','one_to_many'].includes(validation)&&map.li.size!==left.rows.length||['one_to_one','many_to_one'].includes(validation)&&map.ri.size!==right.rows.length)fail('mergeValidation');
+  const {lm,rm,names}=columnsForJoin(left,right,p),pairs=pairsFor(left,right,map,how,sort,names.length),rows=pairs.map(({l,r})=>Object.fromEntries([...lm.map(([c,n])=>[n,l<0?null:left.rows[l][c]]),...rm.map(([c,n])=>[n,r<0?null:right.rows[r][c]])]));return resultFor(rows,names,{names:[...left.index.names],values:pairs.map(p=>p.label),explicit:true},pairs,left,right,op.type);
+ }
+ if(op.type==='indexConcat'){
+  const axis=p.axis??'columns',join=p.join??'outer';if(!['rows','columns'].includes(axis)||!['outer','inner'].includes(join))fail('invalidOperation');
+  if(axis==='rows'){
+   let names=join==='inner'?left.columns.filter(c=>right.columns.includes(c)):unique([...left.columns,...right.columns]);if(sort)names.sort(compareValue);capacity(left.rows.length+right.rows.length,names.length,p.ignoreIndex==='include'?1:levels);
+   const values=[...left.index.values.map(t=>[...t]),...right.index.values.map(t=>[...t])],ignore=p.ignoreIndex==='include',index={names:ignore?[null]:[...left.index.names],values:ignore?values.map((_,i)=>[i]):values,explicit:!ignore};if(p.verify==='include'&&!ignore&&new Set(values.map(map.token)).size!==values.length)fail('duplicateIndex');
+   const pairs=[...left.rows.map((_,l)=>({l,r:-1,label:left.index.values[l]})),...right.rows.map((_,r)=>({l:-1,r,label:right.index.values[r]}))],rows=[...left.rows,...right.rows].map(row=>Object.fromEntries(names.map(c=>[c,Object.hasOwn(row,c)?row[c]:null])));return resultFor(rows,names,index,pairs,left,right,op.type);
+  }
+  if((!map.same||join==='inner')&&(map.li.size!==left.rows.length||map.ri.size!==right.rows.length))fail('duplicateIndexReindex');
+  const {lm,rm,names}=columnsForJoin(left,right,p);let pairs;if(map.same){pairs=left.rows.map((_,i)=>({l:i,r:i,label:[...left.index.values[i]]}));if(sort){pairs.sort((a,b)=>compare(a.label,b.label));if((map.li.size!==left.rows.length||map.ri.size!==right.rows.length)&&pairs.some((p,i)=>p.l!==i))fail('duplicateIndexReindex');}}else{const keys=join==='inner'?[...map.li.keys()].filter(k=>map.ri.has(k)):unique([...map.li.keys(),...map.ri.keys()]);pairs=keys.map(k=>{const l=map.li.get(k)?.[0]??-1,r=map.ri.get(k)?.[0]??-1;return {l,r,label:[...(l<0?right.index.values[r]:left.index.values[l])]};});if(sort)pairs.sort((a,b)=>compare(a.label,b.label));}capacity(pairs.length,names.length,levels);
+  const rows=pairs.map(({l,r})=>Object.fromEntries([...lm.map(([c,n])=>[n,l<0?null:left.rows[l][c]]),...rm.map(([c,n])=>[n,r<0?null:right.rows[r][c]])]));return resultFor(rows,names,{names:[...left.index.names],values:pairs.map(p=>p.label),explicit:true},pairs,left,right,op.type);
+ }
+ if(op.type==='indexArithmetic'){
+  const a=projected(left,p.columns??left.columns),b=projected(right,p.rightColumns??right.columns);for(const frame of [a,b])if(frame.rows.some(row=>frame.columns.some(c=>!missing(row[c])&&(typeof row[c]!=='number'||!Number.isFinite(row[c])))))fail('invalidNumber');
+  const method=p.method??'add';if(!['add','sub','mul','div','floordiv','mod','pow'].includes(method))fail('invalidOperation');let names=how==='left'?[...a.columns]:how==='right'?[...b.columns]:how==='inner'?a.columns.filter(c=>b.columns.includes(c)):unique([...a.columns,...b.columns]);if(how==='outer'&&!a.columns.every((c,i)=>c===b.columns[i])||how==='outer'&&a.columns.length!==b.columns.length)names.sort(compareValue);
+  const pairs=pairsFor(a,b,map,how,how==='outer',names.length,true),fill=p.fill==='include'?Number(p.fillValue):null;if(fill!==null&&(p.fillValue==null||String(p.fillValue).trim()===''||!Number.isFinite(fill)))fail('invalidNumber');
+  const rows=pairs.map(({l,r})=>Object.fromEntries(names.map(c=>{let x=l<0||!a.columns.includes(c)?null:a.rows[l][c],y=r<0||!b.columns.includes(c)?null:b.rows[r][c];if(missing(x)&&missing(y))return [c,null];if(fill!==null){if(missing(x))x=fill;if(missing(y))y=fill;}return [c,p.reverse==='include'?binaryValue(method,y,x):binaryValue(method,x,y)];})));return resultFor(rows,names,{names:[...left.index.names],values:pairs.map(p=>p.label),explicit:true},pairs,left,right,op.type);
+ }
+ fail('invalidOperation');
+}
