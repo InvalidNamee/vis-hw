@@ -100,21 +100,6 @@ export function profile(rows, columns) {
   });
 }
 export const matches = matchesCondition;
-export function aggregate(values, method) {
-  if (!['count','nunique','sum','mean','median','min','max','std','var'].includes(method)) throw new Error('invalidOperation');
-  const valid = values.filter(v => !isMissing(v)), nums = valid.filter(isNumber).sort((a, b) => a - b);
-  if (method === 'count') return valid.length;
-  if (method === 'nunique') return new Set(valid.map(v => JSON.stringify(v))).size;
-  if (method === 'sum') return nums.reduce((a, b) => a + b, 0);
-  if (!nums.length) return null;
-  if (method === 'mean') return nums.reduce((a, b) => a + b, 0) / nums.length;
-  if (method === 'median') return (nums[Math.floor((nums.length - 1) / 2)] + nums[Math.floor(nums.length / 2)]) / 2;
-  if (method === 'min') return nums[0];
-  if (method === 'max') return nums.at(-1);
-  if (method === 'std' || method === 'var') return moments(nums)[method];
-  throw new Error('invalidOperation');
-}
-function requireColumns(columns, keys) { if (keys.some(c => !columns.includes(c))) throw new Error('missingColumn'); }
 function executeOperation(rows, columns, op, datasets = []) {
   if (!op || !op.params || typeof op.params !== 'object') throw new Error('invalidOperation');
   if(op.type==='columnRename')return columnRenameOperation(rows,columns,op);
@@ -126,7 +111,7 @@ function executeOperation(rows, columns, op, datasets = []) {
   if(op.type==='explode')return explodeOperation({rows,columns,index:rangeIndex(rows.length)},op);
   if(alignmentTypes.includes(op.type))return alignmentOperation({rows,columns,index:rangeIndex(rows.length)},op,datasets);
   if(indexTypes.includes(op.type))return indexOperation({rows,columns},op);
-  if (['groupNamed','groupFilter','groupRank'].includes(op.type)) return groupToolsOperation(rows,columns,op);
+  if (['groupFilter','groupRank'].includes(op.type)) return groupToolsOperation(rows,columns,op);
   if (op.type==='ewm') return ewmOperation(rows,columns,op);
   if (['dateparts','datediff','dateparse','resample'].includes(op.type)) return datetimeOperation(rows,columns,op);
   if (op.type==='binning') return binningOperation(rows,columns,op);
@@ -142,44 +127,16 @@ function executeOperation(rows, columns, op, datasets = []) {
   if (cleaningTypes.includes(op.type)) return cleaningOperation(rows,columns,op);
   if (statisticalTypes.includes(op.type)) return statisticalOperation(rows, columns, op);
   if (extendedTypes.includes(op.type)) return extendedOperation(rows, columns, op);
-  const p = op.params;
-  let output = rows, names = [...columns];
-  switch (op.type) {
-    case 'filter': {
-      if(!Array.isArray(p.filters))throw new Error('invalidCondition');
-      const tests=p.filters.map(f=>compileCondition(f,columns));
-      output=rows.filter(row=>{const matched=p.mode==='or'?tests.some(test=>test(row)):tests.every(test=>test(row));return p.exclude?!matched:matched;});break;
-    }
-    case 'calculate': {
-      if (!['+','-','*','/'].includes(p.operator)) throw new Error('invalidOperation');
-      requireColumns(columns, [p.left, p.right]); if (!p.name?.trim() || columns.includes(p.name)) throw new Error('duplicateColumns');
-      if (![p.left, p.right].every(c => columnType(rows, c) === 'number')) throw new Error('invalidNumber');
-      output = rows.map(r => { const a = r[p.left], b = r[p.right]; let value = null; if (isNumber(a) && isNumber(b)) { value = p.operator === '+' ? a + b : p.operator === '-' ? a - b : p.operator === '*' ? a * b : b === 0 ? null : a / b; if (!Number.isFinite(value)) value = null; } return { ...r, [p.name]: value }; }); names.push(p.name); break;
-    }
-    case 'group': {
-      requireColumns(columns, [p.group, p.value]); if (p.month && columnType(rows, p.group) !== 'date') throw new Error('invalidDate'); const groups = new Map();
-      rows.forEach(r => { const value = p.month ? String(r[p.group] ?? '').slice(0, 7) : r[p.group]; if (p.month && !/^\d{4}-\d{2}$/.test(value)) return; const key = JSON.stringify(value); if (!groups.has(key)) groups.set(key, { key: value, values: [] }); groups.get(key).values.push(r[p.value]); });
-      const name = `${p.value}_${p.method}`; names = [p.group, name]; output = [...groups.values()].map(g => ({ [p.group]: g.key, [name]: aggregate(g.values, p.method) })); break;
-    }
-    case 'pivot': {
-      requireColumns(columns, [p.group, p.pivot, p.value]); const categories = [...new Set(rows.map(r => r[p.pivot]).filter(v => !isMissing(v)))];
-      if (categories.length > 60) throw new Error('tooManyCategories');
-      names = [p.group, ...categories.map(c => `value:${String(c)}`)]; if (new Set(names).size !== names.length) throw new Error('duplicateColumns'); const groups = new Map();
-      rows.forEach(r => { const key = JSON.stringify(r[p.group]); if (!groups.has(key)) groups.set(key, { key: r[p.group], rows: [] }); groups.get(key).rows.push(r); });
-      output = [...groups.values()].map(g => Object.fromEntries([[p.group, g.key], ...categories.map(c => { const records = g.rows.filter(r => r[p.pivot] === c); return [`value:${String(c)}`, records.length ? aggregate(records.map(r => r[p.value]), p.method) : null]; })])); break;
-    }
-    case 'join': {
-      if (!['left','inner'].includes(p.how)) throw new Error('invalidOperation');
-      requireColumns(columns, [p.leftKey]); const right = datasets.find(d => d.id === p.dataset); if (!right) throw new Error('missingDataset'); requireColumns(right.columns, [p.rightKey]);
-      const added = right.columns.filter(c => c !== p.rightKey).map(c => [c, columns.includes(c) ? `${c}_right` : c]);
-      if (added.some(([, c]) => names.includes(c)) || new Set(added.map(([, c]) => c)).size !== added.length) throw new Error('duplicateColumns');
-      names.push(...added.map(([, c]) => c)); const index = new Map();
-      right.rows.forEach(r => { const key = JSON.stringify(r[p.rightKey]); if (!index.has(key)) index.set(key, []); index.get(key).push(r); });
-      output = []; for (const r of rows) { const match = index.get(JSON.stringify(r[p.leftKey])) ?? []; if (!match.length && p.how === 'left') output.push({ ...r, ...Object.fromEntries(added.map(([, c]) => [c, null])) }); for (const other of match) output.push({ ...r, ...Object.fromEntries(added.map(([c, name]) => [name, other[c]])) }); if (output.length > 100000) throw new Error('tooManyRows'); } break;
-    }
-    default: throw new Error('invalidOperation');
+  if(op.type==='filter'){
+    const p=op.params;
+    if(!Array.isArray(p.filters))throw new Error('invalidCondition');
+    const tests=p.filters.map(f=>compileCondition(f,columns));
+    return {columns,rows:rows.filter(row=>{
+      const matched=p.mode==='or'?tests.some(test=>test(row)):tests.every(test=>test(row));
+      return p.exclude?!matched:matched;
+    })};
   }
-  return { rows: output, columns: names };
+  throw new Error('invalidOperation');
 }
 export function applyOperation(rows, columns, op, datasets = []) {
   const result=executeOperation(rows,columns,op,datasets);

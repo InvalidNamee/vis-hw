@@ -1,6 +1,7 @@
+import {reduceGroup as aggregate} from '../src/homework/hw03/grouping.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {applyOperation, replay, validateBackup, profile, aggregate} from '../src/homework/hw03/model.mjs';
+import {applyOperation, replay, validateBackup, profile} from '../src/homework/hw03/model.mjs';
 import {quantile, distribution, moments, pairSample} from '../src/homework/hw03/statistics.mjs';
 const rows=[{label:'A',x:1,y:8,constant:2},{label:'A',x:2,y:null,constant:2},{label:'B',x:2,y:3,constant:2},{label:null,x:null,y:2,constant:2},{label:'C',x:10,y:1,constant:2}];
 const columns=['label','x','y','constant'];

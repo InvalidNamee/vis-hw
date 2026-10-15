@@ -1,13 +1,9 @@
-import {groupingOperation,reduceGroup,aggregationMethods} from './grouping.mjs';import {compileCondition} from './selection.mjs';
+import {reduceGroup,aggregationMethods} from './grouping.mjs';import {compileCondition} from './selection.mjs';
 const fail=k=>{throw new Error(k);},missing=v=>v==null||v==='';
 const compare=(a,b)=>{if(['number','boolean'].includes(typeof a)&&['number','boolean'].includes(typeof b))return Number(a)-Number(b);const x=[...String(a)],y=[...String(b)];for(let i=0;i<Math.min(x.length,y.length);i++)if(x[i]!==y[i])return x[i].codePointAt(0)-y[i].codePointAt(0);return x.length-y.length;};
 function partition(rows,columns,p){const keys=p.keys??[];if(!Array.isArray(keys)||new Set(keys).size!==keys.length||keys.some(c=>!columns.includes(c)))fail('missingColumn');const groups=new Map();rows.forEach((row,i)=>{const values=keys.map(k=>missing(row[k])?null:row[k]);if(values.includes(null)&&p.missing!=='include')return;const key=JSON.stringify(values);if(!groups.has(key))groups.set(key,{keys:values,indices:[]});groups.get(key).indices.push(i);});if(!keys.length&&!rows.length)groups.set('[]',{keys:[],indices:[]});return {groups:[...groups.values()],keys};}
 export function groupToolsOperation(rows,columns,op){
  const p=op.params;
- if(op.type==='groupNamed'){
-  if(!Array.isArray(p.specs)||!p.specs.length||p.specs.some(s=>!s||typeof s!=='object'))fail('invalidOperation');
-  return groupingOperation(rows,columns,{type:'groupMulti',params:{...p,columns:[...new Set(p.specs.map(s=>s.column))],methods:[...new Set(p.specs.map(s=>s.method))]}});
- }
  const {groups,keys}=partition(rows,columns,p);
  if(op.type==='groupFilter'){
   if(!columns.includes(p.column))fail('missingColumn');if(!aggregationMethods.includes(p.method??'mean')||!['drop','missing'].includes(p.mode??'drop'))fail('invalidOperation');const ddof=Number(p.ddof??1);if(!Number.isInteger(ddof)||ddof<0)fail('invalidNumber');

@@ -42,7 +42,7 @@ export function axisReshapeOperation(state,op){
 // Keep column labels tied to physical fields across row operations and field projections.
 export function carryColumnIndex(state,result,op){
  if(Object.hasOwn(result,'columnIndex')||!state.columnIndex)return result;
- const compatible=new Set(['explode','setIndex','resetIndex','sortIndex','renameIndex','indexLoc','reindex','indexAssign','indexLevels','filter','filterTree','sort','rowSelect','topN','sample','sampling','dedup','dropMissing','iqr','groupFilter','columnRename','rename','columns','convert','text','replace','rank','fill','calculate','numeric','formula','binning','strings','weightedWindow','windows','ewm','dateparse','dateparts','datediff','selectTypes','groupRank']);
- if(!compatible.has(op.type)&&!(['groupMulti','groupNamed'].includes(op.type)&&op.params.mode==='transform'))return result;
+ const compatible=new Set(['explode','setIndex','resetIndex','sortIndex','renameIndex','indexLoc','reindex','indexAssign','indexLevels','filter','filterTree','sort','rowSelect','topN','sampling','dedup','dropMissing','iqr','groupFilter','columnRename','columns','convert','text','replace','fill','numeric','formula','binning','strings','weightedWindow','windows','ewm','dateparse','dateparts','datediff','selectTypes','groupRank']);
+ if(!compatible.has(op.type)&&!(op.type==='groupMulti'&&op.params.mode==='transform'))return result;
  const old=state.columnIndex,values=result.columns.map(c=>{const original=op.type==='columnRename'?Object.entries(result.analysis.mapping).find(([,value])=>value===c)?.[0]??c:c,pos=state.columns.indexOf(original);return pos>=0?(op.type==='columnRename'?[c]:[...old.values[pos]]):[c,...old.names.slice(1).map(()=>'')];});return {...result,columnIndex:{names:[...old.names],values}};
 }

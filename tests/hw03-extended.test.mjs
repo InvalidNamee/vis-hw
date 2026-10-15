@@ -8,8 +8,8 @@ test('column projection, deletion and rename are immutable and protect schema',(
   assert.deepEqual(run('columns',{columns:['text','id'],mode:'keep'}),{columns:['text','id'],rows:rows.map(r=>({text:r.text,id:r.id}))});
   assert.deepEqual(run('columns',{columns:['text'],mode:'first'}).columns,['text','id','x']);
   assert.deepEqual(run('columns',{columns:['text'],mode:'drop'}).columns,['id','x']);
-  assert.deepEqual(run('rename',{column:'text',name:'label'}).columns,['id','x','label']);
-  assert.throws(()=>run('rename',{column:'text',name:'x'}),/duplicateColumns/);
+  assert.deepEqual(run('columnRename',{columns:['text'],method:'names',names:'label'}).columns,['id','x','label']);
+  assert.throws(()=>run('columnRename',{columns:['text'],method:'names',names:'x'}),/duplicateColumns/);
   assert.throws(()=>run('columns',{columns,mode:'drop'}),/missingColumn/);
   assert.equal(rows[0].text,' A ');
 });
@@ -27,17 +27,17 @@ test('text operations preserve nulls; literal replacement and Unicode count are 
   assert.deepEqual(run('replace',{column:'x',find:'3',replacement:'9',target:'number'}).rows.map(r=>r.x),[9,null,1,9]);
 });
 test('rank handles ties, order and missing values',()=>{
-  for(const [method,expected] of [['average',[2.5,null,1,2.5]],['dense',[2,null,1,2]],['first',[2,null,1,3]],['min',[2,null,1,2]],['max',[3,null,1,3]]])assert.deepEqual(run('rank',{column:'x',name:'r',method}).rows.map(r=>r.r),expected);
-  assert.deepEqual(run('rank',{column:'x',name:'r',method:'average',desc:true}).rows.map(r=>r.r),[1.5,null,3,1.5]);
+  for(const [method,expected] of [['average',[2.5,null,1,2.5]],['dense',[2,null,1,2]],['first',[2,null,1,3]],['min',[2,null,1,2]],['max',[3,null,1,3]]])assert.deepEqual(run('groupRank',{columns:['x'],method}).rows.map(r=>r.x_rank),expected);
+  assert.deepEqual(run('groupRank',{columns:['x'],method:'average',direction:'descending'}).rows.map(r=>r.x_rank),[1.5,null,3,1.5]);
 });
 test('sample is deterministic, without replacement and validates count',()=>{
-  assert.deepEqual(run('sample',{count:3,seed:42}),run('sample',{count:3,seed:42}));
-  assert.equal(new Set(run('sample',{count:3,seed:42}).rows.map(r=>r.id)).size,3);
-  assert.throws(()=>run('sample',{count:9,seed:42}),/invalidNumber/);
+  assert.deepEqual(run('sampling',{count:3,seed:42}),run('sampling',{count:3,seed:42}));
+  assert.equal(new Set(run('sampling',{count:3,seed:42}).rows.map(r=>r.id)).size,3);
+  assert.throws(()=>run('sampling',{count:9,seed:42}),/invalidSample/);
 });
 test('extended operations survive replay and backup validation',()=>{
   const dataset={id:'a',name:'a.json',format:'json',raw:JSON.stringify(rows),rows,columns};
-  const operations=[{type:'text',params:{column:'text',method:'strip'}},{type:'rename',params:{column:'text',name:'label'}},{type:'columns',params:{columns:['label','x'],mode:'keep'}}];
+  const operations=[{type:'text',params:{column:'text',method:'strip'}},{type:'columnRename',params:{columns:['text'],method:'names',names:'label'}},{type:'columns',params:{columns:['label','x'],mode:'keep'}}];
   assert.deepEqual(replay(dataset,operations,3,[dataset]).columns,['label','x']);
   const restored=validateBackup({version:1,active:'a',datasets:[dataset],operations,cursor:3});
   assert.equal(restored.operations.length,3);

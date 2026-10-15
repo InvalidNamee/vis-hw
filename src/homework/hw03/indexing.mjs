@@ -68,11 +68,11 @@ export function indexOperation(state,op){
 }
 // Positional symbols distinguish identical records with different index labels. Never serialize or persist these symbols.
 const position=Symbol('sourceRowPosition');
-const subsetTypes=new Set(['filter','filterTree','sort','rowSelect','topN','sample','sampling','dedup','dropMissing','iqr','groupFilter']);
-const sameRows=new Set(['columnRename','rename','columns','convert','text','replace','rank','fill','calculate','numeric','formula','binning','strings','weightedWindow','windows','ewm','dateparse','dateparts','datediff','selectTypes','groupRank']);
+const subsetTypes=new Set(['filter','filterTree','sort','rowSelect','topN','sampling','dedup','dropMissing','iqr','groupFilter']);
+const sameRows=new Set(['columnRename','columns','convert','text','replace','fill','numeric','formula','binning','strings','weightedWindow','windows','ewm','dateparse','dateparts','datediff','selectTypes','groupRank']);
 export function applyIndexedOperation(state,op,execute,datasets=[]){return carryTypes(state,carryColumnIndex(state,executeIndexedOperation(state,op,execute,datasets),op),op);}
 function executeIndexedOperation(state,op,execute,datasets=[]){
- if(['groupMulti','groupNamed'].includes(op.type)&&state.types){const params=op.type==='groupNamed'?{...op.params,columns:[...new Set((op.params.specs??[]).map(s=>s.column))],methods:[...new Set((op.params.specs??[]).map(s=>s.method))]}:op.params,result=groupingOperation(state.rows,state.columns,{...op,params},state.types);return {...result,index:params.mode==='transform'?state.index:rangeIndex(result.rows.length)};}
+ if(op.type==='groupMulti'&&state.types){const params=op.params,result=groupingOperation(state.rows,state.columns,{...op,params},state.types);return {...result,index:params.mode==='transform'?state.index:rangeIndex(result.rows.length)};}
  if(op.type==='columnRename'&&state.columnIndex?.names.length>1)fail('renameFlattenFirst');
  if(dtypeTypes.includes(op.type))return dtypeOperation(state,op);
  const sorted=categoricalSort(state,op);if(sorted)return sorted;
@@ -91,7 +91,7 @@ function executeIndexedOperation(state,op,execute,datasets=[]){
   if((op.type==='groupFilter'&&op.params.mode==='missing'||op.type==='dropMissing'&&op.params.axis==='columns')&&result.rows.length===state.rows.length){for(const row of result.rows)delete row[position];return {...result,index:cloneIndex(index)};}
   fail('invalidOperation');
  }
- const result=execute(state.rows,state.columns),keep=sameRows.has(op.type)||(op.type==='groupMulti'||op.type==='groupNamed')&&op.params.mode==='transform';
+ const result=execute(state.rows,state.columns),keep=sameRows.has(op.type)||op.type==='groupMulti'&&op.params.mode==='transform';
  return {...result,index:keep&&result.rows.length===state.rows.length?cloneIndex(index):rangeIndex(result.rows.length)};
 }
 export function exportIndexed(rows,columns,index){

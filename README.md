@@ -58,7 +58,7 @@ Lucide 已安装供后续界面使用，例如在 Astro 的 frontmatter 中 `imp
 - 通用界面文案位于 `src/i18n/index.ts`，首页、关于和占位页共用 `src/views/` 中的页面组件。
 - HW01 英文全文位于 `src/pages/en/hw01/index.mdx`，与中文共用交互组件。修改章节结构时需同步两份 MDX，保证目录锚点对应。
 - 验证：`npm run check && npm run build && node --test tests/*.test.mjs`。构建测试检查双语路由、内部链接、英文文案和章节对应关系。
-## HW03 数据织坊
+## HW03 数据分析
 
 `/hw03/` 与 `/en/hw03/` 是同一套双语可视化数据分析工作台。实现清单、验证与语义边界见 [功能覆盖](docs/hw03-coverage.md)，展示说明见 [双语亮点](docs/hw03-highlights.md)。
 

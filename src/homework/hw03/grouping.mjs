@@ -22,7 +22,8 @@ export function reduceGroup(values,method,ddof=1,metadata){
   return moments(valid,ddof)[method];
 }
 export function groupingOperation(rows,columns,op,types={}){
-  const p=op.params,keys=p.keys??[],metrics=p.columns,methods=p.methods,mode=p.mode??'summarize',drop=p.missing!=='include',sort=p.order!=='appearance',ddof=Number(p.ddof??1);
+  const p=op.params;if(p.specs!==undefined&&(!Array.isArray(p.specs)||!p.specs.length||p.specs.some(s=>!s||typeof s!=='object')))fail('invalidOperation');
+  const keys=p.keys??[],metrics=p.specs?[...new Set(p.specs.map(s=>s?.column))]:p.columns,methods=p.specs?[...new Set(p.specs.map(s=>s?.method))]:p.methods,mode=p.mode??'summarize',drop=p.missing!=='include',sort=p.order!=='appearance',ddof=Number(p.ddof??1);
   for(const fields of [keys,metrics])if(!Array.isArray(fields)||new Set(fields).size!==fields.length||fields.some(c=>!columns.includes(c)))fail('missingColumn');
   if(!metrics.length||!Array.isArray(methods)||!methods.length||new Set(methods).size!==methods.length||methods.some(m=>!aggregationMethods.includes(m)))fail('invalidOperation');
   if(!['summarize','transform'].includes(mode)||!Number.isInteger(ddof)||ddof<0)fail('invalidNumber');

@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { copy } from './copy';
 import { localeFromUrl } from '../../i18n';
-import { Database, Upload, Download, Archive, Layers, ShieldCheck, Search } from '@lucide/astro';
+import { Database, Upload, Download, Archive, Layers, ShieldCheck, Search, PanelLeftClose, PanelLeftOpen } from '@lucide/astro';
 import './style.css';
 const en = localeFromUrl(Astro.url) === 'en';
 const t = (key: keyof typeof copy) => copy[key][en ? 1 : 0];
@@ -20,8 +20,9 @@ const t = (key: keyof typeof copy) => copy[key][en ? 1 : 0];
     </header>
     <div class="loom-notice" data-notice role="alert" hidden></div>
     <div class="loom-shell">
-      <aside class="loom-sidebar">
-        <details data-panel="datasets" open><summary><Database size={15}/>{t('datasets')}<span data-dataset-count></span></summary><div class="loom-panel-body"><div data-datasets></div><button data-action="import" class="loom-add">+ {t('import')}</button></div></details>
+      <aside class="loom-sidebar" id="loom-sidebar">
+        <div class="loom-sidebar-heading"><button data-action="toggle-sidebar" aria-controls="loom-sidebar" aria-expanded="true" aria-label={t('collapseSidebar')} title={t('collapseSidebar')}><PanelLeftClose size={16} class="loom-sidebar-close"/><PanelLeftOpen size={16} class="loom-sidebar-open"/><span data-sidebar-toggle-label>{t('collapseSidebar')}</span></button></div>
+        <details data-panel="datasets" open><summary><Database size={15}/>{t('datasets')}<span data-dataset-count></span></summary><div class="loom-panel-body"><div data-datasets></div></div></details>
         <details data-panel="fields" open><summary><Layers size={15}/>{t('fields')}<span data-column-count></span></summary><div class="loom-panel-body"><input type="search" data-field-search aria-label={t('searchFields')} placeholder={t('searchFields')}/><p data-index-summary hidden></p><div data-fields class="loom-fields"></div></div></details>
         <details data-panel="timeline" open><summary>{t('history')}<span data-step-count></span></summary><div class="loom-panel-body"><div class="loom-history-actions"><button data-action="undo">{t('undo')}</button><button data-action="redo">{t('redo')}</button></div><div data-history class="loom-steps"></div><div data-branches></div></div></details>
         <details class="loom-storage" data-panel="storage"><summary><ShieldCheck size={15}/>{t('storage')}</summary><div class="loom-panel-body"><p>{t('local')}</p><label><input type="checkbox" data-autosave checked/> {t('autoSave')}</label><p data-capacity></p><button data-action="retry">{t('retry')}</button><button data-action="restore">{t('restore')}</button><button data-action="reset">{t('reset')}</button><button data-action="clear-storage">{t('clearStorage')}</button></div></details>
@@ -30,11 +31,9 @@ const t = (key: keyof typeof copy) => copy[key][en ? 1 : 0];
         <div class="loom-ribbon"><nav data-sections aria-label={t('toolSections')}></nav><div data-tools class="loom-tools"></div></div>
         <div data-history-notice></div>
         <div data-editor></div>
-        <div data-operation-summary aria-live="polite"></div>
-        <div class="loom-result-header"><div class="loom-view-switch"><button data-view-mode="overview">{t('overview')}</button><button data-view-mode="data">{t('data')}</button></div><div data-result-modes></div><div data-metrics class="loom-metrics"></div></div>
+        <div class="loom-result-header"><div class="loom-view-switch"><button data-view-mode="overview">{t('overview')}</button><button data-view-mode="data">{t('data')}</button></div><div data-result-modes></div><div data-operation-summary aria-live="polite"></div><div data-metrics class="loom-metrics"></div></div>
         <div data-selection class="loom-selection"></div>
         <div data-view class="loom-result"></div>
-        <div class="loom-bottom"><span data-source></span><button data-action="toggle-sidebar">{t('collapseSidebar')}</button></div>
       </div>
     </div>
     <dialog data-import-dialog class="loom-dialog"><div class="loom-card-heading"><h2>{t('importTitle')}</h2><button data-action="close-import">{t('close')}</button></div><p>{t('importHint')}</p><p data-import-notice role="alert" hidden></p>

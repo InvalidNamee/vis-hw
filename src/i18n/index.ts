@@ -7,8 +7,9 @@ export function localeFromUrl(url: URL): Locale {
 }
 export const localizedHref = (path = '', locale: Locale = 'zh-CN') => href(`${locale === 'en' ? 'en/' : ''}${path.replace(/^\//, '')}`);
 const english: Record<string, string> = {
-  "数据织坊：可视化数据工作台": "Data Loom: Visual data studio",
+  "数据分析": "Data Analysis",
   "用图形探索数据，完成清洗、分组、透视与关联，并自动保存分析过程。": "Explore data visually, clean, group, pivot, and join, with locally saved analysis.",
+  "数据表连接散点图、分布柱形与热力矩阵的数据分析示意": "Data analysis illustrated with a table linked to a scatter plot, distribution bars, and a heatmap",
   "字段分布、联动散点与操作时间线组成的数据分析工作台": "Data studio with distributions, linked scatter plots, and an operation timeline",
   "智变：AI 与新质生产力": "The intelligence shift: AI & productivity",
   "通过交互图谱、研究证据和流程实验，看人工智能怎样改变生产。": "Explore how AI changes production through interactive networks, evidence, and workflow experiments.",
