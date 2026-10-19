@@ -13,6 +13,7 @@
     "dist",
     "output",
     ".sites-runtime",
-    "public/hw03/replay-engine.js"
+    "public/hw03/replay-engine.js",
+    "public/hw04"
   ]
 }

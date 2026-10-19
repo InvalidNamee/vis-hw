@@ -76,3 +76,9 @@ PANDAS_PYTHON=.venv/bin/python node --test --test-concurrency=1 tests/*.test.mjs
 ```
 
 构建后再运行完整测试，因为部分站点测试读取 `dist/`。不要让构建与读取 `dist/` 的测试并行。详细容量、日期/正则/抽样及类型边界见覆盖文档；本站不声称兼容 pandas 的全部 API 或任意用户函数。
+
+### HW04 课程重构站
+
+HW04 保持为独立的 Vue 项目，发布在 `/hw04/`。运行开发或构建命令前，脚本会构建同级目录 `../cinger-vis-rebuild`，并将完整产物复制到本项目的 `public/hw04/`，因此发布本项目 `dist/` 即包含课程站。首次使用需分别安装两个项目的依赖。
+
+自定义源码位置、使用预构建产物及悬浮导航的接入方式见 [HW04 接入说明](integration/hw04/README.md)。

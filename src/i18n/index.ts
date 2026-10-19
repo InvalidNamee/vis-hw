@@ -7,6 +7,8 @@ export function localeFromUrl(url: URL): Locale {
 }
 export const localizedHref = (path = '', locale: Locale = 'zh-CN') => href(`${locale === 'en' ? 'en/' : ''}${path.replace(/^\//, '')}`);
 const english: Record<string, string> = {
+  "课程网站重构": "Course Website Redesign",
+  "重新组织课程讲解、关键代码与交互演示，支持搜索、全屏展示和图表导出。": "Reorganize course explanations, key code, and interactive demos, with search, full-screen presentation, and chart export.",
   "数据分析": "Data Analysis",
   "用图形探索数据，完成清洗、分组、透视与关联，并自动保存分析过程。": "Explore data visually, clean, group, pivot, and join, with locally saved analysis.",
   "数据表连接散点图、分布柱形与热力矩阵的数据分析示意": "Data analysis illustrated with a table linked to a scatter plot, distribution bars, and a heatmap",

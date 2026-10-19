@@ -9,9 +9,10 @@
     "preview": "astro preview",
     "check": "astro check",
     "data:hw02": "node scripts/hw02-data.mjs",
-    "prebuild": "npm run data:hw02 && npm run data:hw03",
+    "prebuild": "npm run data:hw02 && npm run data:hw03 && npm run data:hw04",
     "data:hw03": "node scripts/hw03-runtime.mjs",
-    "predev": "npm run data:hw03"
+    "predev": "npm run data:hw03 && npm run data:hw04",
+    "data:hw04": "node scripts/hw04-runtime.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",

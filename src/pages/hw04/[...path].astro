@@ -1,0 +1,18 @@
+---
+// Give every legacy directory its real HTML entry in Astro dev too.
+// Only directories containing index.html become routes; missing pages stay 404.
+export function getStaticPaths() {
+  const documents = import.meta.glob<string>('/public/hw04/**/index.html', {
+    eager: true,
+    query: '?raw',
+    import: 'default',
+  });
+  return Object.entries(documents).flatMap(([filename, html]) => {
+    const relative = filename.slice('/public/hw04/'.length);
+    if (relative === 'index.html') return [];
+    return [{ params: { path: relative.replace(/\/index\.html$/, '') }, props: { html } }];
+  });
+}
+const { html } = Astro.props;
+---
+<Fragment set:html={html} />
