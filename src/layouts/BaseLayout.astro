@@ -1,14 +1,11 @@
 ---
-import { translator, localeFromUrl, localizedHref } from '../i18n';
+import { translator, localeFromUrl } from '../i18n';
 const t = translator(Astro.url);
 const locale = localeFromUrl(Astro.url);
 import '../styles/global.css';
-import { homework, href } from '../config/homework';
-import ExternalLink from '../components/ExternalLink.astro';
-import LanguageSwitch from '../components/LanguageSwitch.astro';
-import ThemeSwitch from '../components/ThemeSwitch.astro';
+import { href } from '../config/homework';
+import FloatingNavigation from '../components/FloatingNavigation.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { siGithub } from 'simple-icons';
 interface Props { title: string; description?: string; current?: string; variant?: 'default' | 'workspace' | 'exhibition'; }
 const { title, description = t("《可视化导论》课程作业：从网页基础到数据可视化。"), current, variant = 'default' } = Astro.props;
 ---
@@ -32,38 +29,7 @@ const { title, description = t("《可视化导论》课程作业：从网页基
   </head>
   <body class:list={{'site-workspace': variant === 'workspace','site-exhibition':variant==='exhibition'}}>
     <a class="skip-link" href="#main">{t("跳到正文")}</a>
-    <header class="site-header">
-      <div class="nav-shell">
-        <a class="brand" href={localizedHref("", locale)} aria-current={!current ? 'page' : undefined}>{locale === "en" ? "Visualization" : t("可视化导论")}</a>
-        <nav class="desktop-nav" aria-label={t("作业导航")}>
-          {homework.map(hw => <a href={localizedHref(`${hw.id}/`, locale)} aria-current={current === hw.id ? 'page' : undefined}>{hw.id.toUpperCase()}</a>)}
-        </nav>
-        <details class="mobile-nav">
-          <summary>{current?.startsWith("hw") ? `${current.toUpperCase()} · ${t("作业目录")}` : t("作业目录")}</summary>
-          <nav aria-label={t("移动端作业导航")}>{homework.map(hw => <a href={localizedHref(`${hw.id}/`, locale)} aria-current={current === hw.id ? 'page' : undefined}>{hw.title ? `${hw.id.toUpperCase()} · ${t(hw.title)}` : hw.id.toUpperCase()}</a>)}</nav>
-        </details>
-        <nav class="site-links" aria-label={t("站点链接")}>
-          <a href={localizedHref('about/', locale)} aria-current={current === 'about' ? 'page' : undefined}>{t("关于")}</a>
-          <ExternalLink href="https://starlab.top/">{t("博客")}</ExternalLink>
-          <ExternalLink href="https://docs.starlab.top/">{t("档案库")}</ExternalLink>
-          <span class="nav-divider" aria-hidden="true"></span>
-          <LanguageSwitch />
-          <ThemeSwitch />
-          <span class="nav-divider" aria-hidden="true"></span>
-          <ExternalLink href="https://github.com/InvalidNamee/vis-hw" variant="icon" label={t("GitHub 项目仓库")}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d={siGithub.path} /></svg>
-          </ExternalLink>
-        </nav>
-      </div>
-    </header>
-    <script is:inline>
-      (() => {
-        const header = document.querySelector('.site-header');
-        const syncHeight = () => document.documentElement.style.setProperty('--site-header-height', `${header.getBoundingClientRect().height}px`);
-        syncHeight();
-        new ResizeObserver(syncHeight).observe(header);
-      })();
-    </script>
+    <FloatingNavigation current={current} />
     <main id="main"><slot /></main>
     {variant === 'default' && <SiteFooter />}
   </body>

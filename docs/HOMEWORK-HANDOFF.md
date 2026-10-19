@@ -121,11 +121,15 @@ ArticleLayout 中的 `.document-content .prose` 统一控制正文：取消限�
 
 ### 仓库入口与品牌图标
 
-用户已确认 GitHub 品牌标志使用 Simple Icons（Lucide 当前版本不包含该标志）。公共导航最右侧通过 ExternalLink 的 icon 变体显示仓库入口；必须提供 label，统一保留新标签页辅助提示。普通界面图标继续用 Lucide。首页不再重复仓库文字入口，About 保留卡片，并通过 ArticleLayout 的 eyebrow="ABOUT" 显示蓝色标签。
+用户已确认 GitHub 品牌标志使用 Simple Icons（Lucide 当前版本不包含该标志）。悬浮导航的外链区域通过 ExternalLink 的 icon 变体显示仓库入口；必须提供 label，统一保留新标签页辅助提示。普通界面图标继续用 Lucide。首页不再重复仓库文字入口，About 保留卡片，并通过 ArticleLayout 的 eyebrow="ABOUT" 显示蓝色标签。
 
 ## 深色模式
 
-- 页头 `ThemeSwitch` 保持在档案库和 GitHub 入口之间，首次访问跟随系统，手动切换后通过 `vis-hw-theme` 保存偏好。
+公共导航现由 `FloatingNavigation` 提供：右下角 48px 圆按钮，展开约 300px 宽的原生非模态 Popover，作业单列排列，当前项保持蓝色文字与下划线。点击外部或 Escape 收起；面板内部可滚动，不锁定正文滚动。
+
+顶部栏已移除，`--site-header-height` 保留为 `0px`，供 HW02 叙事和 HW03 全屏工作区计算高度使用；脚本读取该变量时不可把有效的 0 回退为旧导航高度。异步语言切换更新 `.floating-navigation` 内容，保留展开状态及原主题开关节点；无页脚的工作区也支持切换。新作业复用 BaseLayout 即可获得导航。
+
+- `ThemeSwitch` 位于悬浮导航底部，与语言切换并排；首次访问跟随系统，手动切换后通过 `vis-hw-theme` 保存偏好。
 - `BaseLayout` 在页面绘制前设置根元素的 `.dark` 与 `data-theme`；Expressive Code 根据相同状态切换 GitHub 明暗主题。
 - 新作业的正文和演示组件使用 `src/styles/theme.css` 中的语义颜色变量，例如 `--surface`、`--text-primary`、`--border-soft`，避免写死白色背景和深色文字。实心按钮使用 `--action` 与 `--on-action`。
 - 新增内容需检查明暗主题下的文字、交互控件与图表可读性。

@@ -1,0 +1,81 @@
+---
+import { Menu, X, House } from '@lucide/astro';
+import { siGithub } from 'simple-icons';
+import { homework } from '../config/homework';
+import { translator, localeFromUrl, localizedHref } from '../i18n';
+import ExternalLink from './ExternalLink.astro';
+import LanguageSwitch from './LanguageSwitch.astro';
+import ThemeSwitch from './ThemeSwitch.astro';
+interface Props { current?: string; }
+const { current } = Astro.props;
+const t = translator(Astro.url);
+const locale = localeFromUrl(Astro.url);
+const label = locale === 'en' ? 'Site navigation' : '站点导航';
+---
+<div class="floating-navigation">
+  <button class="navigation-trigger" type="button" popovertarget="site-navigation" aria-controls="site-navigation" aria-expanded="false" aria-label={label} title={label}>
+    <Menu class="navigation-menu-icon" size={22} aria-hidden="true" />
+    <X class="navigation-close-icon" size={22} aria-hidden="true" />
+  </button>
+  <div id="site-navigation" class="navigation-panel" popover="auto" aria-label={label}>
+    <a class="navigation-home" href={localizedHref('', locale)} aria-current={!current ? 'page' : undefined}>
+      <House size={18} aria-hidden="true" />
+      <span>{t('可视化导论')}</span>
+      <small>{locale === 'en' ? 'Home' : '首页'}</small>
+    </a>
+    <nav class="navigation-homework" aria-label={t('作业导航')}>
+      {homework.map(hw => <a href={localizedHref(`${hw.id}/`, locale)} aria-current={current === hw.id ? 'page' : undefined}>
+        <span>{hw.id.toUpperCase()}</span>{hw.title && <span>{t(hw.title)}</span>}
+      </a>)}
+    </nav>
+    <nav class="navigation-links" aria-label={t('站点链接')}>
+      <a href={localizedHref('about/', locale)} aria-current={current === 'about' ? 'page' : undefined}>{t('关于')}</a>
+      <ExternalLink href="https://starlab.top/">{t('博客')}</ExternalLink>
+      <ExternalLink href="https://docs.starlab.top/">{t('档案库')}</ExternalLink>
+      <ExternalLink href="https://github.com/InvalidNamee/vis-hw" variant="icon" label={t('GitHub 项目仓库')}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d={siGithub.path} /></svg>
+      </ExternalLink>
+    </nav>
+    <div class="navigation-tools">
+      <LanguageSwitch />
+      <span class="navigation-theme-label">{t('深色模式')}</span>
+      <ThemeSwitch />
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('toggle', event => {
+    const panel = event.target;
+    if (!(panel instanceof HTMLElement) || panel.id !== 'site-navigation') return;
+    const trigger = document.querySelector<HTMLButtonElement>('.navigation-trigger');
+    const open = panel.matches(':popover-open');
+    trigger?.setAttribute('aria-expanded', String(open));
+    if (open && !panel.contains(document.activeElement)) panel.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true });
+    else if (!open && panel.contains(document.activeElement)) trigger?.focus({ preventScroll: true });
+  }, true);
+</script>
+<style>
+  .floating-navigation { --navigation-right: max(20px, env(safe-area-inset-right)); --navigation-bottom: max(20px, env(safe-area-inset-bottom)); }
+  .navigation-trigger { position: fixed; z-index: 60; right: var(--navigation-right); bottom: var(--navigation-bottom); display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border: 1px solid var(--border-strong); border-radius: 50%; background: var(--surface); color: var(--text-primary); box-shadow: 0 4px 16px #0002; }
+  .navigation-trigger:hover { color: var(--accent); border-color: var(--accent); }
+  .navigation-trigger :global(.navigation-close-icon) { display: none; }
+  .navigation-trigger[aria-expanded="true"] :global(.navigation-menu-icon) { display: none; }
+  .navigation-trigger[aria-expanded="true"] :global(.navigation-close-icon) { display: block; }
+  .navigation-panel { position: fixed; inset: auto var(--navigation-right) calc(var(--navigation-bottom) + 60px) auto; width: min(300px, calc(100vw - var(--navigation-right) - 16px)); max-height: calc(100dvh - var(--navigation-bottom) - 80px - env(safe-area-inset-top)); overflow-y: auto; overscroll-behavior: contain; margin: 0; padding: 16px; border: 1px solid var(--border-soft); border-radius: 12px; background: var(--surface); color: var(--text-primary); box-shadow: 0 8px 32px #0003; font-size: 14px; }
+  .navigation-home { display: flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 650; }
+  .navigation-home span { min-width: 0; }
+  .navigation-home small { margin-left: auto; white-space: nowrap; color: var(--text-subtle); font-size: 12px; font-weight: 400; }
+  .navigation-homework { display: grid; margin: 12px 0; padding-block: 8px; border-block: 1px solid var(--border-soft); }
+  .navigation-homework a { display: flex; align-items: baseline; gap: 12px; padding: 10px 0; min-height: 44px; color: var(--text-secondary); border-bottom: 2px solid transparent; }
+  .navigation-homework a > span:first-child { flex-shrink: 0; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .navigation-homework a > span:last-child { overflow-wrap: anywhere; }
+  .navigation-homework a:hover, .navigation-homework a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
+  .navigation-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; color: var(--text-secondary); }
+  .navigation-links > a, .navigation-links :global(.external-link) { display: inline-flex; align-items: center; min-height: 44px; }
+  .navigation-links a:hover, .navigation-links a[aria-current="page"] { color: var(--accent); }
+  .navigation-tools { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+  .navigation-theme-label { margin-left: auto; font-size: 12px; color: var(--text-secondary); }
+  .navigation-tools :global(.language-status) { position: static; max-width: none; width: 100%; padding: 8px 0 0; border: 0; background: transparent; font-size: 12px; }
+  .navigation-tools { flex-wrap: wrap; }
+  .navigation-tools :global(.language-status:not(:empty)) { order: 1; }
+</style>

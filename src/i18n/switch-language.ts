@@ -24,7 +24,8 @@ async function switchLanguage(target: URL, traverse = false) {
     const response = await fetch(target, { signal: controller.signal });
     if (!response.ok) throw new Error(`Translation request failed: ${response.status}`);
     const incoming = new DOMParser().parseFromString(await response.text(), 'text/html');
-    const regions = ['.site-header', '#main', '.site-footer', '.skip-link'];
+    const regions = ['.floating-navigation', '#main', '.skip-link'];
+    if (document.querySelector('.site-footer')) regions.push('.site-footer');
     if (!['en', 'zh-CN'].includes(incoming.documentElement.lang) || regions.some(selector => !incoming.querySelector(selector))) {
       throw new Error('Invalid translation document');
     }
@@ -42,6 +43,7 @@ async function switchLanguage(target: URL, traverse = false) {
     if (controller.signal.aborted) return;
 
     // Capture at swap time, so scrolling/interaction during the request is respected.
+    const navigationOpen = document.querySelector('#site-navigation')?.matches(':popover-open');
     const position = { left: scrollX, top: scrollY, behavior: 'instant' as ScrollBehavior };
     const storyStep = all<HTMLElement>('.story-step').filter(step => step.getBoundingClientRect().top <= innerHeight * .5).at(-1);
     const storyPosition = storyStep && { id: storyStep.id, offset: storyStep.getBoundingClientRect().top };
@@ -71,6 +73,7 @@ async function switchLanguage(target: URL, traverse = false) {
       current.replaceChildren(...next.childNodes);
     }
     document.dispatchEvent(new Event('astro:after-swap'));
+    if (navigationOpen) document.querySelector<HTMLElement>('#site-navigation')?.showPopover();
     all('.homework-tabs').forEach((group, index) => all<HTMLElement>('[role="tab"]', group)[tabs[index]]?.click());
     all<HTMLInputElement | HTMLSelectElement>('#main input:not([data-hw02-control]):not([data-loom-control]), #main select:not([data-hw02-control]):not([data-loom-control])').forEach((control, index) => {
       if (controls[index] === undefined) return;
@@ -83,9 +86,8 @@ async function switchLanguage(target: URL, traverse = false) {
     if (!traverse) history.pushState({ ...history.state, languageSwitch: true }, '', target);
     displayedUrl = target.href;
     syncLinks();
-    document.querySelector<HTMLElement>(`.language-switch a[lang="${incoming.documentElement.lang}"]`)?.focus({ preventScroll: true });
+    if (navigationOpen) document.querySelector<HTMLElement>(`.language-switch a[lang="${incoming.documentElement.lang}"]`)?.focus({ preventScroll: true });
     // Suppress both hash navigation and the site's smooth scrolling during the swap.
-    document.documentElement.style.setProperty('--site-header-height', `${document.querySelector('.site-header')!.getBoundingClientRect().height}px`);
     window.scrollTo(position);
     const settleStory=()=>{
       const cancel=new AbortController();

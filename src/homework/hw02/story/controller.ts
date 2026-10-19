@@ -31,7 +31,7 @@ class StoryScene extends HTMLElement {
           getComputedStyle(document.documentElement).getPropertyValue(
             "--site-header-height",
           ),
-        ) || 65;
+        ) || 0;
       return (
         !matchMedia("(prefers-reduced-motion:reduce)").matches &&
         innerHeight - header - 44 >= (innerWidth >= 1024 ? 560 : 520)
@@ -99,7 +99,7 @@ class StoryScene extends HTMLElement {
               getComputedStyle(document.documentElement).getPropertyValue(
                 "--site-header-height",
               ),
-            ) || 65;
+            ) || 0;
           const available = innerHeight - header() - 44;
           const enhanced =
             !context.conditions!.reduce &&

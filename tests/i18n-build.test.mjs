@@ -17,10 +17,13 @@ test('all pages have matching language routes and localized navigation', () => {
       if (prefix) {
         const visible = html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, '').replaceAll('中文', '');
         assert.doesNotMatch(visible, /\p{Script=Han}/u, path);
-        const nav = html.match(/<nav class="desktop-nav"[\s\S]*?<\/nav>/)?.[0];
+        const nav = html.match(/<nav class="navigation-homework"[\s\S]*?<\/nav>/)?.[0];
         assert.ok(nav);
         assert.equal([...nav.matchAll(/href="\/en\/hw\d+\/"/g)].length, homeworkCount);
       }
+      assert.doesNotMatch(html, /class="site-header"/);
+      assert.match(html, /popovertarget="site-navigation"/);
+      assert.match(html, /id="site-navigation"[^>]*popover="auto"/);
     }
   }
 });

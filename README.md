@@ -29,6 +29,7 @@ npm run preview
 
 - `src/homework/hwNN/meta.ts`：每章唯一的标题、简介、状态和封面配置；`src/config/homework.ts` 汇总并提供 getHomework。
 - `src/layouts/BaseLayout.astro`：导航、页面元信息与公共外壳。
+- `src/components/FloatingNavigation.astro`：右下角悬浮导航，点击圆按钮展开；六个作业单列排列，并提供首页、关于、外链、语言和主题切换。点击外部或按 Escape 收起，适配窄屏与安全区。
 - `src/layouts/ArticleLayout.astro`：About 与教程共用的文章排版；`DocumentLayout.astro` 从作业 ID 获取元信息。
 - `src/pages/hw01/index.mdx`：HW1 的讲解、关键代码、展示三个标签内容。
 - `src/components/HomeworkTabs.astro`：固定三标签页，可在后续 MDX 中复用。
