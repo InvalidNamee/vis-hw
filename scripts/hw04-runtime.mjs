@@ -11,6 +11,18 @@ const prebuilt = process.env.HW04_DIST_DIR && resolve(process.env.HW04_DIST_DIR)
 const output = resolve(root, 'public/hw04');
 const build = prebuilt || resolve(source, 'dist');
 
+// Normal builds consume the committed snapshot and need no sibling repository.
+// Refresh it explicitly after changes to the independent course source.
+const sync = process.argv.includes('--sync') || Boolean(process.env.HW04_SOURCE_DIR || prebuilt);
+if (!sync) {
+  if (!existsSync(resolve(output, 'index.html'))) {
+    throw new Error('HW04 snapshot is missing. Run npm run sync:hw04 locally and commit public/hw04 before deployment.');
+  }
+  await readFile(resolve(output, 'index.html'));
+  console.log('HW04: using committed public/hw04 snapshot (no external source required).');
+  process.exit(0);
+}
+
 if (!prebuilt) {
   if (!existsSync(resolve(source, 'package.json'))) {
     throw new Error('HW04 source is missing. Place cinger-vis-rebuild beside vis-hw, set HW04_SOURCE_DIR, or supply HW04_DIST_DIR with a complete course build.');

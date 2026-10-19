@@ -1,0 +1,2 @@
+var e=`<aside class="course-callout course-callout--demo-hint" role="note">4 sub-demos: ① Categorical uses hue (✓) ② Ordinal uses brightness (✓) ③ Numerical uses position (✓) ④ Numerical uses hue (mismatch — cannot tell magnitude)</aside>
+`;export{e as default};

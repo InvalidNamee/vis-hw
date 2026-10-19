@@ -79,6 +79,6 @@ PANDAS_PYTHON=.venv/bin/python node --test --test-concurrency=1 tests/*.test.mjs
 
 ### HW04 课程重构站
 
-HW04 保持为独立的 Vue 项目，发布在 `/hw04/`。运行开发或构建命令前，脚本会构建同级目录 `../cinger-vis-rebuild`，并将完整产物复制到本项目的 `public/hw04/`，因此发布本项目 `dist/` 即包含课程站。首次使用需分别安装两个项目的依赖。
+HW04 保持为独立的 Vue 项目，发布在 `/hw04/`。课程构建产物保存在已提交的 `public/hw04/`，普通开发和云端构建只使用该副本，无需检出课程源码。更新课程后，在本地运行 `npm run sync:hw04`，重新构建同级目录 `../cinger-vis-rebuild` 并同步产物，然后将 `public/hw04/` 的新增、修改和删除一并提交。
 
 自定义源码位置、使用预构建产物及悬浮导航的接入方式见 [HW04 接入说明](integration/hw04/README.md)。

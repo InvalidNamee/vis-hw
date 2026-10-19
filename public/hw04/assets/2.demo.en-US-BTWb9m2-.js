@@ -1,0 +1,2 @@
+var e=`<aside class="course-callout course-callout--demo-hint" role="note">Hover over the pyramid → highlight that tier · click → show that tier's definition / examples / common visualizations on the right</aside>
+`;export{e as default};

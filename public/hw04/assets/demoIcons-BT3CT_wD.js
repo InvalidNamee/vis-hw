@@ -1,0 +1,1 @@
+import{B as e}from"./runtime-core.esm-bundler-DVRkMeDb.js";import{f as t}from"./runtime-dom.esm-bundler-BJXfX899.js";function n(n,r,i,a=16){i.aborted||(t(e(r,{size:a,"aria-hidden":`true`}),n),i.addEventListener(`abort`,()=>t(null,n),{once:!0}))}export{n as t};

@@ -1,0 +1,2 @@
+var e=`<aside class="course-callout course-callout--demo-hint" role="note">Use the dropdown to switch among the 8 functions; the right side shows input/output comparison + a real scenario (new-student data)</aside>
+`;export{e as default};

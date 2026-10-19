@@ -1,0 +1,2 @@
+var e=`<aside class="course-callout course-callout--demo-hint" role="note">Click the button to trigger enter (green) / update (blue) / exit (red), and observe the three-state switching</aside>
+`;export{e as default};

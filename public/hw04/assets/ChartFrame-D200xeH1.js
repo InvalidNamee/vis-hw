@@ -1,0 +1,1 @@
+import{b as e,er as t,k as n,mt as r,xt as i}from"./runtime-core.esm-bundler-DVRkMeDb.js";var a=[`aria-label`],o=n({__name:`ChartFrame`,props:{label:{},minimum:{}},setup(n){return(o,s)=>(r(),e(`div`,{class:`supp-chart-frame`,tabindex:`0`,role:`region`,"aria-label":n.label,style:t({"--chart-minimum":`${n.minimum??540}px`})},[i(o.$slots,`default`)],12,a))}});export{o as t};

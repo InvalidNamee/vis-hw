@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>《可视化导论》</title><script>const oldSection = location.hash.match(/^#ch-([1-5])-([1-8])$/);
+const route = oldSection ? '/lessons/0' + oldSection[1] + '/' + oldSection[2] : "/lessons/01";
+const params = new URLSearchParams(location.search);
+if (oldSection) params.set('tab', 'demo');
+location.replace("../index.html#" + route + (params.size ? '?' + params.toString() : ''));</script></head><body><a href="../index.html#/lessons/01">课程门户</a></body></html>

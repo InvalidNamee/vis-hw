@@ -11,6 +11,3 @@ public/hw03/replay-engine.js
 # Generated submission assets and PDF render checks.
 output/submission/
 output/pdf/
-
-# Generated from the independent Vue course by predev/prebuild.
-public/hw04/

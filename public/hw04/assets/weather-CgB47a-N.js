@@ -1,0 +1,1 @@
+function e(e){return{date:e.date,temp_max:Number(e.temp_max),rain_mm:Number(e.rain_mm)}}export{e as t};
