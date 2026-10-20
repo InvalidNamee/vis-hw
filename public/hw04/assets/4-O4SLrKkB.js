@@ -1,0 +1,13 @@
+import{H as e,f as t,g as n,v as r,w as i,x as a}from"./src-Bqv1NRT4.js";import{t as o}from"./weather-CgB47a-N.js";var s=async function(s,c){let l=await c.csv(`./data/weather_2024.csv`,o),u=new Map(l.map(e=>[e.date,e.temp_max])),d=new Date(2024,0,1),f=new Date(2025,0,1),p=22*1.4/(2*Math.PI),m=60/p;function h(e){let t=0+p*e;return{x:t*Math.cos(e),y:t*Math.sin(e),r:t}}function g(e){return 22/Math.sqrt(p*p+e*e)}let _={t:360,l:360},v=n(t).domain([30,-5]);s.innerHTML=`
+    <h4> 阿基米德螺旋日历（2024）</h4>
+    <p class="demo-hint">每个回路 = 1 年（实际是 1 个周期）。鼠标 hover 看日期 + 温度。扇环角度动态调整：<code>Δθ = boxSize / √(b² + r²)</code> 让弧长近似相等。</p>
+    <div class="ms-threshold-control">
+      <label>每周起始：</label>
+      <select id="weekstart">
+        <option value="0" selected>周日</option>
+        <option value="1">周一</option>
+      </select>
+    </div>
+    <svg data-export-chart="" class="spiral-svg" width="720" height="720" id="spiral-svg"></svg>
+    <div id="spiral-note"></div>
+  `;let y=e(s.querySelector(`#spiral-svg`)),b=s.querySelector(`#weekstart`);function x(){y.selectAll(`*`).remove(),m=60/p;let t=+b.value,n=(d.getDay()-t+7)%7;for(let e=0;e<n;e++)m+=g(h(m).r);let o=[];for(let e=0;e<366;e++){let t=m,n=h(t);m+=g(n.r);let a=m,s=i.offset(d,e),c=r(`%Y-%m-%d`)(s),l=u.get(c);o.push({t0:t,t1:a,date:s,value:l})}let s=1.4;y.selectAll(`path.seg`).data(o).join(`path`).attr(`class`,`seg`).attr(`d`,e=>{let t=h(e.t0).r,n=h(e.t1).r,r=t+s,i=n+s;return`M ${r*Math.cos(e.t0)} ${r*Math.sin(e.t0)} A ${r} ${r} 0 0 1 ${i*Math.cos(e.t1)} ${i*Math.sin(e.t1)} L ${n*Math.cos(e.t1)} ${n*Math.sin(e.t1)} A ${n} ${n} 0 0 0 ${t*Math.cos(e.t0)} ${t*Math.sin(e.t0)} Z`}).attr(`fill`,e=>e.value==null?`#e2e8f0`:v(e.value)).attr(`stroke`,`#fff`).attr(`stroke-width`,.5).on(`mouseover`,function(t,n){e(this).attr(`stroke`,`#1e293b`).attr(`stroke-width`,1.5),S(t,`${r(`%Y-%m-%d`)(n.date)}: ${n.value?.toFixed(1)??`-`}°C`)}).on(`mouseout`,function(){e(this).attr(`stroke`,`#fff`).attr(`stroke-width`,.5),C()});let c=a.range(d,f);y.selectAll(`text.month-label`).data(c).join(`text`).attr(`class`,`month-label`).attr(`x`,e=>{let t=o[i.count(d,e)];return h(t.t0).x}).attr(`y`,e=>{let t=o[i.count(d,e)];return h(t.t0).y}).style(`font-size`,`10px`).style(`fill`,`#475569`).text(e=>r(`%b`)(e))}function S(e,t){let n=s.querySelector(`.ts-tip`);n||(n=document.createElement(`div`),n.className=`ts-tip`,n.style.cssText=`position:fixed;background:#1e293b;color:white;padding:4px 8px;border-radius:3px;font-size:11px;pointer-events:none;z-index:1000;`,s.appendChild(n)),n.textContent=t,n.style.left=e.clientX+10+`px`,n.style.top=e.clientY-24+`px`}function C(){let e=s.querySelector(`.ts-tip`);e&&e.remove()}y.attr(`viewBox`,`${-_.l} ${-_.t} 720 720`),b.addEventListener(`change`,x),x()};export{s as default};
